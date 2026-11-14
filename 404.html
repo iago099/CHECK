@@ -652,6 +652,47 @@
       border-color: #059669;
     }
 
+    .tab-inline-input {
+      background: transparent;
+      border: 1px solid transparent;
+      color: inherit;
+      font: inherit;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 1px 4px;
+      border-radius: 4px;
+      outline: none;
+      min-width: 65px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .sheet-tab.active .tab-inline-input {
+      cursor: text;
+    }
+
+    .sheet-tab.active .tab-inline-input:hover {
+      background: rgba(0, 0, 0, 0.14);
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .sheet-tab .tab-inline-input:focus {
+      background: #0f172a;
+      color: #ffffff;
+      border-color: #ffffff;
+      cursor: text;
+    }
+
+    .excel-ghost-row td {
+      background: rgba(255, 255, 255, 0.38);
+      border-top: 1px dashed rgba(15, 23, 42, 0.25);
+    }
+
+    [data-theme="dark"] .excel-ghost-row td {
+      background: rgba(15, 23, 42, 0.45);
+      border-top: 1px dashed rgba(148, 163, 184, 0.25);
+    }
+
     /* Modais */
     .modal-backdrop {
       position: fixed;
@@ -750,7 +791,7 @@
     }
 
     @media print {
-      .topbar, .excel-tabs-bar, .no-print, .alert-toast-container {
+      .topbar, .excel-tabs-bar, .no-print, .alert-toast-container, .smartphone-sim-toolbar, .mobile-bottom-nav {
         display: none !important;
       }
       body {
@@ -758,6 +799,409 @@
       }
       .workspace {
         padding: 0;
+      }
+    }
+
+    /* =========================================================================
+       ANIMAÇÕES CRIATIVAS, MICRO-INTERAÇÕES & EFEITOS VISUAIS (CHECKS-MAX)
+       ========================================================================= */
+    @keyframes floatLogoGlow {
+      0%, 100% {
+        transform: translateY(0px) scale(1);
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.55);
+      }
+      50% {
+        transform: translateY(-2px) scale(1.06);
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.9), 0 0 22px rgba(249, 115, 22, 0.45);
+      }
+    }
+
+    @keyframes rowSlideFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes checkSpringPop {
+      0% { transform: scale(0.6); }
+      55% { transform: scale(1.28) rotate(-4deg); }
+      80% { transform: scale(0.93) rotate(2deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
+
+    @keyframes progressShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes waRadarPulse {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.75); }
+      70% { box-shadow: 0 0 0 9px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    @keyframes kpiBump {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.18); color: #10b981; }
+      100% { transform: scale(1); }
+    }
+
+    .brand-pill img {
+      animation: floatLogoGlow 3.2s ease-in-out infinite;
+    }
+
+    .status-dot.on {
+      animation: waRadarPulse 2s infinite;
+    }
+
+    table.checklist-table tbody tr {
+      animation: rowSlideFadeIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) both;
+      transition: background-color 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+    }
+
+    table.checklist-table tbody tr:hover {
+      box-shadow: inset 4px 0 0 #10b981;
+    }
+
+    .excel-checkbox {
+      transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .excel-checkbox:hover {
+      transform: scale(1.16);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.45);
+    }
+
+    .excel-checkbox.checked {
+      animation: checkSpringPop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+    }
+
+    #donutSegmentsGroup circle {
+      transition: stroke-dasharray 0.65s cubic-bezier(0.22, 1, 0.36, 1), stroke-dashoffset 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .kpi-bump-anim {
+      animation: kpiBump 0.38s ease-out;
+    }
+
+    /* Barra de Progresso Animada no Topo da Planilha */
+    .live-progress-wrap {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.14);
+      height: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .live-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #22c55e, #f59e0b, #10b981);
+      background-size: 250% 100%;
+      animation: progressShimmer 3.5s linear infinite;
+      transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Partículas de Confete ao Concluir 100% */
+    .confetti-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      border-radius: 3px;
+      will-change: transform, opacity;
+    }
+
+    /* =========================================================================
+       SIMULADOR DE PROPORÇÃO SMARTPHONE (NO PC) + RESPONSIVIDADE MOBILE REAL
+       ========================================================================= */
+    .smartphone-sim-toolbar {
+      display: none;
+      background: linear-gradient(90deg, #0f172a, #1e293b, #0f172a);
+      border-bottom: 1px solid #334155;
+      color: #f8fafc;
+      padding: 8px 16px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      z-index: 55;
+    }
+
+    body.smartphone-sim-active .smartphone-sim-toolbar {
+      display: flex;
+    }
+
+    body.smartphone-sim-active {
+      background: radial-gradient(circle at top, #1e293b 0%, #090d16 100%);
+    }
+
+    body.smartphone-sim-active .workspace {
+      max-width: var(--phone-sim-width, 392px);
+      width: var(--phone-sim-width, 392px);
+      margin: 18px auto 75px auto;
+      padding: 44px 12px 28px 12px;
+      background: var(--bg-page);
+      border: 11px solid #0f172a;
+      border-radius: 44px;
+      box-shadow:
+        0 28px 70px rgba(0, 0, 0, 0.75),
+        0 0 0 2px #475569,
+        inset 0 0 12px rgba(0, 0, 0, 0.15);
+      position: relative;
+      min-height: 780px;
+      transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1), max-width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Dynamic Island / Notch do Smartphone */
+    body.smartphone-sim-active .workspace::before {
+      content: "9:41   •   CHECKS-MAX 5G  🔋100%";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 34px;
+      background: #0f172a;
+      color: #e2e8f0;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 30px 30px 0 0;
+      z-index: 10;
+    }
+
+    body.smartphone-sim-active .workspace::after {
+      content: "";
+      position: absolute;
+      bottom: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 115px;
+      height: 4px;
+      background: #64748b;
+      border-radius: 999px;
+      opacity: 0.65;
+    }
+
+    /* Mini KPIs Mobile e Cards Mobile */
+    .mobile-kpi-strip {
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .mobile-kpi-pill {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-grid);
+      border-radius: 8px;
+      padding: 6px 4px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .mobile-kpi-pill .lbl {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .mobile-kpi-pill .val {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .mobile-view-switcher {
+      display: none;
+      gap: 6px;
+      margin-bottom: 10px;
+      background: var(--bg-panel);
+      padding: 4px;
+      border-radius: 8px;
+      border: 1px solid var(--border-grid);
+    }
+
+    .mobile-view-switcher button {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: none;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+
+    .mobile-view-switcher button.active {
+      background: #10b981;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+    }
+
+    /* Lista de Cards Mobile (Proporção Smartphone) */
+    .mobile-cards-container {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px;
+      background: var(--bg-page);
+    }
+
+    .mobile-task-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-grid);
+      border-left: 5px solid #ef4444;
+      border-radius: 10px;
+      padding: 10px 12px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: rowSlideFadeIn 0.22s ease-out both;
+    }
+
+    .mobile-task-card.is-done {
+      border-left-color: #10b981;
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.06), var(--bg-panel) 35%);
+    }
+
+    .mobile-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .mobile-card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .mobile-chk-btn {
+      padding: 7px 8px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 800;
+      border: 1.5px solid #cbd5e1;
+      background: var(--bg-page);
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.18s;
+    }
+
+    .mobile-chk-btn.started-on {
+      background: rgba(249, 115, 22, 0.14);
+      border-color: #f97316;
+      color: #ea580c;
+    }
+
+    .mobile-chk-btn.finished-on {
+      background: #10b981;
+      border-color: #059669;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+    }
+
+    /* Quando em Proporção de Smartphone (Simulador Ativo OU Tela de Celular Real <= 768px) */
+    body.smartphone-sim-active .sheet-layout {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+
+    body.smartphone-sim-active .mobile-kpi-strip,
+    body.smartphone-sim-active .mobile-view-switcher {
+      display: grid;
+    }
+
+    body.smartphone-sim-active .mobile-view-switcher {
+      display: flex;
+    }
+
+    body.smartphone-sim-active .date-banner {
+      padding: 10px 12px;
+    }
+
+    body.smartphone-sim-active .date-banner-input {
+      font-size: 22px;
+      width: 190px;
+    }
+
+    body.smartphone-sim-active .total-yellow-bar {
+      grid-template-columns: 1fr 70px 70px;
+      margin-top: 10px;
+    }
+
+    body.smartphone-sim-active .total-yellow-bar > div:nth-child(1),
+    body.smartphone-sim-active .total-yellow-bar > div:nth-child(5),
+    body.smartphone-sim-active .total-yellow-bar > div:nth-child(6) {
+      display: none;
+    }
+
+    body.smartphone-sim-active.mobile-cards-mode table.checklist-table {
+      display: none;
+    }
+
+    body.smartphone-sim-active.mobile-cards-mode .mobile-cards-container {
+      display: flex;
+    }
+
+    @media (max-width: 768px) {
+      .workspace {
+        padding: 10px 10px 75px 10px;
+      }
+      .sheet-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .mobile-kpi-strip {
+        display: grid;
+      }
+      .mobile-view-switcher {
+        display: flex;
+      }
+      .date-banner {
+        padding: 10px 12px;
+      }
+      .date-banner-input {
+        font-size: 22px;
+        width: 190px;
+      }
+      .total-yellow-bar {
+        grid-template-columns: 1fr 70px 70px;
+        margin-top: 12px;
+      }
+      .total-yellow-bar > div:nth-child(1),
+      .total-yellow-bar > div:nth-child(5),
+      .total-yellow-bar > div:nth-child(6) {
+        display: none;
+      }
+      body.mobile-cards-mode table.checklist-table {
+        display: none;
+      }
+      body.mobile-cards-mode .mobile-cards-container {
+        display: flex;
       }
     }
   </style>
@@ -778,7 +1222,16 @@
         />
         <span style="color:#ffffff;letter-spacing:0.5px;font-weight:900;">CHECKS-MAX</span>
         <span style="opacity:0.4;color:#94a3b8;">|</span>
-        <span id="currentSheetTitleTop" style="color:#10b981;">LIST 03</span>
+        <input
+          type="text"
+          id="currentSheetTitleTop"
+          class="tab-inline-input"
+          style="color:#10b981;width:110px;"
+          value="LISTA 01"
+          title="Clique para editar o nome da aba atual igual ao Excel"
+          onchange="renameSheetInline(db.activeSheetId, this.value)"
+          onkeydown="if(event.key==='Enter'){this.blur();}"
+        />
       </div>
 
       <button class="btn btn-primary" onclick="openNewTaskModal()">
@@ -859,6 +1312,10 @@
         <span class="badge-counter" id="unreadAlertsBadge">0</span>
       </button>
 
+      <button class="btn" onclick="toggleSmartphoneSimulator()" id="smartphoneSimBtn" title="Testar e usar na proporção exata de um Smartphone (iPhone / Android)" style="border-color:#38bdf8;color:#38bdf8;">
+        <span>📱 Smartphone</span>
+      </button>
+
       <button class="btn" onclick="openHistoryModal()" title="Histórico de Auditoria">
         <span>🛡️ Histórico (<span id="historyCountBadge">0</span>)</span>
       </button>
@@ -869,10 +1326,52 @@
     </div>
   </header>
 
+  <!-- Barra de Controle do Simulador de Proporção Smartphone -->
+  <div class="smartphone-sim-toolbar no-print" id="smartphoneSimToolbar">
+    <strong style="color:#38bdf8;">📱 Proporção Smartphone Ativa:</strong>
+    <button class="btn" style="padding:4px 10px;font-size:11px;" onclick="setPhoneSimSize('360px')">Galaxy S24 (360px)</button>
+    <button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="setPhoneSimSize('392px')">iPhone 15 (390px)</button>
+    <button class="btn" style="padding:4px 10px;font-size:11px;" onclick="setPhoneSimSize('430px')">Pro Max (430px)</button>
+    <span style="opacity:0.35;">|</span>
+    <button class="btn" style="padding:4px 10px;font-size:11px;" onclick="setMobileViewMode('cards')">📱 Visão Cards Touch</button>
+    <button class="btn" style="padding:4px 10px;font-size:11px;" onclick="setMobileViewMode('table')">📊 Visão Planilha Excel</button>
+    <button class="btn" style="padding:4px 10px;font-size:11px;border-color:#f59e0b;color:#fcd34d;" onclick="spawnCelebrationConfetti()">🎉 Testar Animação 100%</button>
+    <button class="btn btn-danger" style="padding:4px 10px;font-size:11px;" onclick="toggleSmartphoneSimulator()">🖥️ Voltar p/ Tela Cheia PC</button>
+  </div>
+
   <!-- =========================================================================
-       ÁREA PRINCIPAL (LAYOUT FIEL À IMAGEM DO USUÁRIO)
+       ÁREA PRINCIPAL (LAYOUT FIEL À IMAGEM DO USUÁRIO + ADAPTÁVEL P/ SMARTPHONE)
        ========================================================================= -->
   <main class="workspace" onclick="closeAllDropdowns()">
+    <!-- Mini-KPIs e Alternador de Visão exclusivos para Proporção de Smartphone -->
+    <div class="mobile-kpi-strip no-print">
+      <div class="mobile-kpi-pill">
+        <span class="lbl">Total</span>
+        <span class="val" id="mobKpiTotal">0</span>
+      </div>
+      <div class="mobile-kpi-pill">
+        <span class="lbl" style="color:#10b981;">Feito</span>
+        <span class="val" style="color:#10b981;" id="mobKpiDone">0</span>
+      </div>
+      <div class="mobile-kpi-pill">
+        <span class="lbl" style="color:#f97316;">A Fazer</span>
+        <span class="val" style="color:#f97316;" id="mobKpiTodo">0</span>
+      </div>
+      <div class="mobile-kpi-pill">
+        <span class="lbl" style="color:#3b82f6;">% Feito</span>
+        <span class="val" style="color:#3b82f6;" id="mobKpiPct">0%</span>
+      </div>
+    </div>
+
+    <div class="mobile-view-switcher no-print">
+      <button type="button" id="btnMobViewCards" onclick="setMobileViewMode('cards')">
+        📱 Cards Touch (Smartphone)
+      </button>
+      <button type="button" id="btnMobViewTable" class="active" onclick="setMobileViewMode('table')">
+        📊 Planilha Excel Compacta
+      </button>
+    </div>
+
     <div class="sheet-layout">
 
       <!-- COLUNA ESQUERDA: BANNER DE DATA + TABELA + BARRA AMARELA TOTAL EM % -->
@@ -898,10 +1397,18 @@
             </div>
           </div>
 
+          <!-- Barra de Progresso Animada em Tempo Real -->
+          <div class="live-progress-wrap" title="Progresso Geral Animado da Lista">
+            <div class="live-progress-fill" id="liveProgressFill"></div>
+          </div>
+
           <table class="checklist-table">
             <thead id="tableHead"></thead>
             <tbody id="tableBody"></tbody>
           </table>
+
+          <!-- Visão em Cards Touch para Proporção de Smartphone -->
+          <div id="mobileCardsContainer" class="mobile-cards-container"></div>
         </div>
 
         <div class="no-print" style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
@@ -980,11 +1487,13 @@
           </tbody>
         </table>
 
-        <!-- Gráfico de Rosca (Donut Chart SVG Idêntico à Imagem) -->
+        <!-- Gráfico de Rosca (Donut Chart SVG Idêntico à Imagem + Centro Vivo Animado) -->
         <div class="donut-card">
           <svg width="230" height="230" viewBox="0 0 220 220">
             <g transform="rotate(-90 110 110)" id="donutSegmentsGroup"></g>
             <circle cx="110" cy="110" r="50" fill="var(--bg-panel)"></circle>
+            <text x="110" y="106" text-anchor="middle" font-size="20" font-weight="900" fill="var(--text-main)" id="donutCenterPctText">0%</text>
+            <text x="110" y="124" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text-muted)" id="donutCenterSubText">PRONTO</text>
           </svg>
 
           <div class="donut-legend">
@@ -2025,7 +2534,11 @@
       if (!sheet) return;
 
       document.title = `CHECKS-MAX — ${sheet.name} (${sheet.bannerDate || 'Checklist'})`;
-      document.getElementById('currentSheetTitleTop').textContent = sheet.name;
+      const topTitleInput = document.getElementById('currentSheetTitleTop');
+      if (topTitleInput) {
+        topTitleInput.value = sheet.name;
+        topTitleInput.style.width = Math.max(7, (sheet.name || '').length + 1) + 'ch';
+      }
       document.getElementById('bannerDateInput').value = sheet.bannerDate || '16/04/2026';
       document.getElementById('footerNoteInput').value = sheet.footerNote || '';
       document.getElementById('colCountLabel').textContent = String(5 + (sheet.customColumns || []).length);
@@ -2147,8 +2660,9 @@
                 id="actInput_${r.id}"
                 class="activity-input"
                 value="${escapeHtml(r.activity)}"
-                placeholder="Digite o serviço / atividade e aperte Enter..."
+                placeholder="Clique e digite o serviço / atividade (Enter desce para a linha de baixo)..."
                 onchange="updateRowActivity('${r.id}', this.value)"
+                onkeydown="handleExcelRowKey(event, ${idx})"
               />
             </td>
             ${customCellsHtml}
@@ -2181,6 +2695,43 @@
         `;
       });
 
+      // Linha rápida estilo Excel sempre visível no final da planilha para clicar, digitar e dar Enter
+      const ghostCustomCellsHtml = customCols
+        .map(
+          () => `<td style="text-align:center;color:var(--text-muted);font-size:11px;opacity:0.5;">—</td>`
+        )
+        .join('');
+
+      bodyHtml += `
+        <tr class="excel-ghost-row no-print" title="Clique diretamente aqui, digite o serviço e aperte Enter (igual ao Excel)">
+          <td class="status-cell" style="text-align:center;font-size:11px;font-weight:800;color:#16a34a;background:rgba(22,163,74,0.08);">
+            ＋ NOVO
+          </td>
+          <td>
+            <input
+              type="text"
+              id="excelQuickNewRowInput"
+              class="activity-input"
+              value=""
+              placeholder="＋ Clique aqui e digite um novo serviço direto na planilha (aperte Enter para salvar)..."
+              onkeydown="handleGhostRowKey(event, this)"
+              onblur="commitGhostRowInput(this, false)"
+            />
+          </td>
+          ${ghostCustomCellsHtml}
+          <td class="chk-cell">
+            <div class="excel-checkbox unchecked" style="opacity:0.45;" onclick="document.getElementById('excelQuickNewRowInput').focus()" title="Digite a atividade ao lado primeiro"></div>
+          </td>
+          <td class="chk-cell">
+            <div class="excel-checkbox unchecked" style="opacity:0.45;" onclick="document.getElementById('excelQuickNewRowInput').focus()" title="Digite a atividade ao lado primeiro"></div>
+          </td>
+          <td class="pct-cell" style="opacity:0.45;">0%</td>
+          <td class="row-actions-cell no-print" style="font-size:10px;color:var(--text-muted);">
+            ⏎ Enter
+          </td>
+        </tr>
+      `;
+
       tbody.innerHTML = bodyHtml;
 
       // 3. Cálculos da Barra Amarela e do Painel Direito
@@ -2211,7 +2762,37 @@
       document.getElementById('formulaModeBtn').textContent =
         db.pctFormulaMode === 'excel' ? 'Fórmula: I3÷I4' : 'Fórmula: Feito÷Total';
 
+      // Atualiza também os Mini-KPIs da Proporção Smartphone, a Barra de Progresso Viva e o Centro do Gráfico Donut
+      const realProgressPct = total > 0 ? Math.round(((doneCount * 1 + Math.max(0, startedCount - doneCount) * 0.5) / total) * 100) : 0;
+      const liveFill = document.getElementById('liveProgressFill');
+      if (liveFill) liveFill.style.width = Math.min(100, Math.max(0, realProgressPct)) + '%';
+
+      const mobTotal = document.getElementById('mobKpiTotal');
+      const mobDone = document.getElementById('mobKpiDone');
+      const mobTodo = document.getElementById('mobKpiTodo');
+      const mobPct = document.getElementById('mobKpiPct');
+      if (mobTotal) mobTotal.textContent = String(total);
+      if (mobDone) mobDone.textContent = String(doneCount);
+      if (mobTodo) mobTodo.textContent = String(todoCount);
+      if (mobPct) mobPct.textContent = Math.round(total > 0 ? (doneCount / total) * 100 : 0) + '%';
+
+      const centerPctEl = document.getElementById('donutCenterPctText');
+      const centerSubEl = document.getElementById('donutCenterSubText');
+      if (centerPctEl) {
+        const displayDonutPct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+        centerPctEl.textContent = displayDonutPct + '%';
+        if (centerSubEl) {
+          centerSubEl.textContent =
+            total === 0
+              ? 'LISTA ZERADA'
+              : displayDonutPct === 100
+              ? '🏆 100% FEITO!'
+              : `${doneCount}/${total} FEITOS`;
+        }
+      }
+
       renderDonutChart(doneCount, todoCount, pctDoneNumeric / 100);
+      renderMobileCards(sheet);
       renderTabsBar();
     }
 
@@ -2281,13 +2862,30 @@
       let html = '';
       db.sheets.forEach((s) => {
         const isActive = s.id === db.activeSheetId;
+        const charWidth = Math.max(7, (s.name || '').length + 1);
         html += `
-          <div class="sheet-tab ${isActive ? 'active' : ''}" onclick="selectSheet('${s.id}')">
-            <img src="data:image/png;base64,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" alt="" style="width:15px;height:15px;border-radius:3px;object-fit:cover;" />
-            <span>${escapeHtml(s.name)}</span>
+          <div
+            class="sheet-tab ${isActive ? 'active' : ''}"
+            onclick="handleTabClick(event, '${s.id}')"
+            ondblclick="focusTabInlineEdit('${s.id}')"
+            title="Clique para abrir | Clique no nome (ou dê 2 cliques) para editar igual ao Excel"
+          >
+            <img src="data:image/png;base64,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" alt="" style="width:15px;height:15px;border-radius:3px;object-fit:cover;pointer-events:none;" />
+            <input
+              type="text"
+              id="tabInput_${s.id}"
+              class="tab-inline-input"
+              value="${escapeHtml(s.name)}"
+              style="width:${charWidth}ch;"
+              onclick="handleTabInputClick(event, '${s.id}')"
+              oninput="this.style.width = Math.max(7, this.value.length + 1) + 'ch'"
+              onchange="renameSheetInline('${s.id}', this.value)"
+              onkeydown="if(event.key==='Enter'){this.blur();} if(event.key==='Escape'){this.value='${escapeHtml(s.name)}';this.blur();}"
+              title="Clique e digite para renomear a aba igual ao Excel"
+            />
             ${
               db.sheets.length > 1 && isActive
-                ? `<span onclick="event.stopPropagation(); deleteSheet('${s.id}')" title="Excluir esta aba" style="margin-left:4px;opacity:0.8;">✕</span>`
+                ? `<span onclick="event.stopPropagation(); deleteSheet('${s.id}')" title="Excluir esta aba" style="margin-left:4px;opacity:0.85;cursor:pointer;">✕</span>`
                 : ''
             }
           </div>
@@ -2295,7 +2893,7 @@
       });
 
       html += `
-        <button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="createNewSheetPrompt()">＋ Nova Aba</button>
+        <button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="createNewSheetPrompt()" title="Criar nova aba e já digitar o nome direto na aba (igual ao Excel)">＋ Nova Aba</button>
       `;
       bar.innerHTML = html;
     }
@@ -2431,6 +3029,7 @@
 
       // Gatilho Automático: Quando o serviço fica CONCLUIDO (100%) ou volta para PARCIAL (50%), notifica no WhatsApp!
       if (prevPct !== 100 && newPct === 100) {
+        spawnCelebrationConfetti();
         triggerWhatsAppNotification('complete', row, false);
       } else if (prevPct !== 50 && newPct === 50) {
         triggerWhatsAppNotification('partial', row, false);
@@ -2468,10 +3067,172 @@
 
       if (prevStatus !== newStatusId) {
         if (newStatusId === 'CONCLUIDO') {
+          spawnCelebrationConfetti();
           triggerWhatsAppNotification('complete', row, false);
         } else if (newStatusId === 'PARCIAL' || newStatusId === 'PARCIAL_BRANCO') {
           triggerWhatsAppNotification('partial', row, false);
         }
+      }
+    }
+
+    // =========================================================================
+    // SIMULADOR DE PROPORÇÃO DE SMARTPHONE, CARDS TOUCH & ANIMAÇÃO DE CONFETES
+    // =========================================================================
+    function toggleSmartphoneSimulator() {
+      const isSim = document.body.classList.toggle('smartphone-sim-active');
+      const btn = document.getElementById('smartphoneSimBtn');
+      if (btn) {
+        btn.innerHTML = isSim ? '<span>🖥️ Voltar p/ PC</span>' : '<span>📱 Smartphone</span>';
+        btn.style.background = isSim ? '#0284c7' : '';
+        btn.style.color = isSim ? '#ffffff' : '#38bdf8';
+      }
+      if (isSim) {
+        setMobileViewMode('cards');
+      } else {
+        document.body.classList.remove('mobile-cards-mode');
+      }
+    }
+
+    function setPhoneSimSize(widthStr) {
+      document.documentElement.style.setProperty('--phone-sim-width', widthStr);
+    }
+
+    function setMobileViewMode(mode) {
+      const isCards = mode === 'cards';
+      document.body.classList.toggle('mobile-cards-mode', isCards);
+      const btnCards = document.getElementById('btnMobViewCards');
+      const btnTable = document.getElementById('btnMobViewTable');
+      if (btnCards) btnCards.classList.toggle('active', isCards);
+      if (btnTable) btnTable.classList.toggle('active', !isCards);
+    }
+
+    function renderMobileCards(sheet) {
+      const container = document.getElementById('mobileCardsContainer');
+      if (!container || !sheet) return;
+      const rows = sheet.rows || [];
+      let html = '';
+
+      if (rows.length === 0) {
+        html += `
+          <div style="padding:18px 12px;text-align:center;background:var(--bg-panel);border-radius:10px;border:1px dashed var(--border-grid);color:var(--text-muted);">
+            <div style="font-weight:800;color:var(--text-main);font-size:13.5px;margin-bottom:4px;">📱 Lista Zerada no Smartphone</div>
+            <div style="font-size:11.5px;margin-bottom:10px;">Digite abaixo para criar seu primeiro serviço com 1 toque:</div>
+          </div>
+        `;
+      }
+
+      rows.forEach((r, idx) => {
+        const pct = calcRowPct(r);
+        const stStyle = getStatusStyle(r.status);
+        const isDone = pct === 100 || r.status === 'CONCLUIDO';
+        html += `
+          <div class="mobile-task-card ${isDone ? 'is-done' : ''}" style="animation-delay:${Math.min(idx * 0.04, 0.35)}s;">
+            <div class="mobile-card-top">
+              <span style="background:${stStyle.bg};color:${stStyle.text};font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;">
+                ${escapeHtml(r.status)}
+              </span>
+              <span style="font-size:12px;font-weight:900;color:${isDone ? '#10b981' : '#f97316'};">
+                ${pct}% CONCLUÍDO
+              </span>
+            </div>
+            <input
+              type="text"
+              class="activity-input"
+              style="text-align:left;font-weight:700;font-size:13px;background:var(--bg-page);border:1px solid var(--border-grid);padding:6px 8px;"
+              value="${escapeHtml(r.activity)}"
+              placeholder="Toque para digitar o serviço..."
+              onchange="updateRowActivity('${r.id}', this.value)"
+            />
+            <div class="mobile-card-actions">
+              <button
+                type="button"
+                class="mobile-chk-btn ${r.started ? 'started-on' : ''}"
+                onclick="toggleRowStarted('${r.id}')"
+              >
+                <span>${r.started ? '✓' : '○'}</span> INICIADA (50%)
+              </button>
+              <button
+                type="button"
+                class="mobile-chk-btn ${r.finished ? 'finished-on' : ''}"
+                onclick="toggleRowFinished('${r.id}')"
+              >
+                <span>${r.finished ? '✓' : '○'}</span> FINALIZADA (100%)
+              </button>
+              <button
+                type="button"
+                class="btn btn-whatsapp"
+                style="padding:6px 8px;font-size:11px;"
+                onclick="sendSingleRowWhatsApp('${r.id}')"
+                title="Enviar no WhatsApp"
+              >
+                📲
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                style="padding:6px 8px;font-size:11px;"
+                onclick="deleteRow('${r.id}')"
+                title="Excluir"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      // Card Rápido estilo Excel no final da lista mobile
+      html += `
+        <div class="mobile-task-card" style="border-left-color:#10b981;border-style:dashed;">
+          <div style="font-size:11px;font-weight:800;color:#10b981;">＋ ADICIONAR RÁPIDO (TOQUE E DÊ ENTER)</div>
+          <input
+            type="text"
+            class="activity-input"
+            style="text-align:left;background:var(--bg-page);border:1px solid var(--border-grid);padding:7px 10px;"
+            placeholder="Digite o novo serviço aqui e aperte Enter..."
+            onkeydown="if(event.key==='Enter'){event.preventDefault();commitGhostRowInput(this, false);}"
+            onblur="commitGhostRowInput(this, false)"
+          />
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function spawnCelebrationConfetti() {
+      const colors = ['#10b981', '#22c55e', '#f59e0b', '#38bdf8', '#f97316', '#a855f7', '#ec4899'];
+      const count = 34;
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-particle';
+        const size = 6 + Math.random() * 7;
+        el.style.width = size + 'px';
+        el.style.height = size * (0.6 + Math.random() * 0.8) + 'px';
+        el.style.background = colors[i % colors.length];
+        const startX = window.innerWidth * (0.25 + Math.random() * 0.5);
+        const startY = window.innerHeight * 0.35;
+        el.style.left = startX + 'px';
+        el.style.top = startY + 'px';
+        document.body.appendChild(el);
+
+        const dx = (Math.random() - 0.5) * 380;
+        const dy = -120 - Math.random() * 180;
+        const rot = (Math.random() - 0.5) * 720;
+
+        el.animate(
+          [
+            { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+            { transform: `translate(${dx * 0.6}px, ${dy}px) rotate(${rot * 0.5}deg)`, opacity: 1, offset: 0.45 },
+            { transform: `translate(${dx}px, ${Math.abs(dy) + 260}px) rotate(${rot}deg)`, opacity: 0 }
+          ],
+          {
+            duration: 950 + Math.random() * 550,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'forwards'
+          }
+        );
+
+        setTimeout(() => el.remove(), 1600);
       }
     }
 
@@ -2686,8 +3447,119 @@
     // DEMAIS FUNÇÕES DE GESTÃO DE ABAS, COLUNAS, CORES E EXCEL
     // =========================================================================
     function selectSheet(sheetId) {
+      if (db.activeSheetId === sheetId) return;
       db.activeSheetId = sheetId;
       saveDb();
+    }
+
+    function handleTabClick(e, sheetId) {
+      if (db.activeSheetId !== sheetId) {
+        selectSheet(sheetId);
+      }
+    }
+
+    function handleTabInputClick(e, sheetId) {
+      e.stopPropagation();
+      if (db.activeSheetId !== sheetId) {
+        db.activeSheetId = sheetId;
+        saveDb();
+        setTimeout(() => {
+          const el = document.getElementById('tabInput_' + sheetId);
+          if (el) el.focus();
+        }, 40);
+      }
+    }
+
+    function focusTabInlineEdit(sheetId) {
+      const targetId = sheetId || db.activeSheetId;
+      const el = document.getElementById('tabInput_' + targetId);
+      if (el) {
+        el.focus();
+        el.select();
+      }
+    }
+
+    function renameSheetInline(sheetId, newName) {
+      const sheet = db.sheets.find((s) => s.id === sheetId);
+      if (!sheet) return;
+      const cleaned = (newName || '').trim().toUpperCase();
+      if (!cleaned) {
+        renderAll();
+        return;
+      }
+      if (sheet.name === cleaned) return;
+      const old = sheet.name;
+      sheet.name = cleaned;
+      saveDb(`Renomeou aba "${old}" para "${sheet.name}"`);
+    }
+
+    function handleExcelRowKey(e, rowIndex) {
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      const rows = sheet.rows || [];
+      if (e.key === 'Enter' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        e.target.blur();
+        setTimeout(() => {
+          if (rowIndex + 1 < rows.length) {
+            const nextInput = document.getElementById('actInput_' + rows[rowIndex + 1].id);
+            if (nextInput) nextInput.focus();
+          } else {
+            const ghostInput = document.getElementById('excelQuickNewRowInput');
+            if (ghostInput) ghostInput.focus();
+          }
+        }, 30);
+      } else if (e.key === 'ArrowUp' && rowIndex > 0) {
+        e.preventDefault();
+        e.target.blur();
+        setTimeout(() => {
+          const prevInput = document.getElementById('actInput_' + rows[rowIndex - 1].id);
+          if (prevInput) prevInput.focus();
+        }, 30);
+      }
+    }
+
+    function handleGhostRowKey(e, inputEl) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        commitGhostRowInput(inputEl, true);
+      } else if (e.key === 'ArrowUp') {
+        const sheet = getActiveSheet();
+        const rows = (sheet && sheet.rows) || [];
+        if (rows.length > 0) {
+          e.preventDefault();
+          const lastInput = document.getElementById('actInput_' + rows[rows.length - 1].id);
+          if (lastInput) lastInput.focus();
+        }
+      }
+    }
+
+    function commitGhostRowInput(inputEl, refocusGhost) {
+      if (!inputEl) return;
+      const text = (inputEl.value || '').trim();
+      if (!text) return;
+      inputEl.value = '';
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      const newRow = {
+        id: 'r_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+        status: 'PARCIAL',
+        activity: text.toUpperCase(),
+        started: true,
+        finished: false,
+        custom: {}
+      };
+      sheet.rows.push(newRow);
+      saveDb(`Adicionou serviço direto na planilha: "${newRow.activity}"`);
+      if (db.whatsappConfig && db.whatsappConfig.notifyOnCreate !== false) {
+        triggerWhatsAppNotification('partial', newRow, false);
+      }
+      if (refocusGhost) {
+        setTimeout(() => {
+          const ghost = document.getElementById('excelQuickNewRowInput');
+          if (ghost) ghost.focus();
+        }, 40);
+      }
     }
 
     function updateSheetBannerDate(newVal) {
@@ -2731,12 +3603,12 @@
 
     function createNewSheetPrompt() {
       closeAllDropdowns();
-      const name = window.prompt('Nome da nova Lista / Aba:', 'NOVA LISTA');
-      if (!name || !name.trim()) return;
+      const nextNum = String((db.sheets ? db.sheets.length : 0) + 1).padStart(2, '0');
+      const defaultName = `LISTA ${nextNum}`;
       const today = new Date().toLocaleDateString('pt-BR');
       const newSheet = {
         id: 'lst_' + Date.now(),
-        name: name.trim().toUpperCase(),
+        name: defaultName,
         bannerDate: today,
         headers: {
           cor: 'COR',
@@ -2751,18 +3623,19 @@
       };
       db.sheets.push(newSheet);
       db.activeSheetId = newSheet.id;
-      saveDb(`Criou nova aba zerada "${newSheet.name}"`);
+      saveDb(`Criou nova aba "${newSheet.name}"`);
+      setTimeout(() => {
+        focusTabInlineEdit(newSheet.id);
+      }, 50);
     }
 
     function renameCurrentSheetPrompt() {
       closeAllDropdowns();
       const sheet = getActiveSheet();
       if (!sheet) return;
-      const name = window.prompt('Novo nome para a aba atual:', sheet.name);
-      if (!name || !name.trim()) return;
-      const old = sheet.name;
-      sheet.name = name.trim().toUpperCase();
-      saveDb(`Renomeou aba "${old}" para "${sheet.name}"`);
+      setTimeout(() => {
+        focusTabInlineEdit(sheet.id);
+      }, 40);
     }
 
     function duplicateCurrentSheet() {
