@@ -1,0 +1,3071 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHECKS-MAX — Gestão de Serviços, Checklist & Notificações WhatsApp</title>
+  <!-- Ícone / Imagem da Aba do Navegador (Favicon CHECKS-MAX) -->
+  <link rel="icon" type="image/png" href="data:image/png;base64,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" id="checksMaxFavicon" />
+  <link rel="shortcut icon" type="image/png" href="data:image/png;base64,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" />
+  <link rel="apple-touch-icon" href="./checks-max-logo.png" />
+  <!-- SheetJS para importação/exportação Excel (.xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+  <style>
+    :root {
+      --bg-page: #f1f5f9;
+      --bg-panel: #ffffff;
+      --bg-header-banner: #c4c4c4;
+      --bg-table-body: #b8b8b8;
+      --bg-table-row-hover: #aeaeae;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-grid: #cbd5e1;
+      --date-color: #ef0000;
+      --green-done: #00b050;
+      --red-partial: #ff0000;
+      --yellow-total: #ffff00;
+      --toolbar-bg: #0f172a;
+      --toolbar-text: #f8fafc;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #0b0f17;
+      --bg-panel: #151c28;
+      --bg-header-banner: #1e2738;
+      --bg-table-body: #1b2332;
+      --bg-table-row-hover: #242f44;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-grid: #2d384d;
+      --date-color: #ff4d4d;
+      --green-done: #10b981;
+      --red-partial: #ef4444;
+      --yellow-total: #facc15;
+      --toolbar-bg: #070a0f;
+      --toolbar-text: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Calibri, Inter, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* =========================================================================
+       BARRA SUPERIOR ORGANIZADA EM LINHA ÚNICA COM MENUS AGRUPADOS
+       ========================================================================= */
+    .topbar {
+      background: var(--toolbar-bg);
+      color: var(--toolbar-text);
+      height: 56px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #1e293b;
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    .topbar-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 13.5px;
+      color: #10b981;
+      margin-right: 4px;
+    }
+
+    .divider-v {
+      width: 1px;
+      height: 24px;
+      background: #263248;
+      margin: 0 4px;
+    }
+
+    .btn {
+      border: 1px solid #2e3c56;
+      background: #1a2333;
+      color: #e2e8f0;
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .btn:hover {
+      background: #28354d;
+      border-color: #475569;
+      color: #ffffff;
+    }
+
+    .btn-primary {
+      background: #10b981;
+      border-color: #059669;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #059669;
+    }
+
+    .btn-whatsapp {
+      background: #16a34a;
+      border-color: #15803d;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .btn-whatsapp:hover {
+      background: #15803d;
+    }
+
+    .btn-orange {
+      background: #f97316;
+      border-color: #ea580c;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .btn-orange:hover {
+      background: #ea580c;
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+
+    /* Dropdown Menu Organizado */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 230px;
+      background: #131a27;
+      border: 1px solid #2e3c56;
+      border-radius: 10px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
+      padding: 6px;
+      z-index: 100;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .dropdown.open .dropdown-menu {
+      display: flex;
+    }
+
+    .dropdown-item {
+      background: transparent;
+      border: none;
+      color: #e2e8f0;
+      padding: 8px 11px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .dropdown-item:hover {
+      background: #232f46;
+      color: #ffffff;
+    }
+
+    .dropdown-item.danger {
+      color: #f87171;
+    }
+
+    .dropdown-item.danger:hover {
+      background: rgba(239, 68, 68, 0.18);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: #243046;
+      margin: 4px 0;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .status-dot.on {
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+    }
+
+    .status-dot.off {
+      background: #94a3b8;
+    }
+
+    .badge-counter {
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 999px;
+    }
+
+    /* =========================================================================
+       ÁREA CENTRAL FIEL À IMAGEM DA PLANILHA
+       ========================================================================= */
+    .workspace {
+      flex: 1;
+      padding: 20px 24px 70px 24px;
+      max-width: 1520px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .sheet-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 1080px) {
+      .sheet-layout {
+        grid-template-columns: 1fr;
+      }
+      .topbar {
+        height: auto;
+        padding: 10px 14px;
+        flex-wrap: wrap;
+      }
+    }
+
+    .sheet-main-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-grid);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+
+    .date-banner {
+      background: var(--bg-header-banner);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-bottom: 1px solid var(--border-grid);
+    }
+
+    .date-banner-input {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--date-color);
+      background: transparent;
+      border: 1px dashed transparent;
+      text-align: center;
+      width: 280px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    .date-banner-input:hover,
+    .date-banner-input:focus {
+      border-color: var(--date-color);
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .date-picker-helper {
+      position: absolute;
+      right: 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    table.checklist-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    table.checklist-table thead th {
+      background: var(--bg-panel);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--border-grid);
+      text-transform: uppercase;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .th-editable {
+      background: transparent;
+      border: 1px dashed transparent;
+      color: inherit;
+      font: inherit;
+      text-transform: uppercase;
+      width: 100%;
+      outline: none;
+      padding: 2px 4px;
+    }
+
+    .th-editable:hover,
+    .th-editable:focus {
+      border-color: #64748b;
+      background: rgba(148, 163, 184, 0.12);
+    }
+
+    table.checklist-table tbody tr {
+      background: var(--bg-table-body);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+      transition: background 0.1s ease;
+    }
+
+    table.checklist-table tbody tr:hover {
+      background: var(--bg-table-row-hover);
+    }
+
+    table.checklist-table tbody td {
+      padding: 4px 8px;
+      vertical-align: middle;
+    }
+
+    .status-cell {
+      width: 125px;
+      min-width: 120px;
+      padding: 0 !important;
+    }
+
+    .status-select {
+      width: 100%;
+      height: 30px;
+      border: none;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 0 8px;
+      text-transform: uppercase;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .activity-input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-main);
+      font-size: 13.5px;
+      font-weight: 500;
+      text-align: center;
+      padding: 4px 8px;
+      border-radius: 4px;
+      outline: none;
+      text-transform: uppercase;
+    }
+
+    .activity-input:hover,
+    .activity-input:focus {
+      background: var(--bg-panel);
+      border-color: #3b82f6;
+    }
+
+    .chk-cell {
+      width: 90px;
+      text-align: center;
+    }
+
+    .excel-checkbox {
+      width: 19px;
+      height: 19px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 13px;
+      font-weight: 900;
+      transition: transform 0.1s ease;
+    }
+
+    .excel-checkbox:active {
+      transform: scale(0.9);
+    }
+
+    .excel-checkbox.checked {
+      background-color: #10b981;
+      border: 2px solid #059669;
+      color: #ffffff;
+    }
+
+    .excel-checkbox.unchecked {
+      background-color: transparent;
+      border: 2px solid #ef4444;
+      color: transparent;
+    }
+
+    .pct-cell {
+      width: 130px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 13.5px;
+      color: var(--text-main);
+    }
+
+    .custom-cell-input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-main);
+      font-size: 13px;
+      padding: 4px 6px;
+      text-align: center;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .custom-cell-input:hover,
+    .custom-cell-input:focus {
+      background: var(--bg-panel);
+      border-color: #3b82f6;
+    }
+
+    .row-actions-cell {
+      width: 82px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 2px 4px;
+      opacity: 0.5;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    tr:hover .icon-btn {
+      opacity: 1;
+    }
+
+    .icon-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .total-yellow-bar {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 125px 1fr 90px 90px 130px 82px;
+      align-items: center;
+    }
+
+    .yellow-box {
+      background: var(--yellow-total);
+      color: #000000;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 5px 10px;
+      text-align: center;
+      border: 1px solid #eab308;
+    }
+
+    .extra-note-row {
+      display: grid;
+      grid-template-columns: 125px 1fr 90px 90px 130px 82px;
+      padding: 4px 0 12px 0;
+    }
+
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-grid);
+      font-size: 14px;
+    }
+
+    .summary-table td {
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--border-grid);
+    }
+
+    .summary-table td.label-col {
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-main);
+    }
+
+    .summary-table td.val-col {
+      text-align: right;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .donut-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-grid);
+      padding: 20px 16px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .donut-legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      display: inline-block;
+    }
+
+    /* Card Rápido de WhatsApp na Lateral Direita */
+    .wa-quick-card {
+      background: var(--bg-panel);
+      border: 1px solid rgba(22, 163, 74, 0.4);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .excel-tabs-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--toolbar-bg);
+      border-top: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      gap: 6px;
+      overflow-x: auto;
+      z-index: 40;
+    }
+
+    .sheet-tab {
+      padding: 6px 14px;
+      border-radius: 6px 6px 2px 2px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      background: #1e293b;
+      border: 1px solid #334155;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .sheet-tab:hover {
+      color: #ffffff;
+      background: #334155;
+    }
+
+    .sheet-tab.active {
+      background: #10b981;
+      color: #ffffff;
+      border-color: #059669;
+    }
+
+    /* Modais */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 110;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg-panel);
+      color: var(--text-main);
+      border: 1px solid var(--border-grid);
+      border-radius: 12px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-grid);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .modal-body {
+      padding: 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .modal-footer {
+      padding: 12px 18px;
+      border-top: 1px solid var(--border-grid);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border-grid);
+      border-radius: 6px;
+      background: var(--bg-page);
+      color: var(--text-main);
+      font-size: 13px;
+    }
+
+    /* Toast / Card Flutuante de Alerta e Disparo WhatsApp */
+    .alert-toast-container {
+      position: fixed;
+      bottom: 52px;
+      right: 18px;
+      z-index: 150;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 390px;
+      width: calc(100% - 36px);
+      pointer-events: none;
+    }
+
+    .wa-toast-card {
+      pointer-events: auto;
+      background: #0f172a;
+      color: #f8fafc;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+      animation: slideInRight 0.25s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(110%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @media print {
+      .topbar, .excel-tabs-bar, .no-print, .alert-toast-container {
+        display: none !important;
+      }
+      body {
+        background: #ffffff;
+      }
+      .workspace {
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================================
+       BARRA SUPERIOR ORGANIZADA E LIMPA (1 LINHA COM MENUS AGRUPADOS)
+       ========================================================================= -->
+  <header class="topbar no-print">
+    <!-- Grupo Esquerdo: Aba Ativa + Botão Principal Criar Nova Tarefa + Menus Organizados -->
+    <div class="topbar-group">
+      <div class="brand-pill" title="CHECKS-MAX — Aba / Lista Selecionada">
+        <img
+          src="data:image/png;base64,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"
+          alt="CHECKS-MAX"
+          style="width:24px;height:24px;border-radius:5px;object-fit:cover;box-shadow:0 0 8px rgba(16,185,129,0.5);"
+        />
+        <span style="color:#ffffff;letter-spacing:0.5px;font-weight:900;">CHECKS-MAX</span>
+        <span style="opacity:0.4;color:#94a3b8;">|</span>
+        <span id="currentSheetTitleTop" style="color:#10b981;">LIST 03</span>
+      </div>
+
+      <button class="btn btn-primary" onclick="openNewTaskModal()">
+        ＋ Nova Tarefa
+      </button>
+
+      <div class="divider-v"></div>
+
+      <!-- Menu Dropdown 1: Lista & Estrutura -->
+      <div class="dropdown" id="ddEstrutura">
+        <button class="btn" onclick="toggleDropdown('ddEstrutura')">
+          📋 Lista & Estrutura (<span id="colCountLabel">5</span> col) ▾
+        </button>
+        <div class="dropdown-menu">
+          <button class="dropdown-item" onclick="addNewRowQuick()">
+            <span>➕ Adicionar Linha em Branco</span>
+          </button>
+          <button class="dropdown-item" onclick="openColumnsModal()">
+            <span>⚙️ Gerenciar Colunas / Campos</span>
+          </button>
+          <button class="dropdown-item" onclick="openStatusColorsModal()">
+            <span>🎨 Personalizar Cores & Status</span>
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="createNewSheetPrompt()">
+            <span>📋 Criar Nova Aba / Lista</span>
+          </button>
+          <button class="dropdown-item" onclick="renameCurrentSheetPrompt()">
+            <span>✏️ Renomear Aba Atual</span>
+          </button>
+          <button class="dropdown-item" onclick="duplicateCurrentSheet()">
+            <span>📑 Duplicar Aba Atual</span>
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item danger" onclick="clearCurrentSheetRows()">
+            <span>🧹 Limpar / Zerar Tarefas desta Aba</span>
+          </button>
+          <button class="dropdown-item danger" onclick="resetToOriginalSpreadsheet()">
+            <span>🗑️ Zerar Todo o Sistema (Começar do Zero)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu Dropdown 2: Planilha Excel & PDF -->
+      <div class="dropdown" id="ddArquivo">
+        <button class="btn" onclick="toggleDropdown('ddArquivo')">
+          📂 Excel & PDF ▾
+        </button>
+        <div class="dropdown-menu">
+          <label class="dropdown-item" style="cursor:pointer;">
+            <span>📥 Importar Arquivo Excel (.xlsx)</span>
+            <input type="file" accept=".xlsx,.xls,.csv" style="display:none;" onchange="importExcelFile(event)" />
+          </label>
+          <button class="dropdown-item" onclick="exportToExcel()">
+            <span>📤 Baixar Planilha Excel (.xlsx)</span>
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="window.print()">
+            <span>🖨️ Imprimir / Salvar em PDF</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grupo Direito: Resumão do Final do Dia, WhatsApp Automático, Central de Alertas, Histórico e Tema -->
+    <div class="topbar-group">
+      <button class="btn btn-warning" onclick="openEndOfDaySummaryModal()" title="Gerar ou Agendar o Resumão do Final do Dia no WhatsApp">
+        <span>📋 Resumão do Dia</span>
+      </button>
+
+      <button class="btn btn-whatsapp" onclick="openWhatsAppModal()" title="Configurar SMS/Notificação Automática de Serviço no WhatsApp">
+        <span class="status-dot on" id="waStatusDot"></span>
+        <span>📲 WhatsApp Auto</span>
+      </button>
+
+      <button class="btn" onclick="openAlertsCenterModal()" title="Central de Notificações e Alertas de Serviços">
+        <span>🔔 Alertas</span>
+        <span class="badge-counter" id="unreadAlertsBadge">0</span>
+      </button>
+
+      <button class="btn" onclick="openHistoryModal()" title="Histórico de Auditoria">
+        <span>🛡️ Histórico (<span id="historyCountBadge">0</span>)</span>
+      </button>
+
+      <button class="btn" onclick="toggleTheme()" id="themeBtn" title="Alternar Tema Claro / Escuro">
+        🌙
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       ÁREA PRINCIPAL (LAYOUT FIEL À IMAGEM DO USUÁRIO)
+       ========================================================================= -->
+  <main class="workspace" onclick="closeAllDropdowns()">
+    <div class="sheet-layout">
+
+      <!-- COLUNA ESQUERDA: BANNER DE DATA + TABELA + BARRA AMARELA TOTAL EM % -->
+      <div>
+        <div class="sheet-main-card">
+          <div class="date-banner">
+            <input
+              type="text"
+              id="bannerDateInput"
+              class="date-banner-input"
+              value="16/04/2026"
+              title="Clique para editar a data ou título do cabeçalho"
+              onchange="updateSheetBannerDate(this.value)"
+            />
+            <div class="date-picker-helper no-print">
+              <input
+                type="date"
+                id="nativeDatePicker"
+                style="background:transparent;border:1px solid #94a3b8;border-radius:4px;padding:2px 4px;font-size:11px;cursor:pointer;"
+                onchange="pickDateFromCalendar(this.value)"
+                title="Selecionar data no calendário"
+              />
+            </div>
+          </div>
+
+          <table class="checklist-table">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="no-print" style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="openNewTaskModal()">＋ Novo Serviço / Tarefa</button>
+            <button class="btn" onclick="addNewRowQuick()">＋ Linha Rápida na Tabela</button>
+            <button class="btn btn-warning" onclick="openEndOfDaySummaryModal()">📋 Resumão do Final do Dia</button>
+          </div>
+          <span style="font-size:11px;color:var(--text-muted);">
+            📲 Notificação automática no WhatsApp quando o serviço estiver <strong>PARCIAL (50%)</strong> ou <strong>CONCLUIDO (100%)</strong>.
+          </span>
+        </div>
+
+        <!-- Barra Amarela TOTAL EM % idêntica à linha 19 da planilha -->
+        <div class="total-yellow-bar">
+          <div></div>
+          <div class="yellow-box" style="border-right:none;">TOTAL EM %</div>
+          <div class="yellow-box" style="border-left:none;border-right:none;" id="totalStartedPctBox">100%</div>
+          <div class="yellow-box" style="border-left:none;" id="totalFinishedPctBox">33%</div>
+          <div></div>
+          <div></div>
+        </div>
+
+        <!-- Linha 20 (Campo livre 198279) -->
+        <div class="extra-note-row">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div style="text-align:center;">
+            <input
+              type="text"
+              id="footerNoteInput"
+              class="custom-cell-input"
+              style="font-weight:600;"
+              placeholder="Nota..."
+              onchange="updateSheetFooterNote(this.value)"
+              title="Campo livre de rodapé (Ex: 198279)"
+            />
+          </div>
+          <div></div>
+        </div>
+      </div>
+
+      <!-- COLUNA DIREITA: QUADRO TOTAL / FEITO / A FAZER / % FEITO + GRÁFICO DE ROSCA + CARD WHATSAPP -->
+      <aside class="right-panel">
+        <table class="summary-table">
+          <tbody>
+            <tr>
+              <td class="label-col">TOTAL</td>
+              <td class="val-col" id="kpiTotal">12</td>
+            </tr>
+            <tr>
+              <td class="label-col">FEITO</td>
+              <td class="val-col" id="kpiDone">4</td>
+            </tr>
+            <tr>
+              <td class="label-col">A FAZER</td>
+              <td class="val-col" id="kpiTodo">8</td>
+            </tr>
+            <tr>
+              <td class="label-col" style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                <span>% FEITO</span>
+                <button
+                  class="no-print"
+                  onclick="togglePctFormulaMode()"
+                  id="formulaModeBtn"
+                  style="font-size:10px;padding:1px 5px;border-radius:4px;border:1px solid #cbd5e1;background:transparent;color:var(--text-muted);cursor:pointer;"
+                  title="Alternar entre fórmula da planilha (FEITO ÷ A FAZER = 50,00%) ou (FEITO ÷ TOTAL = 33,33%)"
+                >
+                  Fórmula: I3÷I4
+                </button>
+              </td>
+              <td class="val-col" id="kpiPctDone">50,00%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Gráfico de Rosca (Donut Chart SVG Idêntico à Imagem) -->
+        <div class="donut-card">
+          <svg width="230" height="230" viewBox="0 0 220 220">
+            <g transform="rotate(-90 110 110)" id="donutSegmentsGroup"></g>
+            <circle cx="110" cy="110" r="50" fill="var(--bg-panel)"></circle>
+          </svg>
+
+          <div class="donut-legend">
+            <span class="legend-item">
+              <span class="legend-dot" style="background:#1a608a;"></span> FEITO
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot" style="background:#e67326;"></span> A FAZER
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot" style="background:#1c6b2a;"></span> % FEITO
+            </span>
+          </div>
+        </div>
+
+        <!-- Painel Rápido de Notificação Automática de Serviço & Resumão no WhatsApp -->
+        <div class="wa-quick-card no-print">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <strong style="font-size:12.5px;color:#16a34a;display:flex;align-items:center;gap:5px;">
+              <span>📲</span> SMS / Notificação WhatsApp
+            </strong>
+            <button class="btn" style="padding:2px 7px;font-size:10.5px;" onclick="openWhatsAppModal()" title="Configurações Avançadas e Webhook">
+              ⚙️ Config
+            </button>
+          </div>
+
+          <!-- Número de WhatsApp rápido direto na tela -->
+          <div style="display:flex;align-items:center;gap:5px;">
+            <input
+              type="text"
+              id="quickWaPhoneInput"
+              class="form-input"
+              placeholder="Nº WhatsApp (Ex: 5586999999999)"
+              style="padding:5px 8px;font-size:11.5px;font-family:monospace;font-weight:700;"
+              onchange="updateQuickWaPhone(this.value)"
+            />
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--text-muted);margin-top:2px;">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="chkQuickNotifyPartial" onchange="toggleQuickWaSetting('notifyOnPartial', this.checked)" />
+              <span>🟠 Notificar Serviço <strong>PARCIAL (50%)</strong></span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="chkQuickNotifyComplete" onchange="toggleQuickWaSetting('notifyOnComplete', this.checked)" />
+              <span>✅ Notificar Serviço <strong>CONCLUÍDO (100%)</strong></span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="chkQuickNotifyCreate" onchange="toggleQuickWaSetting('notifyOnCreate', this.checked)" />
+              <span>🆕 Notificar ao <strong>Criar Novo Serviço</strong></span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--text-main);">
+              <input type="checkbox" id="chkQuickAutoOpen" onchange="toggleQuickAutoOpenMode(this.checked)" />
+              <span>🚀 <strong>Envio Automático Direto</strong> ao mudar status</span>
+            </label>
+          </div>
+
+          <!-- Agendamento Automático do Resumão no Final do Dia -->
+          <div style="border-top:1px solid var(--border-grid);padding-top:7px;margin-top:2px;display:flex;flex-direction:column;gap:6px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;font-size:11px;">
+              <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-weight:700;">
+                <input type="checkbox" id="chkQuickEodAuto" onchange="toggleQuickWaSetting('autoEndOfDayEnabled', this.checked)" />
+                <span>⏰ Resumão Fim do Dia:</span>
+              </label>
+              <input
+                type="time"
+                id="quickEodTimeInput"
+                value="18:00"
+                style="padding:2px 5px;border:1px solid var(--border-grid);border-radius:4px;font-size:11px;font-weight:700;background:var(--bg-page);color:var(--text-main);"
+                onchange="updateQuickEodTime(this.value)"
+                title="Horário para disparo automático do Resumão do Final do Dia"
+              />
+            </div>
+
+            <div style="display:flex;gap:5px;">
+              <button class="btn btn-warning" style="flex:1;justify-content:center;padding:7px 8px;font-size:11.5px;" onclick="openEndOfDaySummaryModal()">
+                📋 Resumão do Final do Dia
+              </button>
+              <button class="btn btn-whatsapp" style="padding:7px 9px;font-size:11.5px;" onclick="sendEndOfDaySummaryImmediate()" title="Enviar Resumão no WhatsApp Agora com 1 Clique">
+                📲 Enviar Já
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- CONTAINER DE TOASTS E DISPAROS AUTOMÁTICOS DE WHATSAPP -->
+  <div class="alert-toast-container" id="toastContainer"></div>
+
+  <!-- BARRA INFERIOR DE ABAS (TODAS AS 12 ABAS DA PLANILHA + BOTÃO CRIAR NOVA) -->
+  <footer class="excel-tabs-bar no-print" id="sheetsTabsBar"></footer>
+
+  <!-- =========================================================================
+       MODAL 1: CRIAR NOVA TAREFA / SERVIÇO (COM DISPARO AUTOMÁTICO NO WHATSAPP)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="newTaskModal">
+    <div class="modal-box" style="max-width:520px;">
+      <div class="modal-header">
+        <span>➕ Cadastrar Novo Serviço / Atividade</span>
+        <button class="btn" onclick="closeModal('newTaskModal')">✕</button>
+      </div>
+      <form onsubmit="submitNewTaskModal(event)">
+        <div class="modal-body">
+          <div>
+            <label style="font-weight:700;display:block;margin-bottom:4px;">Descrição do Serviço / Atividade Para Hoje *</label>
+            <input
+              type="text"
+              id="modalTaskActivityInput"
+              class="form-input"
+              required
+              placeholder="Ex: VISTORIAR OBRA DE FLORIANO COM EQUIPE..."
+              style="font-weight:700;text-transform:uppercase;"
+            />
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div>
+              <label style="font-weight:600;display:block;margin-bottom:4px;">Status do Serviço</label>
+              <select id="modalTaskStatusSelect" class="form-input">
+                <option value="PARCIAL">🟠 PARCIAL (Em Andamento 50%)</option>
+                <option value="CONCLUIDO">✅ CONCLUIDO (Finalizado 100%)</option>
+                <option value="NÃO INICIADO">⏳ NÃO INICIADO (0%)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-weight:600;display:block;margin-bottom:4px;">Notificação no WhatsApp</label>
+              <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #16a34a;border-radius:6px;background:rgba(22,163,74,0.08);cursor:pointer;font-weight:700;color:#16a34a;">
+                <input type="checkbox" id="modalTaskSendWaCheckbox" checked />
+                <span>📲 Mandar no WhatsApp</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="modalTaskCustomFieldsContainer" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="closeModal('newTaskModal')">Cancelar</button>
+          <button type="submit" class="btn btn-primary">✅ Salvar Serviço & Notificar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: CONFIGURAÇÃO DE NOTIFICAÇÕES WHATSAPP & SISTEMA DE ALERTAS
+       ========================================================================= -->
+  <div class="modal-backdrop" id="whatsAppModal">
+    <div class="modal-box" style="max-width:660px;">
+      <div class="modal-header" style="background:rgba(22,163,74,0.12);border-bottom-color:rgba(22,163,74,0.3);">
+        <span style="color:#16a34a;">📲 Configurar SMS / Notificação Automática de Serviço no WhatsApp</span>
+        <button class="btn" onclick="closeModal('whatsAppModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background:var(--bg-page);padding:12px;border-radius:8px;border:1px solid var(--border-grid);display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <label style="font-weight:700;display:block;margin-bottom:4px;">
+              📞 Número do WhatsApp de Destino (com DDI 55 + DDD + Número)
+            </label>
+            <input
+              type="text"
+              id="waPhoneInput"
+              class="form-input"
+              placeholder="Ex: 5586999999999 (apenas números)"
+              style="font-family:monospace;font-weight:700;font-size:14px;"
+            />
+            <span style="font-size:11px;color:var(--text-muted);">
+              Informe o seu número ou o número do gestor/cliente que receberá as notificações quando o serviço estiver <strong>PARCIAL</strong>, <strong>CONCLUÍDO</strong> e o <strong>RESUMÃO DO FINAL DO DIA</strong>.
+            </span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div>
+              <label style="font-weight:700;display:block;margin-bottom:4px;">Modo de Disparo no WhatsApp</label>
+              <select id="waDispatchModeSelect" class="form-input">
+                <option value="auto_open">🚀 Automático: Abrir WhatsApp + Card na Hora</option>
+                <option value="card_and_popup">💬 Mostrar Card de Confirmação Rápida na Tela</option>
+                <option value="webhook_only">🤖 Silencioso: Apenas API / Webhook em 2º Plano</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-weight:700;display:block;margin-bottom:4px;">Lembrete Periódico de Serviços Parciais</label>
+              <select id="waReminderMinutesSelect" class="form-input">
+                <option value="0">Desativado</option>
+                <option value="15">Alertar a cada 15 minutos</option>
+                <option value="30">Alertar a cada 30 minutos</option>
+                <option value="60">Alertar a cada 1 hora</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gatilhos Automáticos de Status do Serviço -->
+        <div style="background:var(--bg-page);padding:12px;border-radius:8px;border:1px solid var(--border-grid);display:flex;flex-direction:column;gap:8px;">
+          <strong style="font-size:13px;">⚡ Gatilhos Automáticos de Notificação de Serviço:</strong>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="waNotifyOnPartialInput" />
+            <span>🟠 <strong>Quando o Serviço estiver PARCIAL (50%):</strong> enviar notificação de serviço em andamento no WhatsApp</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="waNotifyOnCompleteInput" />
+            <span>✅ <strong>Quando o Serviço estiver CONCLUÍDO (100%):</strong> tocar som e enviar confirmação de serviço finalizado no WhatsApp</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="waNotifyOnCreateInput" />
+            <span>🆕 <strong>Quando CRIAR um Novo Serviço:</strong> notificar abertura de serviço no WhatsApp</span>
+          </label>
+          <div style="border-top:1px dashed var(--border-grid);padding-top:8px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <input type="checkbox" id="waAutoEndOfDayInput" />
+              <span>📋 <strong>Disparar RESUMÃO DO FINAL DO DIA automaticamente às:</strong></span>
+            </label>
+            <input type="time" id="waEndOfDayTimeInput" class="form-input" style="width:120px;font-weight:700;" value="18:00" />
+          </div>
+          <div style="border-top:1px dashed var(--border-grid);padding-top:8px;display:flex;gap:16px;flex-wrap:wrap;">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="waSoundEnabledInput" />
+              <span>🔊 <strong>Alertas Sonoros</strong></span>
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="waBrowserNotificationInput" />
+              <span>🖥️ <strong>Notificações do Windows / Navegador</strong></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Integração Opcional com API / Webhook (Evolution API / Z-API / CallMeBot) -->
+        <div style="background:var(--bg-page);padding:12px;border-radius:8px;border:1px solid var(--border-grid);display:flex;flex-direction:column;gap:6px;">
+          <label style="font-weight:700;display:block;">
+            🔗 API / Webhook de SMS & WhatsApp Automático (Opcional — CallMeBot / Z-API / Evolution API / Twilio)
+          </label>
+          <input
+            type="text"
+            id="waWebhookUrlInput"
+            class="form-input"
+            placeholder="Opcional: https://api.callmebot.com/whatsapp.php?phone={phone}&text={text}&apikey=SUA_KEY"
+            style="font-family:monospace;font-size:11.5px;"
+          />
+          <span style="font-size:11px;color:var(--text-muted);">
+            Para envio 100% em segundo plano (tipo SMS automático sem abrir aba), cole a URL da sua API usando <code>{phone}</code> e <code>{text}</code>.
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between;flex-wrap:wrap;">
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="btn btn-warning" onclick="testPartialServiceNotificationNow()">
+            🟠 Testar Serviço Parcial
+          </button>
+          <button type="button" class="btn btn-whatsapp" onclick="testWhatsAppNotificationNow()">
+            ✅ Testar Serviço Concluído
+          </button>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn" onclick="closeModal('whatsAppModal')">Cancelar</button>
+          <button type="button" class="btn btn-primary" onclick="saveWhatsAppConfigModal()">💾 Salvar Configurações</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL NOVO: RESUMÃO DO FINAL DO DIA (RELATÓRIO COMPLETO PARA WHATSAPP)
+       ========================================================================= -->
+  <div class="modal-backdrop" id="endOfDaySummaryModal">
+    <div class="modal-box" style="max-width:680px;">
+      <div class="modal-header" style="background:rgba(234,88,12,0.12);border-bottom-color:rgba(234,88,12,0.3);">
+        <span style="color:#ea580c;">📋 Resumão do Final do Dia — Relatório de Serviços no WhatsApp</span>
+        <button class="btn" onclick="closeModal('endOfDaySummaryModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--bg-page);padding:12px;border-radius:8px;border:1px solid var(--border-grid);">
+          <div>
+            <label style="font-weight:700;display:block;margin-bottom:4px;">Abrangência do Resumão</label>
+            <select id="eodScopeSelect" class="form-input" onchange="refreshEndOfDayPreview()">
+              <option value="current">📋 Apenas a Lista Atual Selecionada</option>
+              <option value="all">📚 Todas as Listas / Abas da Planilha</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-weight:700;display:block;margin-bottom:4px;">Observação Final do Dia (Opcional)</label>
+            <input
+              type="text"
+              id="eodCustomNoteInput"
+              class="form-input"
+              placeholder="Ex: Serviços parciais programados para 1ª hora de amanhã"
+              oninput="refreshEndOfDayPreview()"
+            />
+          </div>
+        </div>
+
+        <!-- Cards de Resumo Rápido no Modal -->
+        <div id="eodStatsCards" style="display:grid;grid-template-columns:repeat(4, 1fr);gap:8px;text-align:center;"></div>
+
+        <div>
+          <label style="font-weight:700;display:block;margin-bottom:4px;">
+            📲 Prévia da Mensagem do Resumão (Você também pode editar o texto antes de enviar):
+          </label>
+          <textarea
+            id="eodPreviewTextarea"
+            class="form-input"
+            rows="12"
+            style="font-family:monospace;font-size:12px;line-height:1.45;resize:vertical;"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between;flex-wrap:wrap;">
+        <button
+          type="button"
+          class="btn"
+          onclick="navigator.clipboard?.writeText(document.getElementById('eodPreviewTextarea').value); this.textContent='✓ Resumão Copiado!';"
+        >
+          📋 Copiar Texto do Resumão
+        </button>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn" onclick="closeModal('endOfDaySummaryModal')">Fechar</button>
+          <button type="button" class="btn btn-whatsapp" onclick="sendCustomEndOfDayFromModal()">
+            📲 Enviar Resumão no WhatsApp Agora
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: CENTRAL DE NOTIFICAÇÕES E ALERTAS DO SISTEMA
+       ========================================================================= -->
+  <div class="modal-backdrop" id="alertsCenterModal">
+    <div class="modal-box" style="max-width:650px;">
+      <div class="modal-header">
+        <span>🔔 Central de Notificações e Alertas Disparo WhatsApp</span>
+        <div style="display:flex;gap:6px;">
+          <button class="btn" onclick="triggerPendingAlertCheck(true)">⚠️ Verificar Pendências</button>
+          <button class="btn" onclick="clearAllAlerts()">Limpar</button>
+          <button class="btn" onclick="closeModal('alertsCenterModal')">✕</button>
+        </div>
+      </div>
+      <div class="modal-body" id="alertsCenterBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal('alertsCenterModal')">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: GERENCIAR COLUNAS / CAMPOS PERSONALIZADOS -->
+  <div class="modal-backdrop" id="columnsModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>⚙️ Gerenciar Colunas e Campos Personalizados da Lista</span>
+        <button class="btn" onclick="closeModal('columnsModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="color:var(--text-muted);">
+          Você pode renomear as colunas principais diretamente na tabela ou adicionar novas colunas personalizadas abaixo:
+        </p>
+        <div id="customColsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div style="border-top:1px solid var(--border-grid);padding-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+          <input type="text" id="newColNameInput" class="form-input" style="flex:1;" placeholder="Nome da nova coluna (Ex: RESPONSÁVEL, PRAZO, PRIORIDADE)..." />
+          <select id="newColTypeSelect" class="form-input" style="width:170px;">
+            <option value="text">Texto Livre</option>
+            <option value="date">Data / Prazo</option>
+            <option value="number">Número</option>
+            <option value="checkbox">Caixa de Seleção</option>
+          </select>
+          <button class="btn btn-primary" onclick="addCustomColumn()">＋ Adicionar Coluna</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal('columnsModal')">Concluído</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: GERENCIAR STATUS E CORES -->
+  <div class="modal-backdrop" id="statusColorsModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>🎨 Personalizar Status e Cores</span>
+        <button class="btn" onclick="closeModal('statusColorsModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="statusColorsList" style="display:flex;flex-direction:column;gap:10px;"></div>
+        <div style="border-top:1px solid var(--border-grid);padding-top:12px;display:flex;gap:8px;">
+          <input type="text" id="newStatusLabelInput" class="form-input" placeholder="Novo Status (Ex: AGUARDANDO, ATRASADO)..." />
+          <input type="color" id="newStatusBgInput" value="#eab308" style="width:50px;height:36px;border:none;cursor:pointer;" />
+          <button class="btn btn-primary" onclick="addNewStatusOption()">＋ Criar Status</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal('statusColorsModal')">Salvar e Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: HISTÓRICO DE ALTERAÇÕES E AUDITORIA -->
+  <div class="modal-backdrop" id="historyModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>🛡️ Histórico de Alterações (Auditoria Automática)</span>
+        <button class="btn" onclick="closeModal('historyModal')">✕</button>
+      </div>
+      <div class="modal-body" id="historyModalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal('historyModal')">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MOTOR JAVASCRIPT NATIVO COMPLETO + NOTIFICAÇÕES WHATSAPP E ALERTAS SONOROS
+       ========================================================================= -->
+  <script>
+    const DB_KEY = 'CHECKS_MAX_SISTEMA_V5_ZERADO';
+    let reminderIntervalId = null;
+    let eodClockIntervalId = null;
+
+    function getFactoryDatabase() {
+      const todayStr = new Date().toLocaleDateString('pt-BR');
+      return {
+        theme: 'light',
+        pctFormulaMode: 'standard',
+        activeSheetId: 'lista_principal',
+        whatsappConfig: {
+          phone: '',
+          notifyOnPartial: true,
+          notifyOnComplete: true,
+          notifyOnCreate: true,
+          autoEndOfDayEnabled: true,
+          endOfDayTime: '18:00',
+          lastEndOfDaySentDate: '',
+          soundEnabled: true,
+          browserNotification: true,
+          dispatchMode: 'card_and_popup', // 'card_and_popup' | 'auto_open' | 'webhook_only'
+          reminderMinutes: 0,
+          webhookUrl: ''
+        },
+        alerts: [],
+        statuses: [
+          { id: 'CONCLUIDO', label: 'CONCLUIDO', bg: '#00b050', text: '#000000' },
+          { id: 'PARCIAL', label: 'PARCIAL', bg: '#ff0000', text: '#000000' },
+          { id: 'PARCIAL_BRANCO', label: 'PARCIAL (DESTAQUE)', bg: '#ffffff', text: '#000000' },
+          { id: 'NÃO INICIADO', label: 'NÃO INICIADO', bg: '#ef4444', text: '#ffffff' }
+        ],
+        history: [],
+        sheets: [
+          {
+            id: 'lista_principal',
+            name: 'LISTA 01',
+            bannerDate: todayStr,
+            headers: {
+              cor: 'COR',
+              activity: 'ATIVIDADE PARA HOJE',
+              started: 'INICIADA',
+              finished: 'FINALIZADA',
+              pct: 'CONCLUIDA EM %'
+            },
+            customColumns: [],
+            footerNote: '',
+            rows: []
+          }
+        ]
+      };
+    }
+
+    let db = loadDb();
+
+    function loadDb() {
+      try {
+        const raw = localStorage.getItem(DB_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.sheets) && parsed.sheets.length > 0) {
+            const defWa = getFactoryDatabase().whatsappConfig;
+            parsed.whatsappConfig = Object.assign({}, defWa, parsed.whatsappConfig || {});
+            parsed.alerts = parsed.alerts || [];
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+      const initial = getFactoryDatabase();
+      localStorage.setItem(DB_KEY, JSON.stringify(initial));
+      return initial;
+    }
+
+    function saveDb(logText) {
+      if (logText) {
+        const active = getActiveSheet();
+        db.history = db.history || [];
+        db.history.unshift({
+          time: new Date().toLocaleString('pt-BR'),
+          sheet: active ? active.name : '-',
+          desc: logText
+        });
+        if (db.history.length > 250) db.history.length = 250;
+      }
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+      renderAll();
+    }
+
+    // =========================================================================
+    // MOTOR DE SOM SINTETIZADO (WEB AUDIO API) E NOTIFICAÇÕES DE SERVIÇO WHATSAPP
+    // =========================================================================
+    function playNotificationSound(type) {
+      if (db.whatsappConfig && db.whatsappConfig.soundEnabled === false) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+
+        if (type === 'complete') {
+          // Acorde alegre de serviço concluído (Dó - Mi - Sol - Dó)
+          [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            gain.gain.setValueAtTime(0.14, now + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.25);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.08);
+            osc.stop(now + i * 0.08 + 0.26);
+          });
+        } else if (type === 'partial') {
+          // Toque duplo suave laranja de Serviço Parcial (Em andamento 50%)
+          [440, 554.37].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.12);
+            gain.gain.setValueAtTime(0.14, now + i * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.22);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.12);
+            osc.stop(now + i * 0.12 + 0.23);
+          });
+        } else if (type === 'create') {
+          // Duplo bip moderno de novo serviço
+          [587.33, 880].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.11);
+            gain.gain.setValueAtTime(0.15, now + i * 0.11);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.11 + 0.2);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.11);
+            osc.stop(now + i * 0.11 + 0.22);
+          });
+        } else {
+          // Alerta de atenção / Resumão
+          [440, 660, 880].forEach((freq, i) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.12);
+            gain.gain.setValueAtTime(0.12, now + i * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.18);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.12);
+            osc.stop(now + i * 0.12 + 0.19);
+          });
+        }
+      } catch (e) {
+        console.warn('Som não reproduzido:', e);
+      }
+    }
+
+    function getSheetStats(sheet) {
+      const rows = (sheet && sheet.rows) || [];
+      const total = rows.length;
+      const done = rows.filter((r) => r.finished || r.status === 'CONCLUIDO').length;
+      const partial = rows.filter(
+        (r) => !r.finished && r.status !== 'CONCLUIDO' && (r.started || r.status === 'PARCIAL' || r.status === 'PARCIAL_BRANCO')
+      ).length;
+      const notStarted = Math.max(0, total - done - partial);
+      const todo = Math.max(0, total - done);
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      return { total, done, partial, notStarted, todo, pct };
+    }
+
+    function formatRowCustomExtras(row, sheet) {
+      if (!row || !row.custom || !sheet || !Array.isArray(sheet.customColumns)) return '';
+      const lines = [];
+      sheet.customColumns.forEach((cc) => {
+        const val = row.custom[cc.id];
+        if (val !== undefined && val !== null && String(val).trim() !== '') {
+          lines.push(`🔹 *${cc.name}:* ${val}`);
+        }
+      });
+      return lines.length > 0 ? '\n' + lines.join('\n') : '';
+    }
+
+    function buildWhatsAppMessage(eventType, row, sheet) {
+      const stats = getSheetStats(sheet);
+      const nowStr = new Date().toLocaleString('pt-BR');
+      const extras = formatRowCustomExtras(row, sheet);
+
+      if (eventType === 'partial') {
+        return (
+          `🟠 *[CHECKS-MAX] NOTIFICAÇÃO DE SERVIÇO — PARCIAL (50%)*\n` +
+          `📋 *Lista / Aba:* ${sheet.name} (${sheet.bannerDate})\n` +
+          `🛠️ *Serviço / Atividade:* ${row.activity}` +
+          `${extras}\n` +
+          `📌 *Situação Atual:* PARCIAL — Serviço Iniciado / Em Andamento (50%)\n` +
+          `📊 *Placar do Dia:* ${stats.done} Concluídos | ${stats.partial} Parciais | ${stats.notStarted} Não Iniciados (Total: ${stats.total})\n` +
+          `⏰ *Atualizado em:* ${nowStr}`
+        );
+      }
+
+      if (eventType === 'complete') {
+        return (
+          `✅ *[CHECKS-MAX] NOTIFICAÇÃO DE SERVIÇO — CONCLUÍDO (100%)*\n` +
+          `📋 *Lista / Aba:* ${sheet.name} (${sheet.bannerDate})\n` +
+          `🏆 *Serviço Finalizado:* ${row.activity}` +
+          `${extras}\n` +
+          `💯 *Situação Atual:* CONCLUÍDO — Serviço 100% Finalizado!\n` +
+          `📊 *Placar do Dia:* ${stats.done} Concluídos | ${stats.todo} Pendentes/Parciais (${stats.pct}% concluído)\n` +
+          `⏰ *Finalizado em:* ${nowStr}`
+        );
+      }
+
+      if (eventType === 'create') {
+        const pct = calcRowPct(row);
+        return (
+          `🆕 *[CHECKS-MAX] NOVO SERVIÇO CRIADO — ${sheet.name}*\n` +
+          `📅 *Data da Lista:* ${sheet.bannerDate}\n` +
+          `🛠️ *Serviço:* ${row.activity}` +
+          `${extras}\n` +
+          `📌 *Status Inicial:* ${row.status} (${pct}%)\n` +
+          `📊 *Placar da Lista:* ${stats.done} Concluídos | ${stats.todo} A Fazer (Total: ${stats.total})\n` +
+          `⏰ *Registrado em:* ${nowStr}`
+        );
+      }
+
+      return buildEndOfDayReport('current', '');
+    }
+
+    function buildEndOfDayReport(scope, customNote) {
+      const nowStr = new Date().toLocaleString('pt-BR');
+      const targetSheets = scope === 'all' ? db.sheets : [getActiveSheet()].filter(Boolean);
+
+      let grandTotal = 0;
+      let grandDone = 0;
+      let grandPartial = 0;
+      let grandNotStarted = 0;
+
+      const sectionsText = targetSheets
+        .map((sh) => {
+          const st = getSheetStats(sh);
+          grandTotal += st.total;
+          grandDone += st.done;
+          grandPartial += st.partial;
+          grandNotStarted += st.notStarted;
+
+          const doneRows = (sh.rows || []).filter((r) => r.finished || r.status === 'CONCLUIDO');
+          const partialRows = (sh.rows || []).filter(
+            (r) => !r.finished && r.status !== 'CONCLUIDO' && (r.started || r.status === 'PARCIAL' || r.status === 'PARCIAL_BRANCO')
+          );
+          const notStartedRows = (sh.rows || []).filter(
+            (r) => !r.finished && r.status !== 'CONCLUIDO' && !r.started && r.status !== 'PARCIAL' && r.status !== 'PARCIAL_BRANCO'
+          );
+
+          const doneLines = doneRows.map((r, i) => `  ${i + 1}. ✅ ${r.activity}`).join('\n') || '  (Nenhum serviço concluído)';
+          const partialLines =
+            partialRows.map((r, i) => `  ${i + 1}. 🟠 ${r.activity} (PARCIAL 50%)`).join('\n') || '  (Nenhum serviço parcial)';
+          const notStartedLines =
+            notStartedRows.length > 0
+              ? `\n*⏳ NÃO INICIADOS (0%) [${notStartedRows.length}]:*\n` +
+                notStartedRows.map((r, i) => `  ${i + 1}. ⏳ ${r.activity} (0%)`).join('\n')
+              : '';
+
+          return (
+            `📌 *LISTA: ${sh.name} — DATA: ${sh.bannerDate}*\n` +
+            `📊 Total: ${st.total} | ✅ Concluídos: ${st.done} | 🟠 Parciais: ${st.partial} | 📈 Rendimento: ${st.pct}%\n\n` +
+            `*✅ SERVIÇOS CONCLUÍDOS (100%) [${doneRows.length}]:*\n${doneLines}\n\n` +
+            `*🟠 SERVIÇOS PARCIAIS / EM ANDAMENTO (50%) [${partialRows.length}]:*\n${partialLines}` +
+            `${notStartedLines}`
+          );
+        })
+        .join('\n━━━━━━━━━━━━━━━━━━━━\n');
+
+      const grandPct = grandTotal > 0 ? Math.round((grandDone / grandTotal) * 100) : 0;
+      const noteBlock = customNote && customNote.trim() ? `\n📝 *OBSERVAÇÃO DO FECHAMENTO:*\n${customNote.trim()}\n` : '';
+
+      return (
+        `📋 *[CHECKS-MAX] RESUMÃO DO FINAL DO DIA — RELATÓRIO DE SERVIÇOS*\n` +
+        `━━━━━━━━━━━━━━━━━━━━\n` +
+        `📊 *BALANÇO GERAL DO DIA:*\n` +
+        `• *Total de Serviços:* ${grandTotal}\n` +
+        `• *✅ Concluídos (100%):* ${grandDone}\n` +
+        `• *🟠 Parciais / Em Andamento (50%):* ${grandPartial}\n` +
+        (grandNotStarted > 0 ? `• *⏳ Não Iniciados (0%):* ${grandNotStarted}\n` : '') +
+        `• *📈 Percentual Concluído:* ${grandPct}%\n` +
+        `━━━━━━━━━━━━━━━━━━━━\n` +
+        `${sectionsText}\n` +
+        `━━━━━━━━━━━━━━━━━━━━` +
+        `${noteBlock}\n` +
+        `⏰ *Fechamento emitido em:* ${nowStr}`
+      );
+    }
+
+    function openWhatsAppUrl(text) {
+      const cleanPhone = String((db.whatsappConfig && db.whatsappConfig.phone) || '').replace(/\D/g, '');
+      const encoded = encodeURIComponent(text);
+      const url = cleanPhone
+        ? `https://wa.me/${cleanPhone}?text=${encoded}`
+        : `https://api.whatsapp.com/send?text=${encoded}`;
+      window.open(url, '_blank');
+    }
+
+    function sendViaWebhookIfConfigured(eventType, waText, sheetName) {
+      const cfg = db.whatsappConfig || {};
+      if (!cfg.webhookUrl || !cfg.webhookUrl.trim()) return;
+      const cleanPhone = String(cfg.phone || '').replace(/\D/g, '');
+      let targetUrl = cfg.webhookUrl.trim();
+      if (targetUrl.includes('{text}') || targetUrl.includes('{phone}')) {
+        targetUrl = targetUrl
+          .replace('{phone}', encodeURIComponent(cleanPhone))
+          .replace('{text}', encodeURIComponent(waText));
+        fetch(targetUrl, { mode: 'no-cors' }).catch(() => {});
+      } else {
+        fetch(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event: eventType, phone: cleanPhone, message: waText, sheet: sheetName || '' })
+        }).catch(() => {});
+      }
+    }
+
+    function triggerWhatsAppNotification(eventType, row, forceOpenNow = false) {
+      const cfg = db.whatsappConfig || {};
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+
+      if (!forceOpenNow) {
+        if (eventType === 'partial' && cfg.notifyOnPartial === false) return;
+        if (eventType === 'complete' && cfg.notifyOnComplete === false) return;
+        if (eventType === 'create' && cfg.notifyOnCreate === false) return;
+      }
+
+      const waText = buildWhatsAppMessage(eventType, row, sheet);
+      const title =
+        eventType === 'partial'
+          ? `🟠 Serviço PARCIAL (50%) em ${sheet.name}`
+          : eventType === 'complete'
+          ? `✅ Serviço CONCLUÍDO (100%) em ${sheet.name}!`
+          : eventType === 'create'
+          ? `🆕 Novo Serviço Criado em ${sheet.name}`
+          : `📋 Resumão do Final do Dia — ${sheet.name}`;
+
+      // 1. Toca som sintetizado correspondente
+      playNotificationSound(
+        eventType === 'complete' ? 'complete' : eventType === 'partial' ? 'partial' : eventType === 'create' ? 'create' : 'alert'
+      );
+
+      // 2. Registra na Central de Alertas
+      db.alerts = db.alerts || [];
+      db.alerts.unshift({
+        id: 'al_' + Date.now() + '_' + Math.random().toString(36).substring(2, 5),
+        type: eventType,
+        title,
+        message: row ? `${row.activity} [${row.status}]` : 'Resumão do Final do Dia gerado',
+        waText,
+        time: new Date().toLocaleString('pt-BR'),
+        read: false
+      });
+      if (db.alerts.length > 100) db.alerts.length = 100;
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+      updateBadgesUI();
+
+      // 3. Notificação nativa do Windows / Navegador
+      if (cfg.browserNotification && 'Notification' in window && Notification.permission === 'granted') {
+        try {
+          new Notification(title, { body: row ? row.activity : waText });
+        } catch (e) {}
+      }
+
+      // 4. Disparo via API / Webhook em segundo plano (tipo SMS automático)
+      sendViaWebhookIfConfigured(eventType, waText, sheet.name);
+
+      // 5. Card Flutuante Instantâneo + Abertura Automática conforme modo
+      showWhatsAppToastCard(title, row ? row.activity : 'Resumão pronto para envio no WhatsApp', waText, eventType);
+
+      if (forceOpenNow || cfg.dispatchMode === 'auto_open') {
+        openWhatsAppUrl(waText);
+      }
+    }
+
+    function showWhatsAppToastCard(title, subtitle, waText, eventType = 'complete') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const cardId = 'toast_' + Date.now();
+      const card = document.createElement('div');
+      card.className = 'wa-toast-card';
+      const borderColor = eventType === 'partial' ? '#f97316' : eventType === 'complete' ? '#22c55e' : '#38bdf8';
+      card.style.borderColor = borderColor;
+      card.id = cardId;
+
+      const encodedText = encodeURIComponent(waText);
+      card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div style="font-weight:800;font-size:13px;color:${borderColor};">${escapeHtml(title)}</div>
+          <button onclick="document.getElementById('${cardId}')?.remove()" style="background:transparent;border:none;color:#94a3b8;cursor:pointer;font-size:14px;">✕</button>
+        </div>
+        <div style="font-size:12px;color:#e2e8f0;margin-top:4px;font-weight:600;">
+          ${escapeHtml(subtitle)}
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button
+            class="btn btn-whatsapp"
+            style="flex:1;justify-content:center;padding:6px 10px;"
+            onclick="openWhatsAppUrl(decodeURIComponent('${encodedText}')); document.getElementById('${cardId}')?.remove();"
+          >
+            📲 Enviar no WhatsApp Agora
+          </button>
+          <button
+            class="btn"
+            style="padding:6px 10px;"
+            onclick="navigator.clipboard?.writeText(decodeURIComponent('${encodedText}')); this.textContent='✓ Copiado!';"
+            title="Copiar texto formatado para o WhatsApp"
+          >
+            📋 Copiar
+          </button>
+        </div>
+      `;
+
+      container.prepend(card);
+      setTimeout(() => {
+        const el = document.getElementById(cardId);
+        if (el) el.remove();
+      }, 14000);
+    }
+
+    function sendSingleRowWhatsApp(rowId) {
+      const sheet = getActiveSheet();
+      const row = (sheet.rows || []).find((r) => r.id === rowId);
+      if (!row) return;
+      const pct = calcRowPct(row);
+      const evType = pct === 100 || row.status === 'CONCLUIDO' ? 'complete' : pct === 50 || row.status.startsWith('PARCIAL') ? 'partial' : 'create';
+      const msg = buildWhatsAppMessage(evType, row, sheet);
+      openWhatsAppUrl(msg);
+    }
+
+    function sendDailySummaryWhatsApp() {
+      openEndOfDaySummaryModal();
+    }
+
+    // =========================================================================
+    // MODAL E AGENDADOR DO "RESUMÃO DO FINAL DO DIA"
+    // =========================================================================
+    function openEndOfDaySummaryModal() {
+      closeAllDropdowns();
+      refreshEndOfDayPreview();
+      document.getElementById('endOfDaySummaryModal').classList.add('open');
+    }
+
+    function refreshEndOfDayPreview() {
+      const scopeEl = document.getElementById('eodScopeSelect');
+      const noteEl = document.getElementById('eodCustomNoteInput');
+      const scope = scopeEl ? scopeEl.value : 'current';
+      const note = noteEl ? noteEl.value : '';
+
+      const targetSheets = scope === 'all' ? db.sheets : [getActiveSheet()].filter(Boolean);
+      let total = 0, done = 0, partial = 0, notStarted = 0;
+      targetSheets.forEach((sh) => {
+        const st = getSheetStats(sh);
+        total += st.total;
+        done += st.done;
+        partial += st.partial;
+        notStarted += st.notStarted;
+      });
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+      const cardsContainer = document.getElementById('eodStatsCards');
+      if (cardsContainer) {
+        cardsContainer.innerHTML = `
+          <div style="background:var(--bg-page);padding:8px;border-radius:8px;border:1px solid var(--border-grid);">
+            <div style="font-size:10.5px;color:var(--text-muted);font-weight:700;">TOTAL SERVIÇOS</div>
+            <div style="font-size:18px;font-weight:900;">${total}</div>
+          </div>
+          <div style="background:rgba(22,163,74,0.1);padding:8px;border-radius:8px;border:1px solid rgba(22,163,74,0.35);">
+            <div style="font-size:10.5px;color:#16a34a;font-weight:700;">✅ CONCLUÍDOS</div>
+            <div style="font-size:18px;font-weight:900;color:#16a34a;">${done}</div>
+          </div>
+          <div style="background:rgba(234,88,12,0.1);padding:8px;border-radius:8px;border:1px solid rgba(234,88,12,0.35);">
+            <div style="font-size:10.5px;color:#ea580c;font-weight:700;">🟠 PARCIAIS (50%)</div>
+            <div style="font-size:18px;font-weight:900;color:#ea580c;">${partial}</div>
+          </div>
+          <div style="background:var(--bg-page);padding:8px;border-radius:8px;border:1px solid var(--border-grid);">
+            <div style="font-size:10.5px;color:var(--text-muted);font-weight:700;">📊 RENDIMENTO</div>
+            <div style="font-size:18px;font-weight:900;color:#2563eb;">${pct}%</div>
+          </div>
+        `;
+      }
+
+      const txt = buildEndOfDayReport(scope, note);
+      const area = document.getElementById('eodPreviewTextarea');
+      if (area) area.value = txt;
+    }
+
+    function sendCustomEndOfDayFromModal() {
+      const area = document.getElementById('eodPreviewTextarea');
+      const text = area ? area.value : buildEndOfDayReport('current', '');
+      const sheet = getActiveSheet();
+      playNotificationSound('complete');
+      sendViaWebhookIfConfigured('end_of_day_summary', text, sheet ? sheet.name : 'TODAS');
+      openWhatsAppUrl(text);
+      closeModal('endOfDaySummaryModal');
+    }
+
+    function sendEndOfDaySummaryImmediate() {
+      const sheet = getActiveSheet();
+      const text = buildEndOfDayReport('current', '');
+      playNotificationSound('complete');
+      sendViaWebhookIfConfigured('end_of_day_summary', text, sheet ? sheet.name : 'LISTA');
+      showWhatsAppToastCard(
+        `📋 Resumão do Final do Dia — ${sheet ? sheet.name : ''}`,
+        'Relatório completo de serviços Concluídos e Parciais',
+        text,
+        'complete'
+      );
+      openWhatsAppUrl(text);
+    }
+
+    function setupEndOfDayScheduler() {
+      if (eodClockIntervalId) {
+        clearInterval(eodClockIntervalId);
+        eodClockIntervalId = null;
+      }
+      eodClockIntervalId = setInterval(() => {
+        const cfg = db.whatsappConfig || {};
+        if (!cfg.autoEndOfDayEnabled || !cfg.endOfDayTime) return;
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const currentHM = `${hh}:${mm}`;
+        const todayKey = now.toISOString().slice(0, 10) + '_' + cfg.endOfDayTime;
+
+        if (currentHM === cfg.endOfDayTime && cfg.lastEndOfDaySentDate !== todayKey) {
+          cfg.lastEndOfDaySentDate = todayKey;
+          localStorage.setItem(DB_KEY, JSON.stringify(db));
+
+          const sheet = getActiveSheet();
+          const reportText = buildEndOfDayReport('current', 'Fechamento automático do final do expediente.');
+          playNotificationSound('complete');
+          sendViaWebhookIfConfigured('end_of_day_summary', reportText, sheet ? sheet.name : 'GERAL');
+          showWhatsAppToastCard(
+            `⏰ Horário do Resumão do Final do Dia (${cfg.endOfDayTime})!`,
+            'Clique abaixo para enviar o Resumão do Dia no WhatsApp',
+            reportText,
+            'partial'
+          );
+          if (cfg.dispatchMode === 'auto_open') {
+            openWhatsAppUrl(reportText);
+          }
+        }
+      }, 15000);
+    }
+
+    // =========================================================================
+    // RENDERIZAÇÃO PRINCIPAL DA TABELA, GRÁFICO E BARRA DE ABAS
+    // =========================================================================
+    function getActiveSheet() {
+      return db.sheets.find((s) => s.id === db.activeSheetId) || db.sheets[0];
+    }
+
+    function calcRowPct(row) {
+      const s = row.started ? 1 : 0;
+      const f = row.finished ? 1 : 0;
+      return Math.round(((s + f) / 2) * 100);
+    }
+
+    function getStatusStyle(statusId) {
+      const found = (db.statuses || []).find((s) => s.id === statusId || s.label === statusId);
+      if (found) return found;
+      if (statusId === 'CONCLUIDO') return { bg: '#00b050', text: '#000000', label: 'CONCLUIDO' };
+      if (statusId === 'PARCIAL_BRANCO') return { bg: '#ffffff', text: '#000000', label: 'PARCIAL' };
+      return { bg: '#ff0000', text: '#000000', label: statusId || 'PARCIAL' };
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function updateBadgesUI() {
+      const unread = (db.alerts || []).filter((a) => !a.read).length;
+      const badge = document.getElementById('unreadAlertsBadge');
+      if (badge) badge.textContent = String(unread);
+
+      const cfg = db.whatsappConfig || {};
+      const isWaActive = cfg.notifyOnPartial !== false || cfg.notifyOnComplete !== false || cfg.notifyOnCreate !== false;
+      const dot = document.getElementById('waStatusDot');
+      if (dot) dot.className = 'status-dot ' + (isWaActive ? 'on' : 'off');
+
+      const quickPhone = document.getElementById('quickWaPhoneInput');
+      if (quickPhone && document.activeElement !== quickPhone) {
+        quickPhone.value = cfg.phone || '';
+      }
+
+      const chkP = document.getElementById('chkQuickNotifyPartial');
+      if (chkP) chkP.checked = cfg.notifyOnPartial !== false;
+      const chkF = document.getElementById('chkQuickNotifyComplete');
+      if (chkF) chkF.checked = cfg.notifyOnComplete !== false;
+      const chkC = document.getElementById('chkQuickNotifyCreate');
+      if (chkC) chkC.checked = cfg.notifyOnCreate !== false;
+      const chkAutoOpen = document.getElementById('chkQuickAutoOpen');
+      if (chkAutoOpen) chkAutoOpen.checked = cfg.dispatchMode === 'auto_open';
+
+      const chkEod = document.getElementById('chkQuickEodAuto');
+      if (chkEod) chkEod.checked = cfg.autoEndOfDayEnabled !== false;
+      const timeEod = document.getElementById('quickEodTimeInput');
+      if (timeEod && document.activeElement !== timeEod) {
+        timeEod.value = cfg.endOfDayTime || '18:00';
+      }
+    }
+
+    function renderAll() {
+      document.documentElement.setAttribute('data-theme', db.theme || 'light');
+      const themeBtn = document.getElementById('themeBtn');
+      if (themeBtn) {
+        themeBtn.textContent = db.theme === 'dark' ? '☀️' : '🌙';
+      }
+
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+
+      document.title = `CHECKS-MAX — ${sheet.name} (${sheet.bannerDate || 'Checklist'})`;
+      document.getElementById('currentSheetTitleTop').textContent = sheet.name;
+      document.getElementById('bannerDateInput').value = sheet.bannerDate || '16/04/2026';
+      document.getElementById('footerNoteInput').value = sheet.footerNote || '';
+      document.getElementById('colCountLabel').textContent = String(5 + (sheet.customColumns || []).length);
+      document.getElementById('historyCountBadge').textContent = String((db.history || []).length);
+
+      updateBadgesUI();
+
+      // 1. Cabeçalho da Tabela
+      const customCols = sheet.customColumns || [];
+      const thead = document.getElementById('tableHead');
+      let headHtml = `
+        <tr>
+          <th style="text-align:left;width:125px;">
+            <input class="th-editable" value="${escapeHtml(sheet.headers.cor)}" onchange="updateMainHeader('cor', this.value)" />
+          </th>
+          <th style="text-align:center;">
+            <input class="th-editable" style="text-align:center;" value="${escapeHtml(sheet.headers.activity)}" onchange="updateMainHeader('activity', this.value)" />
+          </th>
+      `;
+
+      customCols.forEach((cc) => {
+        headHtml += `
+          <th style="text-align:center;width:150px;">
+            <input class="th-editable" style="text-align:center;" value="${escapeHtml(cc.name)}" onchange="renameCustomCol('${cc.id}', this.value)" />
+          </th>
+        `;
+      });
+
+      headHtml += `
+          <th style="text-align:center;width:90px;">
+            <input class="th-editable" style="text-align:center;" value="${escapeHtml(sheet.headers.started)}" onchange="updateMainHeader('started', this.value)" />
+          </th>
+          <th style="text-align:center;width:90px;">
+            <input class="th-editable" style="text-align:center;" value="${escapeHtml(sheet.headers.finished)}" onchange="updateMainHeader('finished', this.value)" />
+          </th>
+          <th style="text-align:center;width:130px;">
+            <input class="th-editable" style="text-align:center;" value="${escapeHtml(sheet.headers.pct)}" onchange="updateMainHeader('pct', this.value)" />
+          </th>
+          <th class="no-print" style="width:82px;text-align:center;">AÇÕES</th>
+        </tr>
+      `;
+      thead.innerHTML = headHtml;
+
+      // 2. Linhas da Tabela
+      const tbody = document.getElementById('tableBody');
+      const rows = sheet.rows || [];
+      let bodyHtml = '';
+
+      if (rows.length === 0) {
+        const colSpanTotal = 6 + customCols.length;
+        bodyHtml = `
+          <tr>
+            <td colspan="${colSpanTotal}" style="padding:36px 20px;text-align:center;background:var(--bg-panel);color:var(--text-muted);">
+              <div style="font-size:15px;font-weight:800;color:var(--text-main);margin-bottom:6px;">
+                ✨ Lista Zerada — Pronta para Começar!
+              </div>
+              <div style="font-size:12.5px;margin-bottom:14px;">
+                Adicione seu primeiro serviço/tarefa abaixo para iniciar o acompanhamento e as notificações no WhatsApp.
+              </div>
+              <div style="display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+                <button class="btn btn-primary" onclick="openNewTaskModal()">＋ Cadastrar Novo Serviço / Tarefa</button>
+                <button class="btn" onclick="addNewRowQuick()">➕ Adicionar Linha Direto na Tabela</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+
+      rows.forEach((r, idx) => {
+        const pct = calcRowPct(r);
+        const stStyle = getStatusStyle(r.status);
+        const optionsHtml = (db.statuses || [])
+          .map(
+            (s) =>
+              `<option value="${escapeHtml(s.id)}" ${r.status === s.id ? 'selected' : ''} style="background:#fff;color:#000;">${escapeHtml(s.label)}</option>`
+          )
+          .join('');
+
+        let customCellsHtml = '';
+        customCols.forEach((cc) => {
+          const val = (r.custom && r.custom[cc.id]) || '';
+          if (cc.type === 'checkbox') {
+            const isChk = Boolean(val);
+            customCellsHtml += `
+              <td class="chk-cell">
+                <div class="excel-checkbox ${isChk ? 'checked' : 'unchecked'}" onclick="toggleCustomCheckbox('${r.id}', '${cc.id}')">
+                  ${isChk ? '✓' : ''}
+                </div>
+              </td>
+            `;
+          } else {
+            customCellsHtml += `
+              <td>
+                <input
+                  type="${cc.type === 'date' ? 'date' : cc.type === 'number' ? 'number' : 'text'}"
+                  class="custom-cell-input"
+                  value="${escapeHtml(val)}"
+                  onchange="updateCustomCell('${r.id}', '${cc.id}', this.value)"
+                />
+              </td>
+            `;
+          }
+        });
+
+        bodyHtml += `
+          <tr>
+            <td class="status-cell">
+              <select
+                class="status-select"
+                style="background-color:${stStyle.bg};color:${stStyle.text};"
+                onchange="changeRowStatus('${r.id}', this.value)"
+              >
+                ${optionsHtml}
+              </select>
+            </td>
+            <td>
+              <input
+                type="text"
+                id="actInput_${r.id}"
+                class="activity-input"
+                value="${escapeHtml(r.activity)}"
+                placeholder="Digite o serviço / atividade e aperte Enter..."
+                onchange="updateRowActivity('${r.id}', this.value)"
+              />
+            </td>
+            ${customCellsHtml}
+            <td class="chk-cell">
+              <div
+                class="excel-checkbox ${r.started ? 'checked' : 'unchecked'}"
+                onclick="toggleRowStarted('${r.id}')"
+                title="Clique para marcar/desmarcar INICIADA (Notifica Serviço PARCIAL 50% no WhatsApp!)"
+              >
+                ${r.started ? '✓' : ''}
+              </div>
+            </td>
+            <td class="chk-cell">
+              <div
+                class="excel-checkbox ${r.finished ? 'checked' : 'unchecked'}"
+                onclick="toggleRowFinished('${r.id}')"
+                title="Clique para marcar/desmarcar FINALIZADA (Notifica Serviço CONCLUÍDO 100% no WhatsApp!)"
+              >
+                ${r.finished ? '✓' : ''}
+              </div>
+            </td>
+            <td class="pct-cell">${pct}%</td>
+            <td class="row-actions-cell no-print">
+              <button class="icon-btn" onclick="sendSingleRowWhatsApp('${r.id}')" title="Enviar notificação deste serviço no WhatsApp">📲</button>
+              <button class="icon-btn" onclick="moveRow(${idx}, -1)" title="Subir linha">↑</button>
+              <button class="icon-btn" onclick="moveRow(${idx}, 1)" title="Descer linha">↓</button>
+              <button class="icon-btn" onclick="deleteRow('${r.id}')" title="Excluir linha" style="color:#dc2626;">✕</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = bodyHtml;
+
+      // 3. Cálculos da Barra Amarela e do Painel Direito
+      const total = rows.length;
+      const startedCount = rows.filter((r) => r.started).length;
+      const finishedCount = rows.filter((r) => r.finished).length;
+      const startedPct = total > 0 ? Math.round((startedCount / total) * 100) : 0;
+      const finishedPct = total > 0 ? Math.round((finishedCount / total) * 100) : 0;
+
+      document.getElementById('totalStartedPctBox').textContent = startedPct + '%';
+      document.getElementById('totalFinishedPctBox').textContent = finishedPct + '%';
+
+      const doneCount = rows.filter((r) => r.finished || r.status === 'CONCLUIDO').length;
+      const todoCount = Math.max(0, total - doneCount);
+
+      let pctDoneNumeric = 0;
+      if (db.pctFormulaMode === 'excel') {
+        pctDoneNumeric = todoCount > 0 ? (doneCount / todoCount) * 100 : doneCount > 0 ? 100 : 0;
+      } else {
+        pctDoneNumeric = total > 0 ? (doneCount / total) * 100 : 0;
+      }
+
+      document.getElementById('kpiTotal').textContent = String(total);
+      document.getElementById('kpiDone').textContent = String(doneCount);
+      document.getElementById('kpiTodo').textContent = String(todoCount);
+      document.getElementById('kpiPctDone').textContent =
+        pctDoneNumeric.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('formulaModeBtn').textContent =
+        db.pctFormulaMode === 'excel' ? 'Fórmula: I3÷I4' : 'Fórmula: Feito÷Total';
+
+      renderDonutChart(doneCount, todoCount, pctDoneNumeric / 100);
+      renderTabsBar();
+    }
+
+    function renderDonutChart(doneVal, todoVal, pctRatio) {
+      const svgGroup = document.getElementById('donutSegmentsGroup');
+      if (!svgGroup) return;
+
+      const radius = 72;
+      const circumference = 2 * Math.PI * radius;
+
+      if ((Number(doneVal) || 0) === 0 && (Number(todoVal) || 0) === 0) {
+        svgGroup.innerHTML = `
+          <circle
+            cx="110"
+            cy="110"
+            r="${radius}"
+            fill="transparent"
+            stroke="#cbd5e1"
+            stroke-width="38"
+          />
+        `;
+        return;
+      }
+
+      const v1 = Math.max(0, Number(doneVal) || 0);
+      const v2 = Math.max(0, Number(todoVal) || 0);
+      const v3 = Math.max(0.15, Number(pctRatio) || 0);
+      const sum = v1 + v2 + v3 || 1;
+
+      const segments = [
+        { val: v1, color: '#1a608a' },
+        { val: v2, color: '#e67326' },
+        { val: v3, color: '#1c6b2a' }
+      ];
+
+      let accumulatedAngle = 0;
+      let html = '';
+
+      segments.forEach((seg) => {
+        const frac = seg.val / sum;
+        const dash = frac * circumference;
+        const gap = circumference - dash;
+        const offset = -accumulatedAngle * circumference;
+        accumulatedAngle += frac;
+
+        html += `
+          <circle
+            cx="110"
+            cy="110"
+            r="${radius}"
+            fill="transparent"
+            stroke="${seg.color}"
+            stroke-width="38"
+            stroke-dasharray="${dash} ${gap}"
+            stroke-dashoffset="${offset}"
+          />
+        `;
+      });
+
+      svgGroup.innerHTML = html;
+    }
+
+    function renderTabsBar() {
+      const bar = document.getElementById('sheetsTabsBar');
+      if (!bar) return;
+
+      let html = '';
+      db.sheets.forEach((s) => {
+        const isActive = s.id === db.activeSheetId;
+        html += `
+          <div class="sheet-tab ${isActive ? 'active' : ''}" onclick="selectSheet('${s.id}')">
+            <img src="data:image/png;base64,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" alt="" style="width:15px;height:15px;border-radius:3px;object-fit:cover;" />
+            <span>${escapeHtml(s.name)}</span>
+            ${
+              db.sheets.length > 1 && isActive
+                ? `<span onclick="event.stopPropagation(); deleteSheet('${s.id}')" title="Excluir esta aba" style="margin-left:4px;opacity:0.8;">✕</span>`
+                : ''
+            }
+          </div>
+        `;
+      });
+
+      html += `
+        <button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="createNewSheetPrompt()">＋ Nova Aba</button>
+      `;
+      bar.innerHTML = html;
+    }
+
+    // =========================================================================
+    // CONTROLE DOS MENUS DROPDOWN E MODAIS
+    // =========================================================================
+    function toggleDropdown(id) {
+      event.stopPropagation();
+      const el = document.getElementById(id);
+      const wasOpen = el.classList.contains('open');
+      closeAllDropdowns();
+      if (!wasOpen) el.classList.add('open');
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.dropdown.open').forEach((d) => d.classList.remove('open'));
+    }
+
+    // =========================================================================
+    // CRIAÇÃO, SERVIÇO PARCIAL (50%) E SERVIÇO CONCLUÍDO (100%) COM WHATSAPP
+    // =========================================================================
+    function openNewTaskModal() {
+      closeAllDropdowns();
+      const sheet = getActiveSheet();
+      document.getElementById('modalTaskActivityInput').value = '';
+      document.getElementById('modalTaskStatusSelect').value = 'PARCIAL';
+      document.getElementById('modalTaskSendWaCheckbox').checked = Boolean(
+        db.whatsappConfig ? db.whatsappConfig.notifyOnCreate !== false : true
+      );
+
+      const customContainer = document.getElementById('modalTaskCustomFieldsContainer');
+      const cols = (sheet && sheet.customColumns) || [];
+      customContainer.innerHTML = cols
+        .map(
+          (cc) => `
+          <div>
+            <label style="font-weight:600;display:block;margin-bottom:3px;">${escapeHtml(cc.name)}</label>
+            <input type="${cc.type === 'date' ? 'date' : cc.type === 'number' ? 'number' : 'text'}" class="form-input" data-custom-col="${cc.id}" />
+          </div>
+        `
+        )
+        .join('');
+
+      document.getElementById('newTaskModal').classList.add('open');
+      setTimeout(() => document.getElementById('modalTaskActivityInput').focus(), 80);
+    }
+
+    function submitNewTaskModal(e) {
+      e.preventDefault();
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+
+      const activity = document.getElementById('modalTaskActivityInput').value.trim().toUpperCase();
+      if (!activity) return;
+
+      const status = document.getElementById('modalTaskStatusSelect').value;
+      const sendWa = document.getElementById('modalTaskSendWaCheckbox').checked;
+
+      const custom = {};
+      document.querySelectorAll('#modalTaskCustomFieldsContainer [data-custom-col]').forEach((inp) => {
+        custom[inp.getAttribute('data-custom-col')] = inp.value;
+      });
+
+      const newRow = {
+        id: 'row_' + Date.now(),
+        status,
+        activity,
+        started: status !== 'NÃO INICIADO',
+        finished: status === 'CONCLUIDO',
+        custom
+      };
+
+      sheet.rows.push(newRow);
+      closeModal('newTaskModal');
+      saveDb(`Cadastrou novo serviço: "${activity}" [${status}]`);
+
+      if (sendWa) {
+        const evType = newRow.finished ? 'complete' : status === 'PARCIAL' ? 'partial' : 'create';
+        triggerWhatsAppNotification(evType, newRow, false);
+      }
+    }
+
+    function addNewRowQuick() {
+      closeAllDropdowns();
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      const newId = 'row_' + Date.now();
+      const newRow = {
+        id: newId,
+        status: 'PARCIAL',
+        activity: '',
+        started: true,
+        finished: false,
+        custom: {},
+        isJustCreatedQuick: true
+      };
+      sheet.rows.push(newRow);
+      saveDb('Adicionou nova linha rápida na tabela');
+      setTimeout(() => {
+        const el = document.getElementById('actInput_' + newId);
+        if (el) el.focus();
+      }, 60);
+    }
+
+    function toggleRowStarted(rowId) {
+      const sheet = getActiveSheet();
+      const row = sheet.rows.find((r) => r.id === rowId);
+      if (!row) return;
+      const prevPct = calcRowPct(row);
+      row.started = !row.started;
+      if (!row.started) row.finished = false;
+      syncRowStatusByCheckboxes(row);
+      const newPct = calcRowPct(row);
+      saveDb(`Marcou INICIADA = ${row.started ? 'SIM' : 'NÃO'} em "${row.activity}" (${newPct}%)`);
+
+      // Gatilho Automático: Quando o serviço entra em PARCIAL (50%), notifica no WhatsApp!
+      if (prevPct !== 50 && newPct === 50) {
+        triggerWhatsAppNotification('partial', row, false);
+      }
+    }
+
+    function toggleRowFinished(rowId) {
+      const sheet = getActiveSheet();
+      const row = sheet.rows.find((r) => r.id === rowId);
+      if (!row) return;
+      const prevPct = calcRowPct(row);
+      row.finished = !row.finished;
+      if (row.finished) row.started = true;
+      syncRowStatusByCheckboxes(row);
+      const newPct = calcRowPct(row);
+      saveDb(`Marcou FINALIZADA = ${row.finished ? 'SIM' : 'NÃO'} em "${row.activity}" (${newPct}%)`);
+
+      // Gatilho Automático: Quando o serviço fica CONCLUIDO (100%) ou volta para PARCIAL (50%), notifica no WhatsApp!
+      if (prevPct !== 100 && newPct === 100) {
+        triggerWhatsAppNotification('complete', row, false);
+      } else if (prevPct !== 50 && newPct === 50) {
+        triggerWhatsAppNotification('partial', row, false);
+      }
+    }
+
+    function syncRowStatusByCheckboxes(row) {
+      const pct = calcRowPct(row);
+      if (pct === 100) {
+        row.status = 'CONCLUIDO';
+      } else if (pct === 50) {
+        if (row.status !== 'PARCIAL_BRANCO') row.status = 'PARCIAL';
+      } else {
+        row.status = 'NÃO INICIADO';
+      }
+    }
+
+    function changeRowStatus(rowId, newStatusId) {
+      const sheet = getActiveSheet();
+      const row = sheet.rows.find((r) => r.id === rowId);
+      if (!row) return;
+      const prevStatus = row.status;
+      row.status = newStatusId;
+      if (newStatusId === 'CONCLUIDO') {
+        row.started = true;
+        row.finished = true;
+      } else if (newStatusId === 'PARCIAL' || newStatusId === 'PARCIAL_BRANCO') {
+        row.started = true;
+        row.finished = false;
+      } else if (newStatusId === 'NÃO INICIADO') {
+        row.started = false;
+        row.finished = false;
+      }
+      saveDb(`Alterou status do serviço "${row.activity}" para ${newStatusId}`);
+
+      if (prevStatus !== newStatusId) {
+        if (newStatusId === 'CONCLUIDO') {
+          triggerWhatsAppNotification('complete', row, false);
+        } else if (newStatusId === 'PARCIAL' || newStatusId === 'PARCIAL_BRANCO') {
+          triggerWhatsAppNotification('partial', row, false);
+        }
+      }
+    }
+
+    function updateRowActivity(rowId, newText) {
+      const sheet = getActiveSheet();
+      const row = sheet.rows.find((r) => r.id === rowId);
+      if (!row) return;
+      const old = row.activity;
+      row.activity = newText.trim().toUpperCase() || newText;
+      const wasQuickNew = Boolean(row.isJustCreatedQuick);
+      delete row.isJustCreatedQuick;
+      saveDb(`Editou serviço: "${old}" → "${row.activity}"`);
+
+      if (wasQuickNew && row.activity && row.activity !== 'NOVA ATIVIDADE PARA HOJE') {
+        const evType = row.finished ? 'complete' : row.started ? 'partial' : 'create';
+        triggerWhatsAppNotification(evType, row, false);
+      }
+    }
+
+    function deleteRow(rowId) {
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      const target = sheet.rows.find((r) => r.id === rowId);
+      sheet.rows = sheet.rows.filter((r) => r.id !== rowId);
+      saveDb(`Excluiu o serviço "${target ? target.activity : rowId}"`);
+    }
+
+    function moveRow(index, direction) {
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      const targetIdx = index + direction;
+      if (targetIdx < 0 || targetIdx >= sheet.rows.length) return;
+      const temp = sheet.rows[index];
+      sheet.rows[index] = sheet.rows[targetIdx];
+      sheet.rows[targetIdx] = temp;
+      saveDb(`Reordenou o serviço "${temp.activity}"`);
+    }
+
+    // =========================================================================
+    // MODAL DE CONFIGURAÇÕES DO WHATSAPP & PAINEL LATERAL RÁPIDO
+    // =========================================================================
+    function updateQuickWaPhone(val) {
+      db.whatsappConfig = db.whatsappConfig || {};
+      db.whatsappConfig.phone = val.trim();
+      saveDb(`Atualizou telefone WhatsApp para "${val.trim() || 'Escolher ao abrir'}"`);
+    }
+
+    function toggleQuickAutoOpenMode(checked) {
+      db.whatsappConfig = db.whatsappConfig || {};
+      db.whatsappConfig.dispatchMode = checked ? 'auto_open' : 'card_and_popup';
+      saveDb(`Alterou modo de disparo automático WhatsApp para ${checked ? 'DIRETO' : 'CARD NA TELA'}`);
+    }
+
+    function updateQuickEodTime(val) {
+      db.whatsappConfig = db.whatsappConfig || {};
+      db.whatsappConfig.endOfDayTime = val || '18:00';
+      saveDb(`Programou horário do Resumão do Final do Dia para ${db.whatsappConfig.endOfDayTime}`);
+    }
+
+    function toggleQuickWaSetting(key, checked) {
+      db.whatsappConfig = db.whatsappConfig || {};
+      db.whatsappConfig[key] = checked;
+      saveDb(`Alterou configuração rápida WhatsApp (${key} = ${checked ? 'ATIVADO' : 'DESATIVADO'})`);
+    }
+
+    function openWhatsAppModal() {
+      closeAllDropdowns();
+      const cfg = db.whatsappConfig || {};
+      document.getElementById('waPhoneInput').value = cfg.phone || '';
+      document.getElementById('waDispatchModeSelect').value = cfg.dispatchMode || 'card_and_popup';
+      document.getElementById('waReminderMinutesSelect').value = String(cfg.reminderMinutes || 0);
+      document.getElementById('waNotifyOnPartialInput').checked = cfg.notifyOnPartial !== false;
+      document.getElementById('waNotifyOnCompleteInput').checked = cfg.notifyOnComplete !== false;
+      document.getElementById('waNotifyOnCreateInput').checked = cfg.notifyOnCreate !== false;
+      document.getElementById('waAutoEndOfDayInput').checked = cfg.autoEndOfDayEnabled !== false;
+      document.getElementById('waEndOfDayTimeInput').value = cfg.endOfDayTime || '18:00';
+      document.getElementById('waSoundEnabledInput').checked = cfg.soundEnabled !== false;
+      document.getElementById('waBrowserNotificationInput').checked = cfg.browserNotification !== false;
+      document.getElementById('waWebhookUrlInput').value = cfg.webhookUrl || '';
+
+      document.getElementById('whatsAppModal').classList.add('open');
+    }
+
+    function saveWhatsAppConfigModal() {
+      const prev = db.whatsappConfig || {};
+      const cfg = {
+        phone: document.getElementById('waPhoneInput').value.trim(),
+        dispatchMode: document.getElementById('waDispatchModeSelect').value,
+        reminderMinutes: Number(document.getElementById('waReminderMinutesSelect').value) || 0,
+        notifyOnPartial: document.getElementById('waNotifyOnPartialInput').checked,
+        notifyOnComplete: document.getElementById('waNotifyOnCompleteInput').checked,
+        notifyOnCreate: document.getElementById('waNotifyOnCreateInput').checked,
+        autoEndOfDayEnabled: document.getElementById('waAutoEndOfDayInput').checked,
+        endOfDayTime: document.getElementById('waEndOfDayTimeInput').value || '18:00',
+        lastEndOfDaySentDate: prev.lastEndOfDaySentDate || '',
+        soundEnabled: document.getElementById('waSoundEnabledInput').checked,
+        browserNotification: document.getElementById('waBrowserNotificationInput').checked,
+        webhookUrl: document.getElementById('waWebhookUrlInput').value.trim()
+      };
+
+      if (cfg.browserNotification && 'Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+
+      db.whatsappConfig = cfg;
+      setupReminderTimer();
+      setupEndOfDayScheduler();
+      closeModal('whatsAppModal');
+      saveDb('Salvou configurações de notificações de serviço e Resumão no WhatsApp');
+    }
+
+    function testPartialServiceNotificationNow() {
+      db.whatsappConfig.phone = document.getElementById('waPhoneInput').value.trim();
+      const sheet = getActiveSheet();
+      const sampleRow = (sheet.rows && sheet.rows.find((r) => !r.finished)) || {
+        activity: 'SERVIÇO EM ANDAMENTO — TESTE DE NOTIFICAÇÃO PARCIAL (50%)',
+        status: 'PARCIAL',
+        started: true,
+        finished: false
+      };
+      triggerWhatsAppNotification('partial', sampleRow, true);
+    }
+
+    function testWhatsAppNotificationNow() {
+      db.whatsappConfig.phone = document.getElementById('waPhoneInput').value.trim();
+      const sheet = getActiveSheet();
+      const sampleRow = (sheet.rows && sheet.rows[0]) || {
+        activity: 'SERVIÇO FINALIZADO — TESTE DE NOTIFICAÇÃO CONCLUÍDO (100%)',
+        status: 'CONCLUIDO',
+        started: true,
+        finished: true
+      };
+      triggerWhatsAppNotification('complete', sampleRow, true);
+    }
+
+    function setupReminderTimer() {
+      if (reminderIntervalId) {
+        clearInterval(reminderIntervalId);
+        reminderIntervalId = null;
+      }
+      const mins = Number(db.whatsappConfig && db.whatsappConfig.reminderMinutes) || 0;
+      if (mins > 0) {
+        reminderIntervalId = setInterval(() => {
+          triggerPendingAlertCheck(false);
+        }, mins * 60 * 1000);
+      }
+    }
+
+    function triggerPendingAlertCheck(openWaImmediate) {
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      const stats = getSheetStats(sheet);
+      if (stats.todo === 0) {
+        alert(`🎉 Parabéns! Todos os ${stats.total} serviços de ${sheet.name} já estão concluídos!`);
+        return;
+      }
+      playNotificationSound('alert');
+      const waText = buildEndOfDayReport('current', '');
+      showWhatsAppToastCard(
+        `⚠️ Alerta: ${stats.todo} Serviço(s) Parcial/Pendente em ${sheet.name}`,
+        `Concluídos: ${stats.done} de ${stats.total} (${stats.pct}%)`,
+        waText,
+        'partial'
+      );
+      if (openWaImmediate) {
+        openWhatsAppUrl(waText);
+      }
+    }
+
+    function openAlertsCenterModal() {
+      closeAllDropdowns();
+      (db.alerts || []).forEach((a) => (a.read = true));
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+      updateBadgesUI();
+
+      const container = document.getElementById('alertsCenterBody');
+      const list = db.alerts || [];
+      if (list.length === 0) {
+        container.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);">Nenhum alerta registrado no momento.</div>';
+      } else {
+        container.innerHTML = list
+          .map((a) => {
+            const encoded = encodeURIComponent(a.waText || a.message || '');
+            const color = a.type === 'complete' ? '#16a34a' : a.type === 'partial' ? '#ea580c' : '#3b82f6';
+            return `
+              <div style="padding:10px 12px;border-radius:8px;background:var(--bg-page);border:1px solid var(--border-grid);display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                <div>
+                  <div style="font-weight:800;font-size:12.5px;color:${color};">${escapeHtml(a.title)}</div>
+                  <div style="font-size:12px;margin-top:2px;">${escapeHtml(a.message)}</div>
+                  <div style="font-size:10.5px;color:var(--text-muted);margin-top:2px;">${escapeHtml(a.time)}</div>
+                </div>
+                ${
+                  a.waText
+                    ? `<button class="btn btn-whatsapp" style="padding:5px 10px;font-size:11px;" onclick="openWhatsAppUrl(decodeURIComponent('${encoded}'))">📲 Reenviar WhatsApp</button>`
+                    : ''
+                }
+              </div>
+            `;
+          })
+          .join('');
+      }
+      document.getElementById('alertsCenterModal').classList.add('open');
+    }
+
+    function clearAllAlerts() {
+      db.alerts = [];
+      saveDb();
+      openAlertsCenterModal();
+    }
+
+    // =========================================================================
+    // DEMAIS FUNÇÕES DE GESTÃO DE ABAS, COLUNAS, CORES E EXCEL
+    // =========================================================================
+    function selectSheet(sheetId) {
+      db.activeSheetId = sheetId;
+      saveDb();
+    }
+
+    function updateSheetBannerDate(newVal) {
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      sheet.bannerDate = newVal;
+      saveDb(`Alterou data/título do cabeçalho para "${newVal}"`);
+    }
+
+    function pickDateFromCalendar(isoDate) {
+      if (!isoDate) return;
+      const parts = isoDate.split('-');
+      if (parts.length === 3) {
+        updateSheetBannerDate(`${parts[2]}/${parts[1]}/${parts[0]}`);
+      }
+    }
+
+    function updateSheetFooterNote(newVal) {
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      sheet.footerNote = newVal;
+      saveDb(`Alterou nota de rodapé para "${newVal}"`);
+    }
+
+    function updateMainHeader(key, newVal) {
+      const sheet = getActiveSheet();
+      if (!sheet || !newVal.trim()) return;
+      sheet.headers[key] = newVal.trim();
+      saveDb(`Renomeou coluna para "${newVal.trim()}"`);
+    }
+
+    function togglePctFormulaMode() {
+      db.pctFormulaMode = db.pctFormulaMode === 'excel' ? 'standard' : 'excel';
+      saveDb();
+    }
+
+    function toggleTheme() {
+      db.theme = db.theme === 'dark' ? 'light' : 'dark';
+      saveDb();
+    }
+
+    function createNewSheetPrompt() {
+      closeAllDropdowns();
+      const name = window.prompt('Nome da nova Lista / Aba:', 'NOVA LISTA');
+      if (!name || !name.trim()) return;
+      const today = new Date().toLocaleDateString('pt-BR');
+      const newSheet = {
+        id: 'lst_' + Date.now(),
+        name: name.trim().toUpperCase(),
+        bannerDate: today,
+        headers: {
+          cor: 'COR',
+          activity: 'ATIVIDADE PARA HOJE',
+          started: 'INICIADA',
+          finished: 'FINALIZADA',
+          pct: 'CONCLUIDA EM %'
+        },
+        customColumns: [],
+        footerNote: '',
+        rows: []
+      };
+      db.sheets.push(newSheet);
+      db.activeSheetId = newSheet.id;
+      saveDb(`Criou nova aba zerada "${newSheet.name}"`);
+    }
+
+    function renameCurrentSheetPrompt() {
+      closeAllDropdowns();
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      const name = window.prompt('Novo nome para a aba atual:', sheet.name);
+      if (!name || !name.trim()) return;
+      const old = sheet.name;
+      sheet.name = name.trim().toUpperCase();
+      saveDb(`Renomeou aba "${old}" para "${sheet.name}"`);
+    }
+
+    function duplicateCurrentSheet() {
+      closeAllDropdowns();
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      const clone = JSON.parse(JSON.stringify(sheet));
+      clone.id = 'lst_' + Date.now();
+      clone.name = sheet.name + ' (CÓPIA)';
+      db.sheets.unshift(clone);
+      db.activeSheetId = clone.id;
+      saveDb(`Duplicou a aba "${sheet.name}"`);
+    }
+
+    function deleteSheet(sheetId) {
+      if (db.sheets.length <= 1) {
+        alert('O sistema deve manter pelo menos 1 aba ativa.');
+        return;
+      }
+      const target = db.sheets.find((s) => s.id === sheetId);
+      if (!window.confirm(`Deseja realmente excluir a aba "${target ? target.name : ''}"?`)) return;
+      db.sheets = db.sheets.filter((s) => s.id !== sheetId);
+      if (db.activeSheetId === sheetId) {
+        db.activeSheetId = db.sheets[0].id;
+      }
+      saveDb(`Excluiu a aba "${target ? target.name : sheetId}"`);
+    }
+
+    function openColumnsModal() {
+      closeAllDropdowns();
+      renderCustomColsModalList();
+      document.getElementById('columnsModal').classList.add('open');
+    }
+
+    function renderCustomColsModalList() {
+      const sheet = getActiveSheet();
+      const container = document.getElementById('customColsList');
+      const cols = sheet.customColumns || [];
+      if (cols.length === 0) {
+        container.innerHTML = '<div style="padding:10px;background:var(--bg-page);border-radius:6px;color:var(--text-muted);">Nenhuma coluna extra adicionada nesta aba. Use o formulário abaixo para adicionar colunas como Responsável, Prazo, Equipe, Observações, etc.</div>';
+        return;
+      }
+      container.innerHTML = cols
+        .map(
+          (c) => `
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--bg-page);padding:8px 12px;border-radius:6px;border:1px solid var(--border-grid);">
+            <strong>${escapeHtml(c.name)}</strong>
+            <span style="font-size:11px;color:var(--text-muted);">Tipo: ${c.type}</span>
+            <button class="btn btn-danger" style="padding:3px 8px;" onclick="removeCustomColumn('${c.id}')">Excluir Coluna</button>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    function addCustomColumn() {
+      const input = document.getElementById('newColNameInput');
+      const typeSel = document.getElementById('newColTypeSelect');
+      const name = input.value.trim();
+      if (!name) return;
+      const sheet = getActiveSheet();
+      sheet.customColumns = sheet.customColumns || [];
+      sheet.customColumns.push({
+        id: 'cc_' + Date.now(),
+        name: name.toUpperCase(),
+        type: typeSel.value
+      });
+      input.value = '';
+      saveDb(`Adicionou coluna personalizada "${name.toUpperCase()}"`);
+      renderCustomColsModalList();
+    }
+
+    function renameCustomCol(colId, newName) {
+      const sheet = getActiveSheet();
+      const col = (sheet.customColumns || []).find((c) => c.id === colId);
+      if (col && newName.trim()) {
+        col.name = newName.trim().toUpperCase();
+        saveDb(`Renomeou coluna personalizada para "${col.name}"`);
+      }
+    }
+
+    function removeCustomColumn(colId) {
+      const sheet = getActiveSheet();
+      sheet.customColumns = (sheet.customColumns || []).filter((c) => c.id !== colId);
+      saveDb('Removeu coluna personalizada');
+      renderCustomColsModalList();
+    }
+
+    function updateCustomCell(rowId, colId, val) {
+      const sheet = getActiveSheet();
+      const row = sheet.rows.find((r) => r.id === rowId);
+      if (!row) return;
+      row.custom = row.custom || {};
+      row.custom[colId] = val;
+      saveDb(`Editou campo extra na atividade "${row.activity}"`);
+    }
+
+    function toggleCustomCheckbox(rowId, colId) {
+      const sheet = getActiveSheet();
+      const row = sheet.rows.find((r) => r.id === rowId);
+      if (!row) return;
+      row.custom = row.custom || {};
+      row.custom[colId] = !row.custom[colId];
+      saveDb(`Alternou caixa de seleção extra em "${row.activity}"`);
+    }
+
+    function openStatusColorsModal() {
+      closeAllDropdowns();
+      renderStatusColorsList();
+      document.getElementById('statusColorsModal').classList.add('open');
+    }
+
+    function renderStatusColorsList() {
+      const container = document.getElementById('statusColorsList');
+      container.innerHTML = (db.statuses || [])
+        .map(
+          (st, idx) => `
+          <div style="display:flex;align-items:center;gap:10px;background:var(--bg-page);padding:8px 12px;border-radius:6px;border:1px solid var(--border-grid);">
+            <input type="color" value="${st.bg}" onchange="updateStatusColor(${idx}, 'bg', this.value)" style="width:38px;height:30px;border:none;cursor:pointer;" title="Cor de Fundo" />
+            <input type="text" class="form-input" value="${escapeHtml(st.label)}" onchange="updateStatusColor(${idx}, 'label', this.value)" style="flex:1;font-weight:700;" />
+            ${
+              db.statuses.length > 2
+                ? `<button class="btn btn-danger" onclick="deleteStatusOption(${idx})">✕</button>`
+                : ''
+            }
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    function updateStatusColor(idx, prop, val) {
+      if (!db.statuses[idx]) return;
+      db.statuses[idx][prop] = val;
+      saveDb(`Atualizou configuração de status "${db.statuses[idx].label}"`);
+      renderStatusColorsList();
+    }
+
+    function addNewStatusOption() {
+      const lblInput = document.getElementById('newStatusLabelInput');
+      const bgInput = document.getElementById('newStatusBgInput');
+      const label = lblInput.value.trim().toUpperCase();
+      if (!label) return;
+      db.statuses.push({
+        id: label,
+        label,
+        bg: bgInput.value,
+        text: '#000000'
+      });
+      lblInput.value = '';
+      saveDb(`Criou novo status "${label}"`);
+      renderStatusColorsList();
+    }
+
+    function deleteStatusOption(idx) {
+      db.statuses.splice(idx, 1);
+      saveDb('Removeu opção de status');
+      renderStatusColorsList();
+    }
+
+    function openHistoryModal() {
+      closeAllDropdowns();
+      const container = document.getElementById('historyModalBody');
+      const list = db.history || [];
+      container.innerHTML = list
+        .map(
+          (item) => `
+          <div style="padding:8px 12px;border-radius:6px;background:var(--bg-page);border:1px solid var(--border-grid);display:flex;justify-content:space-between;gap:10px;">
+            <div><strong>[${escapeHtml(item.sheet)}]</strong> ${escapeHtml(item.desc)}</div>
+            <span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">${escapeHtml(item.time)}</span>
+          </div>
+        `
+        )
+        .join('');
+      document.getElementById('historyModal').classList.add('open');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function clearCurrentSheetRows() {
+      closeAllDropdowns();
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      if (!window.confirm(`Deseja zerar todas as tarefas da lista "${sheet.name}"?`)) return;
+      sheet.rows = [];
+      sheet.footerNote = '';
+      saveDb(`Zerou todas as tarefas da lista "${sheet.name}"`);
+    }
+
+    function resetToOriginalSpreadsheet() {
+      closeAllDropdowns();
+      if (!window.confirm('Deseja ZERAR todo o sistema e começar tudo do zero?')) return;
+      const keepPhone = db.whatsappConfig ? db.whatsappConfig.phone : '';
+      db = getFactoryDatabase();
+      if (keepPhone) db.whatsappConfig.phone = keepPhone;
+      saveDb('Zerou todo o sistema para começar do zero');
+    }
+
+    function exportToExcel() {
+      closeAllDropdowns();
+      if (typeof XLSX === 'undefined') {
+        alert('A biblioteca Excel ainda está carregando.');
+        return;
+      }
+      const wb = XLSX.utils.book_new();
+      db.sheets.forEach((s) => {
+        const rowsData = (s.rows || []).map((r) => {
+          const obj = {
+            [s.headers.cor]: r.status === 'PARCIAL_BRANCO' ? 'PARCIAL' : r.status,
+            [s.headers.activity]: r.activity,
+            [s.headers.started]: r.started ? 'TRUE' : 'FALSE',
+            [s.headers.finished]: r.finished ? 'TRUE' : 'FALSE',
+            [s.headers.pct]: calcRowPct(r) + '%'
+          };
+          (s.customColumns || []).forEach((cc) => {
+            obj[cc.name] = (r.custom && r.custom[cc.id]) ?? '';
+          });
+          return obj;
+        });
+        const ws = XLSX.utils.json_to_sheet(rowsData);
+        const safeName = s.name.replace(/[\\/?*[\]:]/g, '').substring(0, 31) || 'Lista';
+        XLSX.utils.book_append_sheet(wb, ws, safeName);
+      });
+      XLSX.writeFile(wb, `CHECKS-MAX_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    }
+
+    function importExcelFile(event) {
+      closeAllDropdowns();
+      const file = event.target.files && event.target.files[0];
+      if (!file || typeof XLSX === 'undefined') return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const wb = XLSX.read(data, { type: 'array' });
+          let importedCount = 0;
+
+          wb.SheetNames.forEach((sheetName) => {
+            const ws = wb.Sheets[sheetName];
+            const matrix = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+            const newRows = [];
+
+            for (let r = 0; r < matrix.length; r++) {
+              const row = matrix[r] || [];
+              const joined = row.map((c) => String(c || '').trim()).join(' ').toUpperCase();
+              if (!joined || joined.includes('ATIVIDADE PARA HOJE') || joined.includes('DEMANDAS') || joined.includes('TOTAL')) {
+                continue;
+              }
+              const candidateText = String(row[2] || row[3] || row[1] || '').trim();
+              if (!candidateText || /^\d+(\.\d+)?$/.test(candidateText)) continue;
+
+              const stRaw = String(row[1] || '').trim().toUpperCase();
+              const startedRaw = row[3] !== undefined ? row[3] : row[4];
+              const finishedRaw = row[4] !== undefined ? row[4] : row[5];
+
+              const started = startedRaw === 1 || startedRaw === '1' || startedRaw === true || String(startedRaw).toUpperCase() === 'TRUE';
+              const finished = finishedRaw === 1 || finishedRaw === '1' || finishedRaw === true || String(finishedRaw).toUpperCase() === 'TRUE';
+
+              newRows.push({
+                id: 'imp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+                status: finished ? 'CONCLUIDO' : started ? 'PARCIAL' : stRaw || 'NÃO INICIADO',
+                activity: candidateText,
+                started: Boolean(started || finished),
+                finished: Boolean(finished),
+                custom: {}
+              });
+            }
+
+            if (newRows.length > 0) {
+              const existing = db.sheets.find((s) => s.name.toUpperCase() === sheetName.trim().toUpperCase());
+              if (existing) {
+                existing.rows = newRows;
+              } else {
+                db.sheets.push({
+                  id: 'lst_' + Date.now() + '_' + importedCount,
+                  name: sheetName.trim().toUpperCase(),
+                  bannerDate: new Date().toLocaleDateString('pt-BR'),
+                  headers: { cor: 'COR', activity: 'ATIVIDADE PARA HOJE', started: 'INICIADA', finished: 'FINALIZADA', pct: 'CONCLUIDA EM %' },
+                  customColumns: [],
+                  footerNote: '',
+                  rows: newRows
+                });
+              }
+              importedCount++;
+            }
+          });
+
+          saveDb(`Importou ${importedCount} aba(s) do arquivo "${file.name}"`);
+          alert(`${importedCount} aba(s) importada(s) com sucesso!`);
+        } catch (err) {
+          console.error(err);
+          alert('Erro ao ler a planilha Excel.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    // Inicializa
+    renderAll();
+    setupReminderTimer();
+    setupEndOfDayScheduler();
+  </script>
+</body>
+</html>

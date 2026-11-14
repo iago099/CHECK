@@ -1,0 +1,92 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Funções auxiliares de autenticação e perfis de permissão
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function hasRole(roles) {
+      return isSignedIn() && (getUserData().role in roles);
+    }
+
+    function isAdmin() {
+      return hasRole(['admin']);
+    }
+
+    function canManageLists() {
+      return hasRole(['admin', 'manager']) || (isSignedIn() && getUserData().permissions.canManageLists == true);
+    }
+
+    function canEditTasks() {
+      return hasRole(['admin', 'manager', 'operator']) || (isSignedIn() && getUserData().permissions.canEditTasks == true);
+    }
+
+    function canDeleteTasks() {
+      return hasRole(['admin', 'manager']) || (isSignedIn() && getUserData().permissions.canDeleteTasks == true);
+    }
+
+    // 1. Coleção de Listas Dinâmicas e Esquema de Campos Personalizados
+    match /lists/{listId} {
+      allow read: if isSignedIn();
+      allow create, update: if canManageLists();
+      allow delete: if isAdmin() || canManageLists();
+    }
+
+    // 2. Coleção de Tarefas / Registros de Checklist
+    match /tasks/{taskId} {
+      allow read: if isSignedIn();
+      allow create, update: if canEditTasks()
+        && request.resource.data.keys().hasAll(['id', 'listId', 'title', 'statusId', 'updatedAt']);
+      allow delete: if canDeleteTasks();
+    }
+
+    // 3. Coleções de Metadados Editáveis (Categorias, Status, Prioridades, Equipes)
+    match /categories/{categoryId} {
+      allow read: if isSignedIn();
+      allow write: if canManageLists();
+    }
+
+    match /statuses/{statusId} {
+      allow read: if isSignedIn();
+      allow write: if canManageLists();
+    }
+
+    match /priorities/{priorityId} {
+      allow read: if isSignedIn();
+      allow write: if canManageLists();
+    }
+
+    match /teams/{teamId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() || hasRole(['manager']);
+    }
+
+    // 4. Coleção de Usuários e Responsáveis
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create, update: if isAdmin() || request.auth.uid == userId;
+      allow delete: if isAdmin();
+    }
+
+    // 5. Histórico e Auditoria (Imutável: apenas criação e leitura, proibido editar ou apagar!)
+    match /audit_logs/{logId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.keys().hasAll(['id', 'action', 'userId', 'userName', 'timestamp']);
+      allow update, delete: if false; // Requisito 8: Não apagar o histórico quando uma tarefa for editada
+    }
+
+    // 6. Configurações Gerais do Workspace
+    match /settings/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+  }
+}
