@@ -350,9 +350,9 @@
     table.checklist-table thead th {
       background: var(--bg-panel);
       color: var(--text-main);
-      font-weight: 600;
-      font-size: 13px;
-      padding: 7px 10px;
+      font-weight: 700;
+      font-size: 12.5px;
+      padding: 8px 6px;
       border-bottom: 1px solid var(--border-grid);
       text-transform: uppercase;
       white-space: nowrap;
@@ -362,12 +362,16 @@
     .th-editable {
       background: transparent;
       border: 1px dashed transparent;
+      border-radius: 4px;
       color: inherit;
       font: inherit;
       text-transform: uppercase;
       width: 100%;
+      min-width: 100%;
       outline: none;
-      padding: 2px 4px;
+      padding: 2px 2px;
+      overflow: visible;
+      text-overflow: clip;
     }
 
     .th-editable:hover,
@@ -432,7 +436,8 @@
     }
 
     .chk-cell {
-      width: 90px;
+      width: 112px;
+      min-width: 108px;
       text-align: center;
     }
 
@@ -467,7 +472,8 @@
     }
 
     .pct-cell {
-      width: 130px;
+      width: 152px;
+      min-width: 146px;
       text-align: center;
       font-weight: 600;
       font-size: 13.5px;
@@ -493,7 +499,8 @@
     }
 
     .row-actions-cell {
-      width: 82px;
+      width: 90px;
+      min-width: 86px;
       text-align: center;
       white-space: nowrap;
     }
@@ -519,7 +526,7 @@
     .total-yellow-bar {
       margin-top: 22px;
       display: grid;
-      grid-template-columns: 125px 1fr 90px 90px 130px 82px;
+      grid-template-columns: 125px 1fr 112px 112px 152px 90px;
       align-items: center;
     }
 
@@ -535,7 +542,7 @@
 
     .extra-note-row {
       display: grid;
-      grid-template-columns: 125px 1fr 90px 90px 130px 82px;
+      grid-template-columns: 125px 1fr 112px 112px 152px 90px;
       padding: 4px 0 12px 0;
     }
 
@@ -2631,33 +2638,33 @@
       const thead = document.getElementById('tableHead');
       let headHtml = `
         <tr>
-          <th style="text-align:left;width:125px;">
-            <input class="th-editable" value="${escapeHtml(sheet.headers.cor)}" onchange="updateMainHeader('cor', this.value)" />
+          <th style="text-align:left;width:125px;min-width:115px;">
+            <input class="th-editable" size="${Math.max(4, (sheet.headers.cor || '').length + 1)}" value="${escapeHtml(sheet.headers.cor)}" onchange="updateMainHeader('cor', this.value)" title="Clique para editar o nome da coluna" />
           </th>
-          <th style="text-align:center;">
-            <input class="th-editable" style="text-align:center;" value="${escapeHtml(sheet.headers.activity)}" onchange="updateMainHeader('activity', this.value)" />
+          <th style="text-align:center;min-width:220px;">
+            <input class="th-editable" size="${Math.max(12, (sheet.headers.activity || '').length + 2)}" style="text-align:center;" value="${escapeHtml(sheet.headers.activity)}" onchange="updateMainHeader('activity', this.value)" title="Clique para editar o nome da coluna" />
           </th>
       `;
 
       customCols.forEach((cc) => {
         headHtml += `
-          <th style="text-align:center;width:150px;">
-            <input class="th-editable" style="text-align:center;" value="${escapeHtml(cc.name)}" onchange="renameCustomCol('${cc.id}', this.value)" />
+          <th style="text-align:center;width:150px;min-width:130px;">
+            <input class="th-editable" size="${Math.max(6, (cc.name || '').length + 2)}" style="text-align:center;" value="${escapeHtml(cc.name)}" onchange="renameCustomCol('${cc.id}', this.value)" title="Clique para editar o nome da coluna" />
           </th>
         `;
       });
 
       headHtml += `
-          <th style="text-align:center;width:90px;">
-            <input class="th-editable" style="text-align:center;" value="${escapeHtml(sheet.headers.started)}" onchange="updateMainHeader('started', this.value)" />
+          <th style="text-align:center;width:112px;min-width:108px;">
+            <input class="th-editable" size="${Math.max(8, (sheet.headers.started || '').length + 2)}" style="text-align:center;" value="${escapeHtml(sheet.headers.started)}" onchange="updateMainHeader('started', this.value)" title="Clique para editar o nome da coluna" />
           </th>
-          <th style="text-align:center;width:90px;">
-            <input class="th-editable" style="text-align:center;" value="${escapeHtml(sheet.headers.finished)}" onchange="updateMainHeader('finished', this.value)" />
+          <th style="text-align:center;width:112px;min-width:108px;">
+            <input class="th-editable" size="${Math.max(10, (sheet.headers.finished || '').length + 2)}" style="text-align:center;" value="${escapeHtml(sheet.headers.finished)}" onchange="updateMainHeader('finished', this.value)" title="Clique para editar o nome da coluna" />
           </th>
-          <th style="text-align:center;width:130px;">
-            <input class="th-editable" style="text-align:center;" value="${escapeHtml(sheet.headers.pct)}" onchange="updateMainHeader('pct', this.value)" />
+          <th style="text-align:center;width:152px;min-width:146px;">
+            <input class="th-editable" size="${Math.max(14, (sheet.headers.pct || '').length + 2)}" style="text-align:center;" value="${escapeHtml(sheet.headers.pct)}" onchange="updateMainHeader('pct', this.value)" title="Clique para editar o nome da coluna" />
           </th>
-          <th class="no-print" style="width:82px;text-align:center;">AÇÕES</th>
+          <th class="no-print" style="width:90px;min-width:86px;text-align:center;">AÇÕES</th>
         </tr>
       `;
       thead.innerHTML = headHtml;
