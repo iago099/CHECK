@@ -2127,6 +2127,8 @@
           if (yr < 100) yr += 2000;
           if (d >= 1 && d <= 31 && mo >= 1 && mo <= 12) {
             const dt = new Date(yr, mo - 1, d, 12, 0, 0);
+            const shiftStart = new Date(yr, mo - 1, d, 6, 0, 0, 0);
+            const shiftEnd = new Date(yr, mo - 1, d, 19, 0, 0, 0);
             const nextDt = new Date(dt.getTime());
             nextDt.setDate(nextDt.getDate() + 1);
 
@@ -2139,6 +2141,8 @@
 
             return {
               dt,
+              shiftStart,
+              shiftEnd,
               nextDt,
               sourceFull,
               sourceShort,
@@ -2162,21 +2166,27 @@
       });
     }
 
-    function syncRolloverForSheet(sourceSheet, forceEvenIfFuture) {
-      if (!sourceSheet) return { transferred: 0, removed: 0, nextSheet: null, dateInfo: null };
+    function syncRolloverForSheet(sourceSheet, forceManual) {
+      if (!sourceSheet) return { transferred: 0, transferredTotal: 0, removed: 0, nextSheet: null, dateInfo: null };
       const dateInfo = parseDateFromSheet(sourceSheet);
       if (!dateInfo) return { transferred: 0, transferredTotal: 0, removed: 0, nextSheet: null, dateInfo: null };
 
-      // Evita cascata infinita (Ex: 16/11 -> 17/11 -> 18/11 no mesmo dia)
-      const todayNoon = new Date();
-      todayNoon.setHours(12, 0, 0, 0);
-      const isTodayOrPast = dateInfo.dt.getTime() <= todayNoon.getTime();
-      const hasOriginalRows = (sourceSheet.rows || []).some(
-        (r) => r.activity && r.activity.trim() !== '' && !r.rolloverFromRowId
-      );
+      const now = new Date();
+      // REGRA DE HORÁRIO ESTRITA (06:00 ÀS 19:00):
+      // O repasse automático para o dia seguinte SÓ acontece quando o período das 06:00 às 19:00 daquele dia TERMINA
+      // (ou seja, quando o relógio atinge ou passa das 19:00 da data da aba: now >= shiftEnd).
+      // Enquanto estiver entre 06:00 e 18:59 do próprio dia (ex: dia 17 às 07:40), NÃO cria o dia 18!
+      const hasShiftEnded = now.getTime() >= dateInfo.shiftEnd.getTime();
 
-      if (!forceEvenIfFuture && !isTodayOrPast && !hasOriginalRows) {
-        return { transferred: 0, transferredTotal: 0, removed: 0, nextSheet: null, dateInfo };
+      if (!forceManual && !hasShiftEnded) {
+        return {
+          transferred: 0,
+          transferredTotal: 0,
+          removed: 0,
+          nextSheet: null,
+          dateInfo,
+          waitingForShiftEnd: true
+        };
       }
 
       const validRows = (sourceSheet.rows || []).filter(
@@ -2251,7 +2261,7 @@
           }
         });
 
-        // 2. Se alguma atividade atingiu 100% no dia atual, remove a cópia pendente do dia seguinte
+        // 2. Se alguma atividade atingiu 100% no dia anterior, remove a cópia pendente do dia seguinte
         completedRows.forEach((doneRow) => {
           const beforeLen = nextSheet.rows.length;
           nextSheet.rows = nextSheet.rows.filter(
@@ -2268,7 +2278,8 @@
         transferredTotal: pendingRows.length,
         removed: removedCompletedCount,
         nextSheet,
-        dateInfo
+        dateInfo,
+        waitingForShiftEnd: false
       };
     }
 
@@ -2276,10 +2287,42 @@
       db.rolloverConfig = db.rolloverConfig || { enabled: true, startHour: 6, endHour: 19 };
       if (db.rolloverConfig.enabled === false && !forceActive) return null;
 
+      const now = new Date();
+
+      // Limpeza automática de qualquer aba futura (ex: dia 18) que tenha sido criada antes das 19:00 do dia 17
+      if (!forceActive && Array.isArray(db.sheets) && db.sheets.length > 1) {
+        db.sheets = db.sheets.filter((sh) => {
+          const info = parseDateFromSheet(sh);
+          if (!info) return true;
+          const prevDayShiftEnd = new Date(
+            info.dt.getFullYear(),
+            info.dt.getMonth(),
+            info.dt.getDate() - 1,
+            19,
+            0,
+            0,
+            0
+          );
+          const createdBeforePrevDay19h = now.getTime() < prevDayShiftEnd.getTime();
+          const onlyHasAutoRolloverRows =
+            (sh.rows || []).length === 0 || (sh.rows || []).every((r) => Boolean(r.rolloverFromRowId));
+          const isAutoCreatedId = String(sh.id || '').startsWith('lst_dia_');
+
+          if (createdBeforePrevDay19h && (isAutoCreatedId || ((sh.rows || []).length > 0 && onlyHasAutoRolloverRows))) {
+            return false; // Remove aba futura criada antes do horário das 19:00
+          }
+          return true;
+        });
+
+        if (!db.sheets.some((s) => s.id === db.activeSheetId) && db.sheets.length > 0) {
+          db.activeSheetId = db.sheets[db.sheets.length - 1].id;
+        }
+      }
+
       let lastResult = null;
       const activeSheet = getActiveSheet();
 
-      // Sincroniza todas as abas cuja data é hoje ou anterior (ex: 16/11/2026 -> 17/11/2026)
+      // Sincroniza apenas as abas cujo período das 06:00 às 19:00 JÁ ENCERROU (now >= 19:00 daquele dia)
       const snapshotSheets = [...(db.sheets || [])];
       snapshotSheets.forEach((sh) => {
         const res = syncRolloverForSheet(sh, forceActive && sh.id === (activeSheet && activeSheet.id));
@@ -3190,27 +3233,49 @@
       }
 
       if (pendingRows.length > 0) {
-        bannerEl.innerHTML = `
-          <div style="padding:9px 14px;border-radius:8px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.4);font-size:12px;color:var(--text-main);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              <span style="background:#10b981;color:#fff;font-weight:900;font-size:10.5px;padding:2px 8px;border-radius:999px;">REGRA 06:00 ÀS 19:00 ATIVA</span>
-              <span>
-                <strong>${pendingRows.length} atividade(s)</strong> em <strong>50%</strong> ou <strong>Não Iniciada (0%)</strong> de <strong>${escapeHtml(dateInfo.sourceFull)}</strong> ${
+        const now = new Date();
+        const hasShiftEnded = now.getTime() >= dateInfo.shiftEnd.getTime();
+        const nowTimeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+        if (!hasShiftEnded) {
+          // Estamos ANTES das 19:00 da data da aba (ex: dia 17/11 entre 06:00 e 19:00) -> Aguarda dar 19:00!
+          bannerEl.innerHTML = `
+            <div style="padding:9px 14px;border-radius:8px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.45);font-size:12px;color:var(--text-main);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span style="background:#f59e0b;color:#000;font-weight:900;font-size:10.5px;padding:2px 8px;border-radius:999px;">⏳ TURNO 06:00 ÀS 19:00 EM ANDAMENTO (${nowTimeStr})</span>
+                <span>
+                  Você tem <strong>${pendingRows.length} atividade(s)</strong> em <strong>50%</strong> ou <strong>Não Iniciada (0%)</strong> hoje (<strong>${escapeHtml(dateInfo.sourceFull)}</strong>). Caso não atinjam 100% até as <strong>19:00</strong>, o sistema criará automaticamente o checklist de <strong>${escapeHtml(dateInfo.nextFull)}</strong> às 19:00!
+                </span>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <button class="btn" style="padding:4px 10px;font-size:11px;border-color:#f59e0b;color:#f59e0b;" onclick="triggerManualRolloverNow()" title="Forçar criação antecipada do dia seguinte antes das 19:00">⚡ Antecipar p/ ${escapeHtml(dateInfo.preferredNextTabName)}</button>
+              </div>
+            </div>
+          `;
+        } else {
+          // Já passou das 19:00 da data da aba -> Repasse automático concluído!
+          bannerEl.innerHTML = `
+            <div style="padding:9px 14px;border-radius:8px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.4);font-size:12px;color:var(--text-main);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span style="background:#10b981;color:#fff;font-weight:900;font-size:10.5px;padding:2px 8px;border-radius:999px;">✅ ENCERRADO 19:00 ➔ REPASSADO</span>
+                <span>
+                  <strong>${pendingRows.length} atividade(s)</strong> em <strong>50%</strong> ou <strong>Não Iniciada (0%)</strong> de <strong>${escapeHtml(dateInfo.sourceFull)}</strong> ${
+                    nextSheet
+                      ? `foram transferidas automaticamente para o checklist de <strong>${escapeHtml(nextSheet.name)}</strong>!`
+                      : `prontas para o checklist de <strong>${escapeHtml(dateInfo.nextFull)}</strong>.`
+                  }
+                </span>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                ${
                   nextSheet
-                    ? `já estão automaticamente no checklist do dia seguinte (<strong>${escapeHtml(nextSheet.name)}</strong>)!`
-                    : `serão criadas no checklist de <strong>${escapeHtml(dateInfo.nextFull)}</strong>.`
+                    ? `<button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="selectSheet('${nextSheet.id}')">📅 Abrir ${escapeHtml(nextSheet.name)} (${(nextSheet.rows || []).length})</button>`
+                    : `<button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="triggerManualRolloverNow()">📅 Criar ${escapeHtml(dateInfo.preferredNextTabName)} Agora</button>`
                 }
-              </span>
+              </div>
             </div>
-            <div style="display:flex;gap:6px;align-items:center;">
-              ${
-                nextSheet
-                  ? `<button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="selectSheet('${nextSheet.id}')">📅 Abrir ${escapeHtml(nextSheet.name)} (${(nextSheet.rows || []).length})</button>`
-                  : `<button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="triggerManualRolloverNow()">📅 Criar ${escapeHtml(dateInfo.preferredNextTabName)} Agora</button>`
-              }
-            </div>
-          </div>
-        `;
+          `;
+        }
       } else if (validRows.length > 0) {
         bannerEl.innerHTML = `
           <div style="padding:8px 12px;border-radius:8px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);font-size:11.5px;color:#10b981;font-weight:700;">
