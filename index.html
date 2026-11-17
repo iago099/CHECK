@@ -1503,11 +1503,17 @@
             <button class="btn btn-primary" onclick="openNewTaskModal()">＋ Novo Serviço / Tarefa</button>
             <button class="btn" onclick="addNewRowQuick()">＋ Linha Rápida na Tabela</button>
             <button class="btn btn-warning" onclick="openEndOfDaySummaryModal()">📋 Resumão do Final do Dia</button>
+            <button class="btn" style="border-color:#10b981;color:#10b981;" onclick="triggerManualRolloverNow()" title="Executar regra agora: transferir tarefas em 50% ou Não Iniciadas (0%) para o checklist do dia seguinte">
+              🔄 Repassar &lt;100% p/ Dia Seguinte
+            </button>
           </div>
           <span style="font-size:11px;color:var(--text-muted);">
-            📲 Notificação automática no WhatsApp quando o serviço estiver <strong>PARCIAL (50%)</strong> ou <strong>CONCLUIDO (100%)</strong>.
+            📲 Notificação WhatsApp em <strong>PARCIAL (50%)</strong> / <strong>CONCLUIDO (100%)</strong> + 🔄 Repasse automático (06h–19h) p/ dia seguinte.
           </span>
         </div>
+
+        <!-- Faixa Viva da Regra 06:00 às 19:00 -> Checklist do Dia Seguinte -->
+        <div id="rolloverRuleBanner" class="no-print" style="margin-top:10px;"></div>
 
         <!-- Barra Amarela TOTAL EM % idêntica à linha 19 da planilha -->
         <div class="total-yellow-bar">
@@ -1661,6 +1667,20 @@
               </button>
               <button class="btn btn-whatsapp" style="padding:7px 9px;font-size:11.5px;" onclick="sendEndOfDaySummaryImmediate()" title="Enviar Resumão no WhatsApp Agora com 1 Clique">
                 📲 Enviar Já
+              </button>
+            </div>
+
+            <!-- Regra Automática 06:00 às 19:00 -> Dia Seguinte -->
+            <div style="border-top:1px solid var(--border-grid);padding-top:7px;margin-top:2px;display:flex;flex-direction:column;gap:5px;">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11.5px;font-weight:800;color:#10b981;">
+                <input type="checkbox" id="chkRolloverEnabled" checked onchange="toggleRolloverRule(this.checked)" />
+                <span>🔄 Regra 06:00 às 19:00 ➔ Dia Seguinte</span>
+              </label>
+              <div style="font-size:10.5px;color:var(--text-muted);line-height:1.35;">
+                Atividades em <strong>50% (Parcial)</strong> ou <strong>0% (Não Iniciada)</strong> criam automaticamente o checklist do <strong>dia seguinte</strong> (Ex: 16/11 ➔ 17/11).
+              </div>
+              <button type="button" class="btn" style="width:100%;justify-content:center;padding:5px 8px;font-size:11px;border-color:#10b981;color:#10b981;" onclick="triggerManualRolloverNow()">
+                ⚡ Atualizar Checklist do Dia Seguinte
               </button>
             </div>
           </div>
@@ -2046,7 +2066,7 @@
       };
     }
 
-    let db = loadDb();
+        let db = loadDb();
 
     function loadDb() {
       try {
@@ -2056,6 +2076,10 @@
           if (parsed && Array.isArray(parsed.sheets) && parsed.sheets.length > 0) {
             const defWa = getFactoryDatabase().whatsappConfig;
             parsed.whatsappConfig = Object.assign({}, defWa, parsed.whatsappConfig || {});
+            parsed.rolloverConfig = Object.assign(
+              { enabled: true, startHour: 6, endHour: 19, lastShiftAlertDate: '' },
+              parsed.rolloverConfig || {}
+            );
             parsed.alerts = parsed.alerts || [];
             return parsed;
           }
@@ -2064,11 +2088,12 @@
         console.error(e);
       }
       const initial = getFactoryDatabase();
+      initial.rolloverConfig = { enabled: true, startHour: 6, endHour: 19, lastShiftAlertDate: '' };
       localStorage.setItem(DB_KEY, JSON.stringify(initial));
       return initial;
     }
 
-    function saveDb(logText) {
+    function saveDb(logText, skipAutoRollover) {
       if (logText) {
         const active = getActiveSheet();
         db.history = db.history || [];
@@ -2079,8 +2104,221 @@
         });
         if (db.history.length > 250) db.history.length = 250;
       }
+      if (!skipAutoRollover) {
+        runAutoRolloverEngine(false);
+      }
       localStorage.setItem(DB_KEY, JSON.stringify(db));
       renderAll();
+    }
+
+    // =========================================================================
+    // REGRA AUTOMÁTICA (06:00 ÀS 19:00): SE 50% OU NÃO INICIADA (<100%),
+    // CRIA O CHECKLIST DO DIA SEGUINTE E INSERE A ATIVIDADE AUTOMATICAMENTE
+    // =========================================================================
+    function parseDateFromSheet(sheet) {
+      if (!sheet) return null;
+      const candidates = [sheet.bannerDate || '', sheet.name || ''];
+      for (const rawStr of candidates) {
+        const m = String(rawStr).trim().match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+        if (m) {
+          const d = parseInt(m[1], 10);
+          const mo = parseInt(m[2], 10);
+          let yr = parseInt(m[3], 10);
+          if (yr < 100) yr += 2000;
+          if (d >= 1 && d <= 31 && mo >= 1 && mo <= 12) {
+            const dt = new Date(yr, mo - 1, d, 12, 0, 0);
+            const nextDt = new Date(dt.getTime());
+            nextDt.setDate(nextDt.getDate() + 1);
+
+            const pad2 = (n) => String(n).padStart(2, '0');
+            const sourceFull = `${pad2(dt.getDate())}/${pad2(dt.getMonth() + 1)}/${dt.getFullYear()}`;
+            const sourceShort = `${pad2(dt.getDate())}/${pad2(dt.getMonth() + 1)}/${String(dt.getFullYear()).slice(-2)}`;
+            const nextFull = `${pad2(nextDt.getDate())}/${pad2(nextDt.getMonth() + 1)}/${nextDt.getFullYear()}`;
+            const nextShort = `${pad2(nextDt.getDate())}/${pad2(nextDt.getMonth() + 1)}/${String(nextDt.getFullYear()).slice(-2)}`;
+            const usesShortTabName = /^\s*\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2}\s*$/.test(String(sheet.name || ''));
+
+            return {
+              dt,
+              nextDt,
+              sourceFull,
+              sourceShort,
+              nextFull,
+              nextShort,
+              preferredNextTabName: usesShortTabName ? nextShort : nextFull
+            };
+          }
+        }
+      }
+      return null;
+    }
+
+    function findSheetByDateStr(fullDate, shortDate) {
+      return (db.sheets || []).find((s) => {
+        const nm = String(s.name || '').trim();
+        const bd = String(s.bannerDate || '').trim();
+        if (nm === fullDate || nm === shortDate || bd === fullDate || bd === shortDate) return true;
+        const info = parseDateFromSheet(s);
+        return info && info.sourceFull === fullDate;
+      });
+    }
+
+    function syncRolloverForSheet(sourceSheet, forceEvenIfFuture) {
+      if (!sourceSheet) return { transferred: 0, removed: 0, nextSheet: null, dateInfo: null };
+      const dateInfo = parseDateFromSheet(sourceSheet);
+      if (!dateInfo) return { transferred: 0, transferredTotal: 0, removed: 0, nextSheet: null, dateInfo: null };
+
+      // Evita cascata infinita (Ex: 16/11 -> 17/11 -> 18/11 no mesmo dia)
+      const todayNoon = new Date();
+      todayNoon.setHours(12, 0, 0, 0);
+      const isTodayOrPast = dateInfo.dt.getTime() <= todayNoon.getTime();
+      const hasOriginalRows = (sourceSheet.rows || []).some(
+        (r) => r.activity && r.activity.trim() !== '' && !r.rolloverFromRowId
+      );
+
+      if (!forceEvenIfFuture && !isTodayOrPast && !hasOriginalRows) {
+        return { transferred: 0, transferredTotal: 0, removed: 0, nextSheet: null, dateInfo };
+      }
+
+      const validRows = (sourceSheet.rows || []).filter(
+        (r) => r.activity && r.activity.trim() !== '' && !r.isJustCreatedQuick
+      );
+
+      // Condição da Regra: Atividades em 50% (PARCIAL) ou 0% (NÃO INICIADO) -> ou seja, < 100%
+      const pendingRows = validRows.filter((r) => calcRowPct(r) < 100);
+      const completedRows = validRows.filter((r) => calcRowPct(r) >= 100);
+
+      let nextSheet = findSheetByDateStr(dateInfo.nextFull, dateInfo.nextShort);
+      let transferredNewCount = 0;
+      let removedCompletedCount = 0;
+
+      if (pendingRows.length > 0 && !nextSheet) {
+        nextSheet = {
+          id: 'lst_dia_' + dateInfo.nextFull.replace(/\D/g, '') + '_' + Math.floor(Math.random() * 1000),
+          name: dateInfo.preferredNextTabName,
+          bannerDate: dateInfo.nextFull,
+          headers: JSON.parse(
+            JSON.stringify(
+              sourceSheet.headers || {
+                cor: 'COR',
+                activity: 'ATIVIDADE PARA HOJE',
+                started: 'INICIADA',
+                finished: 'FINALIZADA',
+                pct: 'CONCLUIDA EM %'
+              }
+            )
+          ),
+          customColumns: JSON.parse(JSON.stringify(sourceSheet.customColumns || [])),
+          footerNote: '',
+          rows: []
+        };
+        const srcIdx = db.sheets.findIndex((s) => s.id === sourceSheet.id);
+        if (srcIdx >= 0) {
+          db.sheets.splice(srcIdx + 1, 0, nextSheet);
+        } else {
+          db.sheets.push(nextSheet);
+        }
+      }
+
+      if (nextSheet && nextSheet.id !== sourceSheet.id) {
+        nextSheet.rows = nextSheet.rows || [];
+
+        // 1. Insere ou sincroniza cada atividade < 100% (50% ou Não Iniciada) na aba do dia seguinte
+        pendingRows.forEach((srcRow) => {
+          const cleanAct = srcRow.activity.trim().toUpperCase();
+          let existing = nextSheet.rows.find(
+            (nr) =>
+              nr.rolloverFromRowId === srcRow.id ||
+              String(nr.activity || '').trim().toUpperCase() === cleanAct
+          );
+
+          if (!existing) {
+            nextSheet.rows.push({
+              id: 'ro_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+              status: srcRow.status === 'CONCLUIDO' ? 'PARCIAL' : srcRow.status || 'NÃO INICIADO',
+              activity: cleanAct,
+              started: Boolean(srcRow.started),
+              finished: false,
+              custom: JSON.parse(JSON.stringify(srcRow.custom || {})),
+              rolloverFromRowId: srcRow.id,
+              rolloverFromDate: dateInfo.sourceFull
+            });
+            transferredNewCount++;
+          } else if (existing.rolloverFromRowId === srcRow.id && !existing.finished) {
+            existing.activity = cleanAct;
+            existing.status = srcRow.status === 'CONCLUIDO' ? 'PARCIAL' : srcRow.status || 'NÃO INICIADO';
+            existing.started = Boolean(srcRow.started);
+            existing.rolloverFromDate = dateInfo.sourceFull;
+          }
+        });
+
+        // 2. Se alguma atividade atingiu 100% no dia atual, remove a cópia pendente do dia seguinte
+        completedRows.forEach((doneRow) => {
+          const beforeLen = nextSheet.rows.length;
+          nextSheet.rows = nextSheet.rows.filter(
+            (nr) => !(nr.rolloverFromRowId === doneRow.id && !nr.finished)
+          );
+          if (nextSheet.rows.length < beforeLen) {
+            removedCompletedCount += beforeLen - nextSheet.rows.length;
+          }
+        });
+      }
+
+      return {
+        transferred: transferredNewCount,
+        transferredTotal: pendingRows.length,
+        removed: removedCompletedCount,
+        nextSheet,
+        dateInfo
+      };
+    }
+
+    function runAutoRolloverEngine(forceActive) {
+      db.rolloverConfig = db.rolloverConfig || { enabled: true, startHour: 6, endHour: 19 };
+      if (db.rolloverConfig.enabled === false && !forceActive) return null;
+
+      let lastResult = null;
+      const activeSheet = getActiveSheet();
+
+      // Sincroniza todas as abas cuja data é hoje ou anterior (ex: 16/11/2026 -> 17/11/2026)
+      const snapshotSheets = [...(db.sheets || [])];
+      snapshotSheets.forEach((sh) => {
+        const res = syncRolloverForSheet(sh, forceActive && sh.id === (activeSheet && activeSheet.id));
+        if (activeSheet && sh.id === activeSheet.id) {
+          lastResult = res;
+        }
+      });
+
+      return lastResult;
+    }
+
+    function toggleRolloverRule(checked) {
+      db.rolloverConfig = db.rolloverConfig || { enabled: true, startHour: 6, endHour: 19 };
+      db.rolloverConfig.enabled = Boolean(checked);
+      saveDb(`Regra automática 06:00–19:00 p/ Dia Seguinte: ${checked ? 'ATIVADA' : 'DESATIVADA'}`);
+    }
+
+    function triggerManualRolloverNow() {
+      const sheet = getActiveSheet();
+      if (!sheet) return;
+      const res = syncRolloverForSheet(sheet, true);
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+      renderAll();
+
+      if (!res.dateInfo) {
+        alert('Coloque uma data válida (ex: 16/11/2026) no topo da planilha para gerar o dia seguinte automaticamente.');
+        return;
+      }
+      if (res.transferredTotal === 0) {
+        alert(`✅ Todas as atividades de ${res.dateInfo.sourceFull} já estão 100% concluídas! Nenhuma pendência para ${res.dateInfo.nextFull}.`);
+        return;
+      }
+      playNotificationSound('partial');
+      showWhatsAppToastCard(
+        `🔄 Regra 06h–19h: ${res.transferredTotal} Atividade(s) em ${res.nextSheet ? res.nextSheet.name : res.dateInfo.nextFull}`,
+        `Tarefas em 50% ou Não Iniciadas de ${res.dateInfo.sourceFull} foram garantidas no checklist de ${res.dateInfo.nextFull}!`,
+        buildEndOfDayReport('current', `Atividades <100% repassadas automaticamente para o checklist de ${res.dateInfo.nextFull}.`),
+        'partial'
+      );
     }
 
     // =========================================================================
@@ -2520,12 +2758,40 @@
         eodClockIntervalId = null;
       }
       eodClockIntervalId = setInterval(() => {
-        const cfg = db.whatsappConfig || {};
-        if (!cfg.autoEndOfDayEnabled || !cfg.endOfDayTime) return;
         const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
+        const hourNum = now.getHours();
+        const hh = String(hourNum).padStart(2, '0');
         const mm = String(now.getMinutes()).padStart(2, '0');
         const currentHM = `${hh}:${mm}`;
+
+        // 1. Verificação contínua da Regra 06:00 às 19:00 -> Dia Seguinte
+        if (db.rolloverConfig && db.rolloverConfig.enabled !== false) {
+          const res = runAutoRolloverEngine(false);
+          if (res && (res.transferred > 0 || res.removed > 0)) {
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+            renderAll();
+          }
+
+          // Às 19:00 em ponto (fim do turno 06:00–19:00), avisa na tela caso haja tarefas repassadas para o dia seguinte
+          const shiftKey = now.toISOString().slice(0, 10) + '_19:00_rollover';
+          if (hourNum >= 19 && db.rolloverConfig.lastShiftAlertDate !== shiftKey) {
+            db.rolloverConfig.lastShiftAlertDate = shiftKey;
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+            if (res && res.transferredTotal > 0 && res.dateInfo) {
+              playNotificationSound('partial');
+              showWhatsAppToastCard(
+                `🔄 Fim do Período (06:00–19:00): ${res.transferredTotal} Atividade(s) ➔ ${res.dateInfo.nextFull}`,
+                `As atividades em 50% ou Não Iniciadas de ${res.dateInfo.sourceFull} foram colocadas automaticamente no checklist de ${res.dateInfo.nextFull}!`,
+                buildEndOfDayReport('current', `Atividades <100% repassadas automaticamente para o checklist de ${res.dateInfo.nextFull}.`),
+                'partial'
+              );
+            }
+          }
+        }
+
+        // 2. Disparo do Resumão do Final do Dia no horário agendado
+        const cfg = db.whatsappConfig || {};
+        if (!cfg.autoEndOfDayEnabled || !cfg.endOfDayTime) return;
         const todayKey = now.toISOString().slice(0, 10) + '_' + cfg.endOfDayTime;
 
         if (currentHM === cfg.endOfDayTime && cfg.lastEndOfDaySentDate !== todayKey) {
@@ -2607,6 +2873,11 @@
       const timeEod = document.getElementById('quickEodTimeInput');
       if (timeEod && document.activeElement !== timeEod) {
         timeEod.value = cfg.endOfDayTime || '18:00';
+      }
+
+      const chkRollover = document.getElementById('chkRolloverEnabled');
+      if (chkRollover) {
+        chkRollover.checked = !db.rolloverConfig || db.rolloverConfig.enabled !== false;
       }
     }
 
@@ -2742,15 +3013,22 @@
               </select>
             </td>
             <td>
-              <input
-                type="text"
-                id="actInput_${r.id}"
-                class="activity-input"
-                value="${escapeHtml(r.activity)}"
-                placeholder="Clique e digite o serviço / atividade (Enter desce para a linha de baixo)..."
-                onchange="updateRowActivity('${r.id}', this.value)"
-                onkeydown="handleExcelRowKey(event, ${idx})"
-              />
+              <div style="display:flex;align-items:center;gap:6px;">
+                ${
+                  r.rolloverFromDate
+                    ? `<span style="font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:999px;background:rgba(249,115,22,0.16);color:#f97316;border:1px solid rgba(249,115,22,0.4);white-space:nowrap;flex-shrink:0;" title="Repassada automaticamente do checklist de ${escapeHtml(r.rolloverFromDate)} pois estava em 50% ou Não Iniciada (06h–19h)">↪ ${escapeHtml(r.rolloverFromDate.slice(0, 5))}</span>`
+                    : ''
+                }
+                <input
+                  type="text"
+                  id="actInput_${r.id}"
+                  class="activity-input"
+                  value="${escapeHtml(r.activity)}"
+                  placeholder="Clique e digite o serviço / atividade (Enter desce para a linha de baixo)..."
+                  onchange="updateRowActivity('${r.id}', this.value)"
+                  onkeydown="handleExcelRowKey(event, ${idx})"
+                />
+              </div>
             </td>
             ${customCellsHtml}
             <td class="chk-cell">
@@ -2880,7 +3158,68 @@
 
       renderDonutChart(doneCount, todoCount, pctDoneNumeric / 100);
       renderMobileCards(sheet);
+      renderRolloverBannerUI(sheet);
       renderTabsBar();
+    }
+
+    function renderRolloverBannerUI(sheet) {
+      const bannerEl = document.getElementById('rolloverRuleBanner');
+      if (!bannerEl || !sheet) return;
+
+      const dateInfo = parseDateFromSheet(sheet);
+      if (!dateInfo) {
+        bannerEl.innerHTML = '';
+        return;
+      }
+
+      const validRows = (sheet.rows || []).filter(
+        (r) => r.activity && r.activity.trim() !== '' && !r.isJustCreatedQuick
+      );
+      const pendingRows = validRows.filter((r) => calcRowPct(r) < 100);
+      const nextSheet = findSheetByDateStr(dateInfo.nextFull, dateInfo.nextShort);
+      const isRuleEnabled = !db.rolloverConfig || db.rolloverConfig.enabled !== false;
+
+      if (!isRuleEnabled) {
+        bannerEl.innerHTML = `
+          <div style="padding:8px 12px;border-radius:8px;background:var(--bg-panel);border:1px dashed var(--border-grid);font-size:11.5px;color:var(--text-muted);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+            <span>⏸️ Regra automática (06:00 às 19:00 ➔ Dia Seguinte) desativada no momento.</span>
+            <button class="btn" style="padding:3px 9px;font-size:11px;" onclick="toggleRolloverRule(true)">Ativar Regra</button>
+          </div>
+        `;
+        return;
+      }
+
+      if (pendingRows.length > 0) {
+        bannerEl.innerHTML = `
+          <div style="padding:9px 14px;border-radius:8px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.4);font-size:12px;color:var(--text-main);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span style="background:#10b981;color:#fff;font-weight:900;font-size:10.5px;padding:2px 8px;border-radius:999px;">REGRA 06:00 ÀS 19:00 ATIVA</span>
+              <span>
+                <strong>${pendingRows.length} atividade(s)</strong> em <strong>50%</strong> ou <strong>Não Iniciada (0%)</strong> de <strong>${escapeHtml(dateInfo.sourceFull)}</strong> ${
+                  nextSheet
+                    ? `já estão automaticamente no checklist do dia seguinte (<strong>${escapeHtml(nextSheet.name)}</strong>)!`
+                    : `serão criadas no checklist de <strong>${escapeHtml(dateInfo.nextFull)}</strong>.`
+                }
+              </span>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              ${
+                nextSheet
+                  ? `<button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="selectSheet('${nextSheet.id}')">📅 Abrir ${escapeHtml(nextSheet.name)} (${(nextSheet.rows || []).length})</button>`
+                  : `<button class="btn btn-primary" style="padding:4px 10px;font-size:11px;" onclick="triggerManualRolloverNow()">📅 Criar ${escapeHtml(dateInfo.preferredNextTabName)} Agora</button>`
+              }
+            </div>
+          </div>
+        `;
+      } else if (validRows.length > 0) {
+        bannerEl.innerHTML = `
+          <div style="padding:8px 12px;border-radius:8px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);font-size:11.5px;color:#10b981;font-weight:700;">
+            🏆 Todas as ${validRows.length} atividade(s) de ${escapeHtml(dateInfo.sourceFull)} atingiram 100%! Nenhuma pendência repassada para ${escapeHtml(dateInfo.nextFull)}.
+          </div>
+        `;
+      } else {
+        bannerEl.innerHTML = '';
+      }
     }
 
     function renderDonutChart(doneVal, todoVal, pctRatio) {
@@ -4042,9 +4381,11 @@
       reader.readAsArrayBuffer(file);
     }
 
-    // Inicializa e adapta automaticamente para PC ou Smartphone
+    // Inicializa, sincroniza a Regra 06:00–19:00 p/ Dia Seguinte e adapta automaticamente para PC ou Smartphone
     autoAdaptDeviceLayout();
     window.addEventListener('resize', autoAdaptDeviceLayout);
+    runAutoRolloverEngine(false);
+    localStorage.setItem(DB_KEY, JSON.stringify(db));
     renderAll();
     setupReminderTimer();
     setupEndOfDayScheduler();
