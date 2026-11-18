@@ -1602,24 +1602,30 @@
           </div>
         </div>
 
-        <!-- Painel Rápido de Notificação Automática de Serviço & Resumão no WhatsApp -->
+        <!-- Painel Rápido de Notificação Automática de Serviço & Resumão no WhatsApp (com GREEN-API) -->
         <div class="wa-quick-card no-print">
           <div style="display:flex;align-items:center;justify-content:space-between;">
             <strong style="font-size:12.5px;color:#16a34a;display:flex;align-items:center;gap:5px;">
-              <span>📲</span> SMS / Notificação WhatsApp
+              <span>📲</span> WhatsApp & GREEN-API
             </strong>
-            <button class="btn" style="padding:2px 7px;font-size:10.5px;" onclick="openWhatsAppModal()" title="Configurações Avançadas e Webhook">
-              ⚙️ Config
+            <button class="btn" style="padding:2px 8px;font-size:10.5px;border-color:#22c55e;color:#4ade80;" onclick="openWhatsAppModal()" title="Configurar idInstance e apiTokenInstance do console.green-api.com">
+              🟢 Configurar GREEN-API
             </button>
           </div>
 
-          <!-- Número de WhatsApp rápido direto na tela -->
+          <!-- Status rápido da GREEN-API -->
+          <div id="quickGreenApiStatusBadge" onclick="openWhatsAppModal()" style="cursor:pointer;font-size:10.5px;padding:4px 8px;border-radius:6px;background:rgba(148,163,184,0.12);border:1px dashed var(--border-grid);color:var(--text-muted);display:flex;align-items:center;justify-content:space-between;">
+            <span>⚪ GREEN-API: Clique p/ conectar</span>
+            <strong style="color:#10b981;">Configurar ➔</strong>
+          </div>
+
+          <!-- Número de WhatsApp ou ID de Grupo rápido direto na tela -->
           <div style="display:flex;align-items:center;gap:5px;">
             <input
               type="text"
               id="quickWaPhoneInput"
               class="form-input"
-              placeholder="Nº WhatsApp (Ex: 5586999999999)"
+              placeholder="Nº WhatsApp (5586999...) ou ID Grupo (@g.us)"
               style="padding:5px 8px;font-size:11.5px;font-family:monospace;font-weight:700;"
               onchange="updateQuickWaPhone(this.value)"
             />
@@ -1748,39 +1754,109 @@
   </div>
 
   <!-- =========================================================================
-       MODAL 2: CONFIGURAÇÃO DE NOTIFICAÇÕES WHATSAPP & SISTEMA DE ALERTAS
+       MODAL 2: CONFIGURAÇÃO DE NOTIFICAÇÕES WHATSAPP & INTEGRAÇÃO GREEN-API
        ========================================================================= -->
   <div class="modal-backdrop" id="whatsAppModal">
-    <div class="modal-box" style="max-width:660px;">
+    <div class="modal-box" style="max-width:720px;">
       <div class="modal-header" style="background:rgba(22,163,74,0.12);border-bottom-color:rgba(22,163,74,0.3);">
-        <span style="color:#16a34a;">📲 Configurar SMS / Notificação Automática de Serviço no WhatsApp</span>
+        <span style="color:#16a34a;">🟢 Integração GREEN-API (console.green-api.com) & Notificações WhatsApp</span>
         <button class="btn" onclick="closeModal('whatsAppModal')">✕</button>
       </div>
       <div class="modal-body">
+        <!-- Painel Principal GREEN-API (https://console.green-api.com) -->
+        <div style="background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(22,163,74,0.04));padding:14px;border-radius:10px;border:1.5px solid rgba(16,185,129,0.45);display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+            <div style="font-weight:800;font-size:13.5px;color:#10b981;display:flex;align-items:center;gap:6px;">
+              <span>🟢</span> Credenciais da sua Instância GREEN-API
+            </div>
+            <a href="https://console.green-api.com" target="_blank" rel="noopener" style="font-size:11px;font-weight:700;color:#38bdf8;text-decoration:underline;">
+              🔗 Abrir Painel console.green-api.com ↗
+            </a>
+          </div>
+
+          <div style="font-size:11.5px;color:var(--text-muted);line-height:1.4;">
+            Copie o <strong>idInstance</strong> e o <strong>apiTokenInstance</strong> da sua instância autorizada no <a href="https://console.green-api.com" target="_blank" style="color:#10b981;">console.green-api.com</a>. Com eles preenchidos, o <strong>CHECKS-MAX dispara as mensagens 100% sozinho em 2º plano</strong> (sem precisar abrir janela do WhatsApp!).
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:10px;">
+            <div>
+              <label style="font-weight:700;display:block;margin-bottom:3px;font-size:12px;">
+                🆔 idInstance (ID da Instância) *
+              </label>
+              <input
+                type="text"
+                id="waGreenIdInstanceInput"
+                class="form-input"
+                placeholder="Ex: 7103948576"
+                style="font-family:monospace;font-weight:800;font-size:13px;"
+              />
+            </div>
+            <div>
+              <label style="font-weight:700;display:block;margin-bottom:3px;font-size:12px;">
+                🔑 apiTokenInstance (Token da API) *
+              </label>
+              <input
+                type="text"
+                id="waGreenApiTokenInput"
+                class="form-input"
+                placeholder="Ex: d75b3a66374942c5b3e019c698abc12345..."
+                style="font-family:monospace;font-weight:700;font-size:12.5px;"
+              />
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;">
+            <div>
+              <label style="font-weight:600;display:block;margin-bottom:3px;font-size:11.5px;color:var(--text-muted);">
+                🌐 apiUrl (URL do Servidor GREEN-API — deixe o padrão ou cole do painel)
+              </label>
+              <input
+                type="text"
+                id="waGreenApiUrlInput"
+                class="form-input"
+                placeholder="https://api.green-api.com"
+                value="https://api.green-api.com"
+                style="font-family:monospace;font-size:12px;"
+              />
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary" onclick="testGreenApiConnectionNow()" style="padding:8px 12px;">
+                🔍 Testar Conexão GREEN-API
+              </button>
+              <button type="button" class="btn" onclick="loadGreenApiGroups()" style="padding:8px 10px;" title="Listar seus Grupos e Contatos do WhatsApp pela GREEN-API">
+                👥 Buscar Grupos WhatsApp
+              </button>
+            </div>
+          </div>
+
+          <!-- Resultado ao vivo do teste da GREEN-API ou seletor de grupos -->
+          <div id="greenApiDiagnosticBox" style="display:none;padding:9px 12px;border-radius:8px;background:var(--bg-panel);border:1px solid var(--border-grid);font-size:12px;"></div>
+        </div>
+
         <div style="background:var(--bg-page);padding:12px;border-radius:8px;border:1px solid var(--border-grid);display:flex;flex-direction:column;gap:10px;">
           <div>
             <label style="font-weight:700;display:block;margin-bottom:4px;">
-              📞 Número do WhatsApp de Destino (com DDI 55 + DDD + Número)
+              📞 Destino no WhatsApp: Número (DDI 55 + DDD + Nº) ou ID de Grupo (<code>@g.us</code>)
             </label>
             <input
               type="text"
               id="waPhoneInput"
               class="form-input"
-              placeholder="Ex: 5586999999999 (apenas números)"
+              placeholder="Ex: 5586999999999  ou  120363043968066561@g.us"
               style="font-family:monospace;font-weight:700;font-size:14px;"
             />
             <span style="font-size:11px;color:var(--text-muted);">
-              Informe o seu número ou o número do gestor/cliente que receberá as notificações quando o serviço estiver <strong>PARCIAL</strong>, <strong>CONCLUÍDO</strong> e o <strong>RESUMÃO DO FINAL DO DIA</strong>.
+              Você pode digitar um número (ex: <code>5586999999999</code>) ou clicar em <strong>"👥 Buscar Grupos WhatsApp"</strong> acima para enviar direto para um Grupo da sua equipe!
             </span>
           </div>
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <div>
-              <label style="font-weight:700;display:block;margin-bottom:4px;">Modo de Disparo no WhatsApp</label>
+              <label style="font-weight:700;display:block;margin-bottom:4px;">Comportamento ao Disparar</label>
               <select id="waDispatchModeSelect" class="form-input">
-                <option value="auto_open">🚀 Automático: Abrir WhatsApp + Card na Hora</option>
-                <option value="card_and_popup">💬 Mostrar Card de Confirmação Rápida na Tela</option>
-                <option value="webhook_only">🤖 Silencioso: Apenas API / Webhook em 2º Plano</option>
+                <option value="webhook_only">🟢 100% Automático via GREEN-API (Sem abrir aba extra)</option>
+                <option value="card_and_popup">💬 Enviar via GREEN-API + Mostrar Card na Tela</option>
+                <option value="auto_open">🚀 Abrir também WhatsApp Web (wa.me) se sem API</option>
               </select>
             </div>
             <div>
@@ -2232,7 +2308,8 @@
       if (nextSheet && nextSheet.id !== sourceSheet.id) {
         nextSheet.rows = nextSheet.rows || [];
 
-        // 1. Insere ou sincroniza cada atividade < 100% (50% ou Não Iniciada) na aba do dia seguinte
+        // 1. Insere cada atividade < 100% (50% ou Não Iniciada) na aba do dia seguinte APENAS 1 VEZ
+        // (Depois que a tarefa já entrou no dia de hoje, ela fica 100% livre para você clicar em INICIADA 50% ou FINALIZADA 100% sem o dia anterior sobrescrever!)
         pendingRows.forEach((srcRow) => {
           const cleanAct = srcRow.activity.trim().toUpperCase();
           let existing = nextSheet.rows.find(
@@ -2241,7 +2318,7 @@
               String(nr.activity || '').trim().toUpperCase() === cleanAct
           );
 
-          if (!existing) {
+          if (!existing && srcRow.alreadyRolledOverTo !== dateInfo.nextFull) {
             nextSheet.rows.push({
               id: 'ro_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
               status: srcRow.status === 'CONCLUIDO' ? 'PARCIAL' : srcRow.status || 'NÃO INICIADO',
@@ -2252,12 +2329,10 @@
               rolloverFromRowId: srcRow.id,
               rolloverFromDate: dateInfo.sourceFull
             });
+            srcRow.alreadyRolledOverTo = dateInfo.nextFull;
             transferredNewCount++;
-          } else if (existing.rolloverFromRowId === srcRow.id && !existing.finished) {
-            existing.activity = cleanAct;
-            existing.status = srcRow.status === 'CONCLUIDO' ? 'PARCIAL' : srcRow.status || 'NÃO INICIADO';
-            existing.started = Boolean(srcRow.started);
-            existing.rolloverFromDate = dateInfo.sourceFull;
+          } else if (existing) {
+            srcRow.alreadyRolledOverTo = dateInfo.nextFull;
           }
         });
 
@@ -2571,8 +2646,262 @@
       );
     }
 
+    // =========================================================================
+    // MOTOR OFICIAL GREEN-API (https://console.green-api.com) + FALLBACK WA.ME
+    // =========================================================================
+    function isGreenApiConfigured(cfg) {
+      const c = cfg || (db && db.whatsappConfig) || {};
+      return Boolean(String(c.greenIdInstance || '').trim() && String(c.greenApiToken || '').trim());
+    }
+
+    function getGreenApiBaseUrl(cfg) {
+      const c = cfg || (db && db.whatsappConfig) || {};
+      let raw = String(c.greenApiUrl || 'https://api.green-api.com').trim().replace(/\/+$/, '');
+      if (!raw.startsWith('http')) raw = 'https://' + raw;
+      return raw;
+    }
+
+    function formatGreenApiChatId(rawPhoneOrGroup) {
+      const str = String(rawPhoneOrGroup || '').trim();
+      if (!str) return '';
+      if (str.endsWith('@c.us') || str.endsWith('@g.us')) return str;
+      let digits = str.replace(/\D/g, '');
+      if (!digits) return '';
+      // Se informou apenas DDD + Número do Brasil (10 ou 11 dígitos), adiciona DDI 55 automaticamente
+      if (digits.length === 10 || digits.length === 11) {
+        digits = '55' + digits;
+      }
+      return digits + '@c.us';
+    }
+
+    async function sendViaGreenApi(waText, statusBadgeElId) {
+      const cfg = (db && db.whatsappConfig) || {};
+      const idInstance = String(cfg.greenIdInstance || '').trim();
+      const apiToken = String(cfg.greenApiToken || '').trim();
+      if (!idInstance || !apiToken) return { ok: false, reason: 'not_configured' };
+
+      const chatId = formatGreenApiChatId(cfg.phone);
+      const badgeEl = statusBadgeElId ? document.getElementById(statusBadgeElId) : null;
+
+      if (!chatId) {
+        if (badgeEl) {
+          badgeEl.style.color = '#fbbf24';
+          badgeEl.textContent = '⚠️ Informe o Nº WhatsApp ou Grupo para a GREEN-API enviar!';
+        }
+        return { ok: false, reason: 'missing_phone' };
+      }
+
+      if (badgeEl) {
+        badgeEl.style.color = '#38bdf8';
+        badgeEl.textContent = `⏳ Enviando automaticamente via GREEN-API para ${chatId}...`;
+      }
+
+      const primaryBase = getGreenApiBaseUrl(cfg);
+      const clusterPrefix = idInstance.slice(0, 4);
+      const fallbackBase = `https://${clusterPrefix}.api.greenapi.com`;
+      const urlsToTry = [
+        `${primaryBase}/waInstance${idInstance}/sendMessage/${apiToken}`,
+        ...(primaryBase !== fallbackBase ? [`${fallbackBase}/waInstance${idInstance}/sendMessage/${apiToken}`] : [])
+      ];
+
+      let lastErr = '';
+      for (const endpoint of urlsToTry) {
+        try {
+          const resp = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chatId,
+              message: waText
+            })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data && data.idMessage) {
+              if (badgeEl) {
+                badgeEl.style.color = '#4ade80';
+                badgeEl.textContent = `🟢 Enviado 100% Automático via GREEN-API! (ID: ${data.idMessage.slice(0, 10)})`;
+              }
+              return { ok: true, idMessage: data.idMessage, chatId };
+            }
+          } else {
+            const errTxt = await resp.text().catch(() => '');
+            lastErr = `HTTP ${resp.status} ${errTxt.slice(0, 80)}`;
+          }
+        } catch (err) {
+          lastErr = err && err.message ? err.message : 'Erro de rede / CORS';
+        }
+      }
+
+      if (badgeEl) {
+        badgeEl.style.color = '#f87171';
+        badgeEl.textContent = `❌ Falha GREEN-API (${lastErr || 'Verifique idInstance / Token'}). Use o botão abaixo:`;
+      }
+      return { ok: false, reason: lastErr };
+    }
+
+    async function testGreenApiConnectionNow() {
+      const box = document.getElementById('greenApiDiagnosticBox');
+      if (!box) return;
+      box.style.display = 'block';
+
+      const idInstance = document.getElementById('waGreenIdInstanceInput').value.trim();
+      const apiToken = document.getElementById('waGreenApiTokenInput').value.trim();
+      const apiUrl = document.getElementById('waGreenApiUrlInput').value.trim() || 'https://api.green-api.com';
+      const phone = document.getElementById('waPhoneInput').value.trim();
+
+      if (!idInstance || !apiToken) {
+        box.innerHTML = `<span style="color:#f87171;font-weight:700;">⚠️ Preencha o <strong>idInstance</strong> e o <strong>apiTokenInstance</strong> copiados do <a href="https://console.green-api.com" target="_blank" style="color:#38bdf8;">console.green-api.com</a>.</span>`;
+        return;
+      }
+
+      // Salva imediatamente no banco para já ficar ativo
+      db.whatsappConfig = db.whatsappConfig || {};
+      db.whatsappConfig.greenIdInstance = idInstance;
+      db.whatsappConfig.greenApiToken = apiToken;
+      db.whatsappConfig.greenApiUrl = apiUrl;
+      if (phone) db.whatsappConfig.phone = phone;
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+      updateBadgesUI();
+
+      box.innerHTML = `<span style="color:#38bdf8;font-weight:700;">⏳ Conectando ao servidor GREEN-API (Instância ${escapeHtml(idInstance)})...</span>`;
+
+      const primaryBase = getGreenApiBaseUrl(db.whatsappConfig);
+      const clusterBase = `https://${idInstance.slice(0, 4)}.api.greenapi.com`;
+      const bases = [primaryBase, ...(primaryBase !== clusterBase ? [clusterBase] : [])];
+
+      let stateData = null;
+      let workingBase = primaryBase;
+
+      for (const b of bases) {
+        try {
+          const r = await fetch(`${b}/waInstance${idInstance}/getStateInstance/${apiToken}`);
+          if (r.ok) {
+            stateData = await r.json();
+            workingBase = b;
+            break;
+          }
+        } catch (e) {}
+      }
+
+      if (!stateData) {
+        box.innerHTML = `<div style="color:#f87171;font-weight:700;">❌ Não foi possível validar a instância <code>${escapeHtml(idInstance)}</code>. Confira se o <strong>idInstance</strong> e o <strong>apiTokenInstance</strong> estão corretos no painel <a href="https://console.green-api.com" target="_blank" style="color:#38bdf8;">console.green-api.com</a>.</div>`;
+        return;
+      }
+
+      if (workingBase !== primaryBase) {
+        document.getElementById('waGreenApiUrlInput').value = workingBase;
+        db.whatsappConfig.greenApiUrl = workingBase;
+        localStorage.setItem(DB_KEY, JSON.stringify(db));
+      }
+
+      const st = stateData.stateInstance;
+      if (st !== 'authorized') {
+        box.innerHTML = `<div style="color:#f59e0b;font-weight:700;">⚠️ Instância encontrada, mas o status é <code>${escapeHtml(st)}</code>. Abra o <a href="https://console.green-api.com" target="_blank" style="color:#38bdf8;">console.green-api.com</a> e escaneie o QR Code com seu WhatsApp para ficar <code>authorized</code>!</div>`;
+        return;
+      }
+
+      if (!phone) {
+        box.innerHTML = `<div style="color:#10b981;font-weight:800;">🟢 Instância GREEN-API CONECTADA e AUTORIZADA (<code>authorized</code>)! Agora preencha o Número de WhatsApp abaixo (ou clique em "👥 Buscar Grupos WhatsApp") para testar o disparo.</div>`;
+        return;
+      }
+
+      const chatId = formatGreenApiChatId(phone);
+      box.innerHTML = `<div style="color:#10b981;font-weight:700;">🟢 Instância Autorizada! Disparando mensagem real de teste para <code>${escapeHtml(chatId)}</code>...</div>`;
+
+      const testMsg =
+        `🟢 *[CHECKS-MAX] INTEGRAÇÃO GREEN-API CONECTADA COM SUCESSO!*\n` +
+        `✅ Sua instância *${idInstance}* está ativa e enviando notificações automáticas em 2º plano!\n` +
+        `⏰ *Teste realizado em:* ${new Date().toLocaleString('pt-BR')}`;
+
+      const sendRes = await sendViaGreenApi(testMsg, null);
+      if (sendRes.ok) {
+        playNotificationSound('complete');
+        box.innerHTML = `<div style="color:#10b981;font-weight:800;">🎉 SUCESSO TOTAL! Instância <code>authorized</code> e mensagem enviada via GREEN-API para <code>${escapeHtml(chatId)}</code> (ID: <code>${escapeHtml(sendRes.idMessage)}</code>)!</div>`;
+      } else {
+        box.innerHTML = `<div style="color:#f87171;font-weight:700;">⚠️ Instância autorizada, mas falha ao enviar para <code>${escapeHtml(chatId)}</code>: ${escapeHtml(sendRes.reason)}</div>`;
+      }
+    }
+
+    async function loadGreenApiGroups() {
+      const box = document.getElementById('greenApiDiagnosticBox');
+      if (!box) return;
+      box.style.display = 'block';
+
+      const idInstance = document.getElementById('waGreenIdInstanceInput').value.trim();
+      const apiToken = document.getElementById('waGreenApiTokenInput').value.trim();
+      const apiUrl = document.getElementById('waGreenApiUrlInput').value.trim() || 'https://api.green-api.com';
+
+      if (!idInstance || !apiToken) {
+        box.innerHTML = `<span style="color:#f87171;font-weight:700;">⚠️ Preencha primeiro o <strong>idInstance</strong> e o <strong>apiTokenInstance</strong> acima.</span>`;
+        return;
+      }
+
+      box.innerHTML = `<span style="color:#38bdf8;font-weight:700;">⏳ Buscando seus Grupos e Conversas do WhatsApp via GREEN-API...</span>`;
+
+      const primaryBase = apiUrl.replace(/\/+$/, '');
+      const clusterBase = `https://${idInstance.slice(0, 4)}.api.greenapi.com`;
+      const bases = [primaryBase, ...(primaryBase !== clusterBase ? [clusterBase] : [])];
+
+      let chats = null;
+      for (const b of bases) {
+        try {
+          const r = await fetch(`${b}/waInstance${idInstance}/getChats/${apiToken}`);
+          if (r.ok) {
+            chats = await r.json();
+            break;
+          }
+        } catch (e) {}
+      }
+
+      if (!Array.isArray(chats)) {
+        box.innerHTML = `<span style="color:#f87171;font-weight:700;">❌ Não foi possível listar os grupos. Verifique se sua instância está <code>authorized</code> no console.green-api.com.</span>`;
+        return;
+      }
+
+      const groups = chats.filter((c) => c && String(c.id || '').endsWith('@g.us')).slice(0, 25);
+      if (groups.length === 0) {
+        box.innerHTML = `<span style="color:#f59e0b;font-weight:700;">Nenhum grupo (<code>@g.us</code>) encontrado recente. Digite o número de telefone diretamente no campo abaixo.</span>`;
+        return;
+      }
+
+      box.innerHTML = `
+        <div style="font-weight:800;margin-bottom:6px;color:#10b981;">👥 Clique em um Grupo abaixo para selecioná-lo como destino:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:130px;overflow-y:auto;">
+          ${groups
+            .map(
+              (g) => `
+              <button
+                type="button"
+                class="btn"
+                style="padding:4px 9px;font-size:11px;"
+                onclick="selectGreenApiChatId('${escapeHtml(g.id)}', '${escapeHtml(g.name || g.id)}')"
+              >
+                👥 ${escapeHtml(g.name || g.id)}
+              </button>
+            `
+            )
+            .join('')}
+        </div>
+      `;
+    }
+
+    function selectGreenApiChatId(chatId, chatName) {
+      const inp = document.getElementById('waPhoneInput');
+      if (inp) inp.value = chatId;
+      db.whatsappConfig = db.whatsappConfig || {};
+      db.whatsappConfig.phone = chatId;
+      localStorage.setItem(DB_KEY, JSON.stringify(db));
+      updateBadgesUI();
+      const box = document.getElementById('greenApiDiagnosticBox');
+      if (box) {
+        box.innerHTML = `<div style="color:#10b981;font-weight:800;">✅ Grupo selecionado: <strong>${escapeHtml(chatName)}</strong> (<code>${escapeHtml(chatId)}</code>)! Clique em "💾 Salvar Configurações".</div>`;
+      }
+    }
+
     function openWhatsAppUrl(text) {
-      const cleanPhone = String((db.whatsappConfig && db.whatsappConfig.phone) || '').replace(/\D/g, '');
+      const rawDest = String((db.whatsappConfig && db.whatsappConfig.phone) || '').trim();
+      const cleanPhone = rawDest.endsWith('@g.us') ? '' : rawDest.replace(/\D/g, '');
       const encoded = encodeURIComponent(text);
       const url = cleanPhone
         ? `https://wa.me/${cleanPhone}?text=${encoded}`
@@ -2647,22 +2976,31 @@
         } catch (e) {}
       }
 
-      // 4. Disparo via API / Webhook em segundo plano (tipo SMS automático)
-      sendViaWebhookIfConfigured(eventType, waText, sheet.name);
+      // 4. Card Flutuante Instantâneo + Disparo Automático GREEN-API (console.green-api.com)
+      const statusBadgeId = showWhatsAppToastCard(
+        title,
+        row ? row.activity : 'Resumão pronto para envio no WhatsApp',
+        waText,
+        eventType
+      );
 
-      // 5. Card Flutuante Instantâneo + Abertura Automática conforme modo
-      showWhatsAppToastCard(title, row ? row.activity : 'Resumão pronto para envio no WhatsApp', waText, eventType);
-
-      if (forceOpenNow || cfg.dispatchMode === 'auto_open') {
-        openWhatsAppUrl(waText);
+      // 5. Se GREEN-API estiver configurada, envia 100% automático em 2º plano sem abrir aba extra!
+      if (isGreenApiConfigured(cfg)) {
+        sendViaGreenApi(waText, statusBadgeId);
+      } else {
+        sendViaWebhookIfConfigured(eventType, waText, sheet.name);
+        if (forceOpenNow || cfg.dispatchMode === 'auto_open') {
+          openWhatsAppUrl(waText);
+        }
       }
     }
 
     function showWhatsAppToastCard(title, subtitle, waText, eventType = 'complete') {
       const container = document.getElementById('toastContainer');
-      if (!container) return;
+      if (!container) return null;
 
-      const cardId = 'toast_' + Date.now();
+      const cardId = 'toast_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+      const badgeId = cardId + '_status';
       const card = document.createElement('div');
       card.className = 'wa-toast-card';
       const borderColor = eventType === 'partial' ? '#f97316' : eventType === 'complete' ? '#22c55e' : '#38bdf8';
@@ -2670,6 +3008,7 @@
       card.id = cardId;
 
       const encodedText = encodeURIComponent(waText);
+      const hasGreen = isGreenApiConfigured();
       card.innerHTML = `
         <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
           <div style="font-weight:800;font-size:13px;color:${borderColor};">${escapeHtml(title)}</div>
@@ -2678,13 +3017,16 @@
         <div style="font-size:12px;color:#e2e8f0;margin-top:4px;font-weight:600;">
           ${escapeHtml(subtitle)}
         </div>
-        <div style="display:flex;gap:8px;margin-top:10px;">
+        <div id="${badgeId}" style="font-size:11px;font-weight:800;margin-top:6px;color:${hasGreen ? '#38bdf8' : '#94a3b8'};">
+          ${hasGreen ? '⏳ Disparando via GREEN-API...' : '💡 Configure a GREEN-API para envio 100% automático em 2º plano'}
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
           <button
             class="btn btn-whatsapp"
             style="flex:1;justify-content:center;padding:6px 10px;"
             onclick="openWhatsAppUrl(decodeURIComponent('${encodedText}')); document.getElementById('${cardId}')?.remove();"
           >
-            📲 Enviar no WhatsApp Agora
+            📲 Abrir WhatsApp Web
           </button>
           <button
             class="btn"
@@ -2702,6 +3044,7 @@
         const el = document.getElementById(cardId);
         if (el) el.remove();
       }, 14000);
+      return badgeId;
     }
 
     function sendSingleRowWhatsApp(rowId) {
@@ -2711,7 +3054,12 @@
       const pct = calcRowPct(row);
       const evType = pct === 100 || row.status === 'CONCLUIDO' ? 'complete' : pct === 50 || row.status.startsWith('PARCIAL') ? 'partial' : 'create';
       const msg = buildWhatsAppMessage(evType, row, sheet);
-      openWhatsAppUrl(msg);
+      if (isGreenApiConfigured()) {
+        const badgeId = showWhatsAppToastCard(`📲 Disparo GREEN-API — ${sheet.name}`, row.activity, msg, evType);
+        sendViaGreenApi(msg, badgeId);
+      } else {
+        openWhatsAppUrl(msg);
+      }
     }
 
     function sendDailySummaryWhatsApp() {
@@ -2776,23 +3124,37 @@
       const text = area ? area.value : buildEndOfDayReport('current', '');
       const sheet = getActiveSheet();
       playNotificationSound('complete');
-      sendViaWebhookIfConfigured('end_of_day_summary', text, sheet ? sheet.name : 'TODAS');
-      openWhatsAppUrl(text);
       closeModal('endOfDaySummaryModal');
+      const badgeId = showWhatsAppToastCard(
+        `📋 Resumão do Final do Dia — ${sheet ? sheet.name : ''}`,
+        'Relatório completo de serviços Concluídos e Parciais',
+        text,
+        'complete'
+      );
+      if (isGreenApiConfigured()) {
+        sendViaGreenApi(text, badgeId);
+      } else {
+        sendViaWebhookIfConfigured('end_of_day_summary', text, sheet ? sheet.name : 'TODAS');
+        openWhatsAppUrl(text);
+      }
     }
 
     function sendEndOfDaySummaryImmediate() {
       const sheet = getActiveSheet();
       const text = buildEndOfDayReport('current', '');
       playNotificationSound('complete');
-      sendViaWebhookIfConfigured('end_of_day_summary', text, sheet ? sheet.name : 'LISTA');
-      showWhatsAppToastCard(
+      const badgeId = showWhatsAppToastCard(
         `📋 Resumão do Final do Dia — ${sheet ? sheet.name : ''}`,
         'Relatório completo de serviços Concluídos e Parciais',
         text,
         'complete'
       );
-      openWhatsAppUrl(text);
+      if (isGreenApiConfigured()) {
+        sendViaGreenApi(text, badgeId);
+      } else {
+        sendViaWebhookIfConfigured('end_of_day_summary', text, sheet ? sheet.name : 'LISTA');
+        openWhatsAppUrl(text);
+      }
     }
 
     function setupEndOfDayScheduler() {
@@ -2822,12 +3184,19 @@
             localStorage.setItem(DB_KEY, JSON.stringify(db));
             if (res && res.transferredTotal > 0 && res.dateInfo) {
               playNotificationSound('partial');
-              showWhatsAppToastCard(
+              const roReport = buildEndOfDayReport(
+                'current',
+                `Atividades <100% repassadas automaticamente para o checklist de ${res.dateInfo.nextFull}.`
+              );
+              const badgeId = showWhatsAppToastCard(
                 `🔄 Fim do Período (06:00–19:00): ${res.transferredTotal} Atividade(s) ➔ ${res.dateInfo.nextFull}`,
                 `As atividades em 50% ou Não Iniciadas de ${res.dateInfo.sourceFull} foram colocadas automaticamente no checklist de ${res.dateInfo.nextFull}!`,
-                buildEndOfDayReport('current', `Atividades <100% repassadas automaticamente para o checklist de ${res.dateInfo.nextFull}.`),
+                roReport,
                 'partial'
               );
+              if (isGreenApiConfigured()) {
+                sendViaGreenApi(roReport, badgeId);
+              }
             }
           }
         }
@@ -2844,15 +3213,19 @@
           const sheet = getActiveSheet();
           const reportText = buildEndOfDayReport('current', 'Fechamento automático do final do expediente.');
           playNotificationSound('complete');
-          sendViaWebhookIfConfigured('end_of_day_summary', reportText, sheet ? sheet.name : 'GERAL');
-          showWhatsAppToastCard(
+          const badgeId = showWhatsAppToastCard(
             `⏰ Horário do Resumão do Final do Dia (${cfg.endOfDayTime})!`,
-            'Clique abaixo para enviar o Resumão do Dia no WhatsApp',
+            'Disparo automático do Resumão do Dia no WhatsApp',
             reportText,
             'partial'
           );
-          if (cfg.dispatchMode === 'auto_open') {
-            openWhatsAppUrl(reportText);
+          if (isGreenApiConfigured(cfg)) {
+            sendViaGreenApi(reportText, badgeId);
+          } else {
+            sendViaWebhookIfConfigured('end_of_day_summary', reportText, sheet ? sheet.name : 'GERAL');
+            if (cfg.dispatchMode === 'auto_open') {
+              openWhatsAppUrl(reportText);
+            }
           }
         }
       }, 15000);
@@ -2896,6 +3269,20 @@
       const isWaActive = cfg.notifyOnPartial !== false || cfg.notifyOnComplete !== false || cfg.notifyOnCreate !== false;
       const dot = document.getElementById('waStatusDot');
       if (dot) dot.className = 'status-dot ' + (isWaActive ? 'on' : 'off');
+
+      // Atualiza badge rápido da GREEN-API na barra lateral
+      const greenBadge = document.getElementById('quickGreenApiStatusBadge');
+      if (greenBadge) {
+        if (isGreenApiConfigured(cfg)) {
+          greenBadge.style.background = 'rgba(16, 185, 129, 0.14)';
+          greenBadge.style.borderColor = 'rgba(16, 185, 129, 0.45)';
+          greenBadge.innerHTML = `<span style="color:#10b981;font-weight:800;">🟢 GREEN-API Ativa (${escapeHtml(String(cfg.greenIdInstance).slice(0, 6))}...)</span><strong style="color:#10b981;">Editar ➔</strong>`;
+        } else {
+          greenBadge.style.background = 'rgba(148, 163, 184, 0.12)';
+          greenBadge.style.borderColor = 'var(--border-grid)';
+          greenBadge.innerHTML = `<span>⚪ GREEN-API: Clique p/ conectar</span><strong style="color:#10b981;">Configurar ➔</strong>`;
+        }
+      }
 
       const quickPhone = document.getElementById('quickWaPhoneInput');
       if (quickPhone && document.activeElement !== quickPhone) {
@@ -3812,6 +4199,16 @@
     function openWhatsAppModal() {
       closeAllDropdowns();
       const cfg = db.whatsappConfig || {};
+      const greenIdEl = document.getElementById('waGreenIdInstanceInput');
+      const greenTokEl = document.getElementById('waGreenApiTokenInput');
+      const greenUrlEl = document.getElementById('waGreenApiUrlInput');
+      if (greenIdEl) greenIdEl.value = cfg.greenIdInstance || '';
+      if (greenTokEl) greenTokEl.value = cfg.greenApiToken || '';
+      if (greenUrlEl) greenUrlEl.value = cfg.greenApiUrl || 'https://api.green-api.com';
+
+      const diagBox = document.getElementById('greenApiDiagnosticBox');
+      if (diagBox) diagBox.style.display = 'none';
+
       document.getElementById('waPhoneInput').value = cfg.phone || '';
       document.getElementById('waDispatchModeSelect').value = cfg.dispatchMode || 'card_and_popup';
       document.getElementById('waReminderMinutesSelect').value = String(cfg.reminderMinutes || 0);
@@ -3830,6 +4227,9 @@
     function saveWhatsAppConfigModal() {
       const prev = db.whatsappConfig || {};
       const cfg = {
+        greenIdInstance: (document.getElementById('waGreenIdInstanceInput')?.value || '').trim(),
+        greenApiToken: (document.getElementById('waGreenApiTokenInput')?.value || '').trim(),
+        greenApiUrl: (document.getElementById('waGreenApiUrlInput')?.value || 'https://api.green-api.com').trim(),
         phone: document.getElementById('waPhoneInput').value.trim(),
         dispatchMode: document.getElementById('waDispatchModeSelect').value,
         reminderMinutes: Number(document.getElementById('waReminderMinutesSelect').value) || 0,
@@ -3852,10 +4252,13 @@
       setupReminderTimer();
       setupEndOfDayScheduler();
       closeModal('whatsAppModal');
-      saveDb('Salvou configurações de notificações de serviço e Resumão no WhatsApp');
+      saveDb('Salvou configurações da GREEN-API e notificações de serviço no WhatsApp');
     }
 
     function testPartialServiceNotificationNow() {
+      db.whatsappConfig.greenIdInstance = (document.getElementById('waGreenIdInstanceInput')?.value || '').trim();
+      db.whatsappConfig.greenApiToken = (document.getElementById('waGreenApiTokenInput')?.value || '').trim();
+      db.whatsappConfig.greenApiUrl = (document.getElementById('waGreenApiUrlInput')?.value || 'https://api.green-api.com').trim();
       db.whatsappConfig.phone = document.getElementById('waPhoneInput').value.trim();
       const sheet = getActiveSheet();
       const sampleRow = (sheet.rows && sheet.rows.find((r) => !r.finished)) || {
@@ -3868,6 +4271,9 @@
     }
 
     function testWhatsAppNotificationNow() {
+      db.whatsappConfig.greenIdInstance = (document.getElementById('waGreenIdInstanceInput')?.value || '').trim();
+      db.whatsappConfig.greenApiToken = (document.getElementById('waGreenApiTokenInput')?.value || '').trim();
+      db.whatsappConfig.greenApiUrl = (document.getElementById('waGreenApiUrlInput')?.value || 'https://api.green-api.com').trim();
       db.whatsappConfig.phone = document.getElementById('waPhoneInput').value.trim();
       const sheet = getActiveSheet();
       const sampleRow = (sheet.rows && sheet.rows[0]) || {
