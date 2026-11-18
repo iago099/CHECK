@@ -554,60 +554,298 @@
 
     .summary-table {
       width: 100%;
-      border-collapse: collapse;
-      background: var(--bg-panel);
-      border: 1px solid var(--border-grid);
-      font-size: 14px;
+      border-collapse: separate;
+      border-spacing: 0 6px;
+      background: transparent;
+      font-size: 13.5px;
+      perspective: 600px;
+    }
+
+    .summary-table tr {
+      background: linear-gradient(145deg, var(--bg-panel), rgba(15, 23, 42, 0.04));
+      box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 2px 0 var(--border-grid);
+      border-radius: 8px;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+    }
+
+    [data-theme="dark"] .summary-table tr {
+      background: linear-gradient(145deg, #1b2536, #111824);
+      box-shadow:
+        0 6px 14px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 2px 0 #090d14;
+    }
+
+    .summary-table tr:hover {
+      transform: translateY(-2px) translateZ(8px);
+      box-shadow:
+        0 8px 18px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 3px 0 #10b981;
     }
 
     .summary-table td {
-      padding: 6px 12px;
+      padding: 8px 12px;
+      border-top: 1px solid var(--border-grid);
       border-bottom: 1px solid var(--border-grid);
     }
 
+    .summary-table td:first-child {
+      border-left: 1px solid var(--border-grid);
+      border-radius: 8px 0 0 8px;
+    }
+
+    .summary-table td:last-child {
+      border-right: 1px solid var(--border-grid);
+      border-radius: 0 8px 8px 0;
+    }
+
     .summary-table td.label-col {
-      font-weight: 600;
+      font-weight: 800;
       text-transform: uppercase;
       color: var(--text-main);
+      letter-spacing: 0.3px;
     }
 
     .summary-table td.val-col {
       text-align: right;
-      font-weight: 700;
+      font-weight: 900;
+      font-size: 16px;
       font-variant-numeric: tabular-nums;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
+    /* =========================================================================
+       CARD 3D VOLUMÉTRICO (ROSCA 3D EXTRUDADA + TORRES CILÍNDRICAS 3D)
+       ========================================================================= */
     .donut-card {
-      background: var(--bg-panel);
+      background: radial-gradient(circle at 50% 22%, rgba(56, 189, 248, 0.09), var(--bg-panel) 72%);
       border: 1px solid var(--border-grid);
-      padding: 20px 16px 16px 16px;
+      border-radius: 14px;
+      padding: 14px 14px 16px 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      box-shadow:
+        0 14px 32px rgba(0, 0, 0, 0.18),
+        inset 0 1px 1px rgba(255, 255, 255, 0.15),
+        0 4px 0 var(--border-grid);
+      perspective: 900px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .donut-card {
+      background: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.12), #131b29 68%, #0d131d 100%);
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.6),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        0 4px 0 #070a10;
+    }
+
+    .chart-3d-stage {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform-style: preserve-3d;
+      transition: transform 0.18s ease-out;
+      will-change: transform;
+    }
+
+    @keyframes float3DIdle {
+      0%, 100% {
+        transform: rotateX(16deg) rotateY(-8deg) translateY(0px);
+      }
+      50% {
+        transform: rotateX(21deg) rotateY(8deg) translateY(-5px);
+      }
+    }
+
+    @keyframes spin3DContinuous {
+      0% {
+        transform: rotateX(20deg) rotateY(0deg);
+      }
+      50% {
+        transform: rotateX(20deg) rotateY(180deg);
+      }
+      100% {
+        transform: rotateX(20deg) rotateY(360deg);
+      }
+    }
+
+    .chart-3d-stage.idle-float {
+      animation: float3DIdle 6s ease-in-out infinite;
+    }
+
+    .chart-3d-stage.spin-3d {
+      animation: spin3DContinuous 7s linear infinite;
+    }
+
+    /* Orbe Central 3D Flutuante acima da Rosca */
+    .orb-3d-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -56%) translateZ(34px);
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.22), var(--bg-panel) 65%, rgba(0, 0, 0, 0.35) 100%);
+      border: 2px solid rgba(56, 189, 248, 0.38);
+      box-shadow:
+        0 14px 24px rgba(0, 0, 0, 0.48),
+        inset 0 2px 5px rgba(255, 255, 255, 0.3),
+        0 0 18px rgba(16, 185, 129, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Torres / Cilindros 3D Isométricos */
+    .towers-3d-stage {
+      display: none;
+      width: 100%;
+      height: 215px;
+      padding: 18px 10px 10px 10px;
+      align-items: flex-end;
+      justify-content: space-around;
+      gap: 12px;
+      transform-style: preserve-3d;
+    }
+
+    .tower-3d-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .tower-3d-pill-val {
+      font-size: 12px;
+      font-weight: 900;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      transform: translateZ(18px);
+      white-space: nowrap;
+    }
+
+    .tower-3d-cylinder {
+      width: 46px;
+      min-height: 18px;
+      border-radius: 23px / 10px;
+      position: relative;
+      transition: height 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow:
+        0 12px 20px rgba(0, 0, 0, 0.45),
+        inset -8px 0 12px rgba(0, 0, 0, 0.38),
+        inset 6px 0 10px rgba(255, 255, 255, 0.28);
+    }
+
+    /* Tampa Superior Elíptica 3D do Cilindro */
+    .tower-3d-cylinder::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 0;
+      right: 0;
+      height: 16px;
+      border-radius: 50%;
+      background: inherit;
+      filter: brightness(1.28);
+      box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.65);
+    }
+
+    /* Base Inferior 3D do Cilindro */
+    .tower-3d-cylinder::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      right: 0;
+      height: 16px;
+      border-radius: 50%;
+      background: inherit;
+      filter: brightness(0.75);
+      z-index: -1;
+    }
+
+    /* Mini Barras Cilíndricas 3D Horizontais na base do Card */
+    .mini-3d-bars {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-grid);
+    }
+
+    .mini-3d-row {
+      display: grid;
+      grid-template-columns: 74px 1fr 42px;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .mini-3d-track {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.25);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mini-3d-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow:
+        inset 0 2px 3px rgba(255, 255, 255, 0.45),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.35),
+        0 0 10px rgba(16, 185, 129, 0.3);
     }
 
     .donut-legend {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      margin-top: 16px;
-      font-size: 12px;
+      gap: 14px;
+      margin-top: 10px;
+      font-size: 11.5px;
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 800;
     }
 
     .legend-item {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
 
     .legend-dot {
-      width: 9px;
-      height: 9px;
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
       display: inline-block;
+      box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.35),
+        inset 0 1px 2px rgba(255, 255, 255, 0.5);
     }
 
     /* Card Rápido de WhatsApp na Lateral Direita */
@@ -1551,20 +1789,38 @@
         <table class="summary-table">
           <tbody>
             <tr>
-              <td class="label-col">TOTAL</td>
+              <td class="label-col">
+                <span style="display:inline-flex;align-items:center;gap:7px;">
+                  <span style="width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #93c5fd, #2563eb);box-shadow:0 2px 5px rgba(37,99,235,0.5);"></span>
+                  TOTAL
+                </span>
+              </td>
               <td class="val-col" id="kpiTotal">12</td>
             </tr>
             <tr>
-              <td class="label-col">FEITO</td>
-              <td class="val-col" id="kpiDone">4</td>
+              <td class="label-col">
+                <span style="display:inline-flex;align-items:center;gap:7px;">
+                  <span style="width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #6ee7b7, #059669);box-shadow:0 2px 5px rgba(16,185,129,0.55);"></span>
+                  FEITO
+                </span>
+              </td>
+              <td class="val-col" style="color:#10b981;" id="kpiDone">4</td>
             </tr>
             <tr>
-              <td class="label-col">A FAZER</td>
-              <td class="val-col" id="kpiTodo">8</td>
+              <td class="label-col">
+                <span style="display:inline-flex;align-items:center;gap:7px;">
+                  <span style="width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fdba74, #ea580c);box-shadow:0 2px 5px rgba(234,88,12,0.55);"></span>
+                  A FAZER
+                </span>
+              </td>
+              <td class="val-col" style="color:#f97316;" id="kpiTodo">8</td>
             </tr>
             <tr>
               <td class="label-col" style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
-                <span>% FEITO</span>
+                <span style="display:inline-flex;align-items:center;gap:7px;">
+                  <span style="width:11px;height:11px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fde047, #16a34a);box-shadow:0 2px 5px rgba(22,163,74,0.55);"></span>
+                  % FEITO
+                </span>
                 <button
                   class="no-print"
                   onclick="togglePctFormulaMode()"
@@ -1575,29 +1831,89 @@
                   Fórmula: I3÷I4
                 </button>
               </td>
-              <td class="val-col" id="kpiPctDone">50,00%</td>
+              <td class="val-col" style="color:#38bdf8;" id="kpiPctDone">50,00%</td>
             </tr>
           </tbody>
         </table>
 
-        <!-- Gráfico de Rosca (Donut Chart SVG Idêntico à Imagem + Centro Vivo Animado) -->
-        <div class="donut-card">
-          <svg width="230" height="230" viewBox="0 0 220 220">
-            <g transform="rotate(-90 110 110)" id="donutSegmentsGroup"></g>
-            <circle cx="110" cy="110" r="50" fill="var(--bg-panel)"></circle>
-            <text x="110" y="106" text-anchor="middle" font-size="20" font-weight="900" fill="var(--text-main)" id="donutCenterPctText">0%</text>
-            <text x="110" y="124" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text-muted)" id="donutCenterSubText">PRONTO</text>
-          </svg>
+        <!-- PAINEL GRÁFICO 3D VOLUMÉTRICO INTERATIVO (ROSCA 3D EXTRUDADA + TORRES CILÍNDRICAS 3D) -->
+        <div
+          class="donut-card"
+          onmousemove="handle3DCardTilt(event, this)"
+          onmouseleave="reset3DCardTilt(this)"
+          title="Passe o mouse para inclinar em 3D ou alterne entre Rosca 3D e Cilindros 3D"
+        >
+          <!-- Barra de Modos 3D no Topo do Card -->
+          <div class="no-print" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:4px;margin-bottom:6px;z-index:8;">
+            <span style="font-size:10.5px;font-weight:900;color:#38bdf8;letter-spacing:0.4px;display:flex;align-items:center;gap:4px;">
+              <span>🧊</span> PAINEL 3D VIVO
+            </span>
+            <div style="display:flex;gap:4px;">
+              <button type="button" id="btn3DModeDonut" class="btn btn-primary" style="padding:2px 7px;font-size:10px;" onclick="set3DChartMode('donut')">
+                🍩 Rosca 3D
+              </button>
+              <button type="button" id="btn3DModeTowers" class="btn" style="padding:2px 7px;font-size:10px;" onclick="set3DChartMode('towers')">
+                🏙️ Torres 3D
+              </button>
+              <button type="button" id="btn3DSpinToggle" class="btn" style="padding:2px 7px;font-size:10px;" onclick="toggle3DContinuousSpin()" title="Ativar/Desativar Giro 3D Contínuo">
+                🔄
+              </button>
+            </div>
+          </div>
+
+          <!-- Palco 3D Principal -->
+          <div class="chart-3d-stage idle-float" id="chart3DStage">
+            <!-- MODO 1: Rosca 3D Volumétrica com 14 Camadas de Extrusão + Orbe Central 3D -->
+            <div id="donut3DViewWrap" style="position:relative;display:flex;align-items:center;justify-content:center;transform-style:preserve-3d;">
+              <svg width="246" height="236" viewBox="0 0 240 240" style="overflow:visible;filter:drop-shadow(0 16px 20px rgba(0,0,0,0.45));">
+                <defs>
+                  <linearGradient id="grad3dDoneTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#38bdf8" />
+                    <stop offset="55%" stop-color="#0284c7" />
+                    <stop offset="100%" stop-color="#1e3a8a" />
+                  </linearGradient>
+                  <linearGradient id="grad3dTodoTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fb923c" />
+                    <stop offset="55%" stop-color="#ea580c" />
+                    <stop offset="100%" stop-color="#9a3412" />
+                  </linearGradient>
+                  <linearGradient id="grad3dPctTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#4ade80" />
+                    <stop offset="55%" stop-color="#16a34a" />
+                    <stop offset="100%" stop-color="#14532d" />
+                  </linearGradient>
+                </defs>
+
+                <!-- Sombra 3D no chão abaixo da rosca -->
+                <ellipse cx="120" cy="134" rx="88" ry="74" fill="rgba(0,0,0,0.34)" />
+
+                <!-- Paredes Extrudadas 3D + Face Superior Brilhante -->
+                <g id="donutSegmentsGroup"></g>
+              </svg>
+
+              <!-- Orbe Holográfico 3D Flutuando em translateZ(34px) no Centro -->
+              <div class="orb-3d-center">
+                <span style="font-size:21px;font-weight:900;color:var(--text-main);line-height:1;text-shadow:0 3px 6px rgba(0,0,0,0.35);" id="donutCenterPctText">0%</span>
+                <span style="font-size:9.5px;font-weight:800;color:var(--text-muted);margin-top:3px;letter-spacing:0.3px;" id="donutCenterSubText">PRONTO</span>
+              </div>
+            </div>
+
+            <!-- MODO 2: Torres / Cilindros 3D Isométricos -->
+            <div id="towers3DStage" class="towers-3d-stage"></div>
+          </div>
+
+          <!-- Barras Cilíndricas 3D Volumétricas na Base do Card -->
+          <div class="mini-3d-bars" id="mini3DBarsContainer"></div>
 
           <div class="donut-legend">
             <span class="legend-item">
-              <span class="legend-dot" style="background:#1a608a;"></span> FEITO
+              <span class="legend-dot" style="background:linear-gradient(135deg,#38bdf8,#1a608a);"></span> FEITO
             </span>
             <span class="legend-item">
-              <span class="legend-dot" style="background:#e67326;"></span> A FAZER
+              <span class="legend-dot" style="background:linear-gradient(135deg,#fb923c,#c2410c);"></span> A FAZER
             </span>
             <span class="legend-item">
-              <span class="legend-dot" style="background:#1c6b2a;"></span> % FEITO
+              <span class="legend-dot" style="background:linear-gradient(135deg,#4ade80,#15803d);"></span> % FEITO
             </span>
           </div>
         </div>
@@ -3674,63 +3990,215 @@
       }
     }
 
+    let current3DChartMode = 'donut';
+    let is3DContinuousSpin = false;
+
+    function set3DChartMode(mode) {
+      current3DChartMode = mode === 'towers' ? 'towers' : 'donut';
+      const donutWrap = document.getElementById('donut3DViewWrap');
+      const towersWrap = document.getElementById('towers3DStage');
+      const btnDonut = document.getElementById('btn3DModeDonut');
+      const btnTowers = document.getElementById('btn3DModeTowers');
+
+      if (donutWrap) donutWrap.style.display = current3DChartMode === 'donut' ? 'flex' : 'none';
+      if (towersWrap) towersWrap.style.display = current3DChartMode === 'towers' ? 'flex' : 'none';
+      if (btnDonut) btnDonut.classList.toggle('btn-primary', current3DChartMode === 'donut');
+      if (btnTowers) btnTowers.classList.toggle('btn-primary', current3DChartMode === 'towers');
+    }
+
+    function toggle3DContinuousSpin() {
+      is3DContinuousSpin = !is3DContinuousSpin;
+      const stage = document.getElementById('chart3DStage');
+      const btn = document.getElementById('btn3DSpinToggle');
+      if (stage) {
+        stage.classList.toggle('spin-3d', is3DContinuousSpin);
+        stage.classList.toggle('idle-float', !is3DContinuousSpin);
+        if (is3DContinuousSpin) stage.style.transform = '';
+      }
+      if (btn) btn.classList.toggle('btn-primary', is3DContinuousSpin);
+    }
+
+    function handle3DCardTilt(e, cardEl) {
+      if (is3DContinuousSpin) return;
+      const stage = document.getElementById('chart3DStage');
+      if (!stage || !cardEl) return;
+      const rect = cardEl.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      const rotX = Math.round(18 - y * 28);
+      const rotY = Math.round(x * 32);
+      stage.classList.remove('idle-float');
+      stage.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.02)`;
+    }
+
+    function reset3DCardTilt() {
+      if (is3DContinuousSpin) return;
+      const stage = document.getElementById('chart3DStage');
+      if (!stage) return;
+      stage.style.transform = '';
+      stage.classList.add('idle-float');
+    }
+
     function renderDonutChart(doneVal, todoVal, pctRatio) {
       const svgGroup = document.getElementById('donutSegmentsGroup');
       if (!svgGroup) return;
+
+      const sheet = getActiveSheet();
+      const rows = (sheet && sheet.rows) || [];
+      const totalRows = rows.length;
+      const partialRowsCount = rows.filter(
+        (r) => !r.finished && r.status !== 'CONCLUIDO' && (r.started || r.status === 'PARCIAL' || r.status === 'PARCIAL_BRANCO')
+      ).length;
+      const notStartedCount = Math.max(0, totalRows - doneVal - partialRowsCount);
 
       const radius = 72;
       const circumference = 2 * Math.PI * radius;
 
       if ((Number(doneVal) || 0) === 0 && (Number(todoVal) || 0) === 0) {
-        svgGroup.innerHTML = `
-          <circle
-            cx="110"
-            cy="110"
-            r="${radius}"
-            fill="transparent"
-            stroke="#cbd5e1"
-            stroke-width="38"
-          />
+        let empty3D = '';
+        for (let depth = 13; depth >= 1; depth--) {
+          empty3D += `<circle cx="120" cy="${112 + depth}" r="${radius}" fill="transparent" stroke="#334155" stroke-width="38" />`;
+        }
+        empty3D += `<circle cx="120" cy="112" r="${radius}" fill="transparent" stroke="#64748b" stroke-width="38" />`;
+        empty3D += `<circle cx="120" cy="112" r="${radius + 17}" fill="transparent" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" />`;
+        svgGroup.innerHTML = empty3D;
+      } else {
+        const v1 = Math.max(0, Number(doneVal) || 0);
+        const v2 = Math.max(0, Number(todoVal) || 0);
+        const v3 = Math.max(0.18, Number(pctRatio) || 0);
+        const sum = v1 + v2 + v3 || 1;
+
+        const segments = [
+          { val: v1, topStroke: 'url(#grad3dDoneTop)', wallColor: '#0c3b5e' },
+          { val: v2, topStroke: 'url(#grad3dTodoTop)', wallColor: '#9a3412' },
+          { val: v3, topStroke: 'url(#grad3dPctTop)', wallColor: '#0f4c23' }
+        ];
+
+        // Pré-calcula os ângulos de cada fatia da rosca
+        let acc = 0;
+        const computedSegs = segments.map((seg) => {
+          const frac = seg.val / sum;
+          const dash = frac * circumference;
+          const gap = circumference - dash;
+          const offset = -acc * circumference;
+          acc += frac;
+          return { ...seg, dash, gap, offset };
+        });
+
+        let html = '';
+
+        // 1. Extrusão Volumétrica 3D (14 camadas empilhadas em profundidade formando as paredes cilíndricas 3D)
+        for (let depth = 14; depth >= 1; depth--) {
+          const cy = 110 + depth;
+          html += `<g transform="rotate(-90 120 ${cy})">`;
+          computedSegs.forEach((seg) => {
+            html += `
+              <circle
+                cx="120"
+                cy="${cy}"
+                r="${radius}"
+                fill="transparent"
+                stroke="${seg.wallColor}"
+                stroke-width="38"
+                stroke-dasharray="${seg.dash} ${seg.gap}"
+                stroke-dashoffset="${seg.offset}"
+              />
+            `;
+          });
+          html += `</g>`;
+        }
+
+        // 2. Face Superior 3D Iluminada com Gradiente Especular
+        html += `<g transform="rotate(-90 120 110)">`;
+        computedSegs.forEach((seg) => {
+          html += `
+            <circle
+              cx="120"
+              cy="110"
+              r="${radius}"
+              fill="transparent"
+              stroke="${seg.topStroke}"
+              stroke-width="38"
+              stroke-dasharray="${seg.dash} ${seg.gap}"
+              stroke-dashoffset="${seg.offset}"
+            />
+          `;
+        });
+        html += `</g>`;
+
+        // 3. Anéis de Reflexo de Luz 3D (Bisel Externo e Interno da Rosca)
+        html += `
+          <circle cx="120" cy="110" r="${radius + 18}" fill="transparent" stroke="rgba(255,255,255,0.32)" stroke-width="1.5" />
+          <circle cx="120" cy="110" r="${radius - 18}" fill="transparent" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" />
         `;
-        return;
+
+        svgGroup.innerHTML = html;
       }
 
-      const v1 = Math.max(0, Number(doneVal) || 0);
-      const v2 = Math.max(0, Number(todoVal) || 0);
-      const v3 = Math.max(0.15, Number(pctRatio) || 0);
-      const sum = v1 + v2 + v3 || 1;
+      // Renderiza também as Torres Cilíndricas 3D Isométricas (Modo 2)
+      const towersEl = document.getElementById('towers3DStage');
+      if (towersEl) {
+        const maxVal = Math.max(1, totalRows);
+        const hTotal = totalRows > 0 ? 132 : 20;
+        const hDone = Math.max(18, Math.round((doneVal / maxVal) * 132));
+        const hPartial = Math.max(18, Math.round((partialRowsCount / maxVal) * 132));
+        const hTodo = Math.max(18, Math.round((notStartedCount / maxVal) * 132));
 
-      const segments = [
-        { val: v1, color: '#1a608a' },
-        { val: v2, color: '#e67326' },
-        { val: v3, color: '#1c6b2a' }
-      ];
-
-      let accumulatedAngle = 0;
-      let html = '';
-
-      segments.forEach((seg) => {
-        const frac = seg.val / sum;
-        const dash = frac * circumference;
-        const gap = circumference - dash;
-        const offset = -accumulatedAngle * circumference;
-        accumulatedAngle += frac;
-
-        html += `
-          <circle
-            cx="110"
-            cy="110"
-            r="${radius}"
-            fill="transparent"
-            stroke="${seg.color}"
-            stroke-width="38"
-            stroke-dasharray="${dash} ${gap}"
-            stroke-dashoffset="${offset}"
-          />
+        towersEl.innerHTML = `
+          <div class="tower-3d-col">
+            <span class="tower-3d-pill-val" style="border:1px solid #38bdf8;">${totalRows}</span>
+            <div class="tower-3d-cylinder" style="height:${hTotal}px;background:linear-gradient(90deg,#0284c7,#38bdf8 40%,#1e3a8a);"></div>
+            <span style="font-size:10px;font-weight:900;color:var(--text-muted);margin-top:6px;">TOTAL</span>
+          </div>
+          <div class="tower-3d-col">
+            <span class="tower-3d-pill-val" style="border:1px solid #10b981;color:#4ade80;">${doneVal}</span>
+            <div class="tower-3d-cylinder" style="height:${hDone}px;background:linear-gradient(90deg,#059669,#34d399 40%,#064e3b);"></div>
+            <span style="font-size:10px;font-weight:900;color:#10b981;margin-top:6px;">FEITO</span>
+          </div>
+          <div class="tower-3d-col">
+            <span class="tower-3d-pill-val" style="border:1px solid #f59e0b;color:#fcd34d;">${partialRowsCount}</span>
+            <div class="tower-3d-cylinder" style="height:${hPartial}px;background:linear-gradient(90deg,#d97706,#fbbf24 40%,#78350f);"></div>
+            <span style="font-size:10px;font-weight:900;color:#f59e0b;margin-top:6px;">50% PARC.</span>
+          </div>
+          <div class="tower-3d-col">
+            <span class="tower-3d-pill-val" style="border:1px solid #ef4444;color:#fca5a5;">${notStartedCount}</span>
+            <div class="tower-3d-cylinder" style="height:${hTodo}px;background:linear-gradient(90deg,#dc2626,#f87171 40%,#7f1d1d);"></div>
+            <span style="font-size:10px;font-weight:900;color:#ef4444;margin-top:6px;">0% A FAZER</span>
+          </div>
         `;
-      });
+      }
 
-      svgGroup.innerHTML = html;
+      // Renderiza também os Tubos Cilíndricos 3D na base do Card
+      const miniBarsEl = document.getElementById('mini3DBarsContainer');
+      if (miniBarsEl) {
+        const pDone = totalRows > 0 ? Math.round((doneVal / totalRows) * 100) : 0;
+        const pPart = totalRows > 0 ? Math.round((partialRowsCount / totalRows) * 100) : 0;
+        const pZero = totalRows > 0 ? Math.round((notStartedCount / totalRows) * 100) : 0;
+
+        miniBarsEl.innerHTML = `
+          <div class="mini-3d-row">
+            <span style="color:#10b981;">✅ 100% FEITO</span>
+            <div class="mini-3d-track">
+              <div class="mini-3d-fill" style="width:${pDone}%;background:linear-gradient(180deg,#6ee7b7 0%,#10b981 50%,#047857 100%);"></div>
+            </div>
+            <span style="text-align:right;color:#10b981;">${doneVal} (${pDone}%)</span>
+          </div>
+          <div class="mini-3d-row">
+            <span style="color:#f59e0b;">🟠 50% PARC.</span>
+            <div class="mini-3d-track">
+              <div class="mini-3d-fill" style="width:${pPart}%;background:linear-gradient(180deg,#fde68a 0%,#f59e0b 50%,#b45309 100%);"></div>
+            </div>
+            <span style="text-align:right;color:#f59e0b;">${partialRowsCount} (${pPart}%)</span>
+          </div>
+          <div class="mini-3d-row">
+            <span style="color:#ef4444;">⏳ 0% A FAZER</span>
+            <div class="mini-3d-track">
+              <div class="mini-3d-fill" style="width:${pZero}%;background:linear-gradient(180deg,#fca5a5 0%,#ef4444 50%,#991b1b 100%);"></div>
+            </div>
+            <span style="text-align:right;color:#ef4444;">${notStartedCount} (${pZero}%)</span>
+          </div>
+        `;
+      }
     }
 
     function renderTabsBar() {
