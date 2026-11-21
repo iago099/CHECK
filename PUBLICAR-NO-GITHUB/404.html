@@ -71,12 +71,15 @@
     .topbar {
       background: linear-gradient(180deg, #162032 0%, var(--toolbar-bg) 100%);
       color: var(--toolbar-text);
-      min-height: 58px;
-      padding: 6px 18px;
+      min-height: 54px;
+      padding: 6px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
       border-bottom: 1px solid #1e293b;
       position: sticky;
       top: 0;
@@ -87,11 +90,16 @@
         0 3px 0 #05080d;
     }
 
+    .topbar::-webkit-scrollbar {
+      display: none;
+    }
+
     .topbar-group {
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 6px;
+      flex-wrap: nowrap;
+      flex-shrink: 0;
     }
 
     .brand-pill {
@@ -664,13 +672,18 @@
     }
 
     .icon-btn {
-      background: transparent;
-      border: none;
+      background: rgba(148, 163, 184, 0.14);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 6px;
+      color: var(--text-main);
       cursor: pointer;
-      font-size: 13px;
-      padding: 2px 4px;
-      opacity: 0.6;
-      transition: opacity 0.15s, transform 0.12s;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 2px 5px;
+      margin: 0 1px;
+      opacity: 0.88;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.28);
+      transition: opacity 0.15s, transform 0.12s, background 0.15s;
     }
 
     tr:hover .icon-btn {
@@ -678,7 +691,9 @@
     }
 
     .icon-btn:hover {
-      transform: translateY(-1px) scale(1.2);
+      background: rgba(56, 189, 248, 0.22);
+      border-color: #38bdf8;
+      transform: translateY(-1px) scale(1.12);
     }
 
     /* Barra Amarela TOTAL EM % em Ouro 3D Extrudado */
@@ -852,11 +867,11 @@
     /* Orbe Central 3D Flutuante acima da Rosca */
     .orb-3d-center {
       position: absolute;
-      top: 50%;
+      top: 47%;
       left: 50%;
       transform: translate(-50%, -56%) translateZ(34px);
-      width: 92px;
-      height: 92px;
+      width: 82px;
+      height: 82px;
       border-radius: 50%;
       background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.22), var(--bg-panel) 65%, rgba(0, 0, 0, 0.35) 100%);
       border: 2px solid rgba(56, 189, 248, 0.38);
@@ -1783,7 +1798,7 @@
           type="text"
           id="currentSheetTitleTop"
           class="tab-inline-input"
-          style="color:#10b981;width:110px;"
+          style="color:#10b981;width:82px;"
           value="LISTA 01"
           title="Clique para editar o nome da aba atual igual ao Excel"
           onchange="renameSheetInline(db.activeSheetId, this.value)"
@@ -1800,7 +1815,7 @@
       <!-- Menu Dropdown 1: Lista & Estrutura -->
       <div class="dropdown" id="ddEstrutura">
         <button class="btn" onclick="toggleDropdown('ddEstrutura')">
-          📋 Lista & Estrutura (<span id="colCountLabel">5</span> col) ▾
+          📋 Estrutura (<span id="colCountLabel">5</span>) ▾
         </button>
         <div class="dropdown-menu">
           <button class="dropdown-item" onclick="addNewRowQuick()">
@@ -1968,7 +1983,20 @@
           <div id="mobileCardsContainer" class="mobile-cards-container"></div>
         </div>
 
-        <div class="no-print" style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <!-- Barra Amarela TOTAL EM % colada logo abaixo das colunas da planilha (estilo Excel) -->
+        <div class="total-yellow-bar" style="margin-top:10px;">
+          <div></div>
+          <div class="yellow-box" style="border-right:none;border-radius:8px 0 0 8px;">TOTAL EM %</div>
+          <div class="yellow-box" style="border-left:none;border-right:none;" id="totalStartedPctBox">100%</div>
+          <div class="yellow-box" style="border-left:none;border-radius:0 8px 8px 0;" id="totalFinishedPctBox">33%</div>
+          <div></div>
+          <div></div>
+        </div>
+
+        <!-- Faixa Viva Compacta da Regra 06:00 às 19:00 -> Checklist do Dia Seguinte -->
+        <div id="rolloverRuleBanner" class="no-print" style="margin-top:12px;"></div>
+
+        <div class="no-print" style="margin-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn btn-primary" onclick="openNewTaskModal()">＋ Novo Serviço / Tarefa</button>
             <button class="btn" onclick="addNewRowQuick()">＋ Linha Rápida na Tabela</button>
@@ -1978,21 +2006,8 @@
             </button>
           </div>
           <span style="font-size:11px;color:var(--text-muted);">
-            📲 Notificação WhatsApp em <strong>PARCIAL (50%)</strong> / <strong>CONCLUIDO (100%)</strong> + 🔄 Repasse automático (06h–19h) p/ dia seguinte.
+            🟢 <strong>100% Concluído</strong> | 🟠 <strong>50% Parcial</strong> | 🔴 <strong>0% Não Iniciado</strong>
           </span>
-        </div>
-
-        <!-- Faixa Viva da Regra 06:00 às 19:00 -> Checklist do Dia Seguinte -->
-        <div id="rolloverRuleBanner" class="no-print" style="margin-top:10px;"></div>
-
-        <!-- Barra Amarela TOTAL EM % idêntica à linha 19 da planilha -->
-        <div class="total-yellow-bar">
-          <div></div>
-          <div class="yellow-box" style="border-right:none;">TOTAL EM %</div>
-          <div class="yellow-box" style="border-left:none;border-right:none;" id="totalStartedPctBox">100%</div>
-          <div class="yellow-box" style="border-left:none;" id="totalFinishedPctBox">33%</div>
-          <div></div>
-          <div></div>
         </div>
 
         <!-- Linha 20 (Campo livre 198279) -->
@@ -2664,8 +2679,8 @@
         },
         alerts: [],
         statuses: [
-          { id: 'CONCLUIDO', label: 'CONCLUIDO', bg: '#00b050', text: '#000000' },
-          { id: 'PARCIAL', label: 'PARCIAL', bg: '#ff0000', text: '#000000' },
+          { id: 'CONCLUIDO', label: 'CONCLUIDO', bg: '#10b981', text: '#000000' },
+          { id: 'PARCIAL', label: 'PARCIAL', bg: '#f59e0b', text: '#000000' },
           { id: 'PARCIAL_BRANCO', label: 'PARCIAL (DESTAQUE)', bg: '#ffffff', text: '#000000' },
           { id: 'NÃO INICIADO', label: 'NÃO INICIADO', bg: '#ef4444', text: '#ffffff' }
         ],
@@ -2690,7 +2705,7 @@
       };
     }
 
-        let db = loadDb();
+    let db = loadDb();
 
     function loadDb() {
       try {
@@ -2704,6 +2719,15 @@
               { enabled: true, startHour: 6, endHour: 19, lastShiftAlertDate: '' },
               parsed.rolloverConfig || {}
             );
+            // Migra automaticamente o status PARCIAL antigo (#ff0000 igual ao NÃO INICIADO) para Laranja/Âmbar (#f59e0b) de semáforo 3D
+            if (Array.isArray(parsed.statuses)) {
+              parsed.statuses.forEach((st) => {
+                if (st.id === 'PARCIAL' && (st.bg === '#ff0000' || st.bg === '#ef4444')) {
+                  st.bg = '#f59e0b';
+                  st.text = '#000000';
+                }
+              });
+            }
             parsed.alerts = parsed.alerts || [];
             return parsed;
           }
