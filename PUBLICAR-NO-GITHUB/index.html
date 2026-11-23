@@ -1893,15 +1893,18 @@
           <div style="padding:4px 10px 6px;font-size:10px;font-weight:800;color:#38bdf8;letter-spacing:0.6px;text-transform:uppercase;">
             📂 Exportar / Baixar & Importar
           </div>
-          <button class="dropdown-item" onclick="exportToPdfNow()">
-            <span>📄 Baixar Arquivo PDF (.pdf)</span>
+          <button class="dropdown-item" onclick="exportToPdfNow('rascunho')">
+            <span>📝 Baixar PDF (Folha p/ Impressão & Rascunho Manual)</span>
+          </button>
+          <button class="dropdown-item" onclick="exportToPdfNow('dark3d')">
+            <span>🎨 Baixar PDF 3D Colorido (Tema Escuro da Tela)</span>
           </button>
           <button class="dropdown-item" onclick="exportToExcel()">
             <span>📤 Baixar Planilha Excel (.xlsx)</span>
           </button>
           <div class="dropdown-divider"></div>
           <button class="dropdown-item" onclick="printSheetPdf()">
-            <span>🖨️ Imprimir Folha (A4 Paisagem)</span>
+            <span>🖨️ Imprimir Folha Direto (A4 Paisagem)</span>
           </button>
           <div class="dropdown-divider"></div>
           <label class="dropdown-item" style="cursor:pointer;">
@@ -4793,14 +4796,15 @@
       const goldGrad = ctx.createLinearGradient(0, footY, 0, footY + 52);
       goldGrad.addColorStop(0, '#fde047');
       goldGrad.addColorStop(1, '#ca8a04');
-      drawRoundedRectPdf(ctx, leftX + 180, footY, leftW - 360, 52, 12, goldGrad, '#a16207', 2);
+      drawRoundedRectPdf(ctx, leftX + 140, footY, leftW - 280, 52, 12, goldGrad, '#a16207', 2);
 
       ctx.fillStyle = '#0f172a';
-      ctx.font = '900 22px "Segoe UI", Arial, sans-serif';
+      ctx.font = '900 21px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('TOTAL EM %', leftX + 185, footY + 34);
       ctx.textAlign = 'center';
-      ctx.fillText('TOTAL EM %', leftX + 520, footY + 34);
-      ctx.fillText(`${stats.startedPct}% (INICIADAS)`, leftX + 980, footY + 34);
-      ctx.fillText(`${stats.finishedPct}% (FINALIZADAS)`, leftX + 1250, footY + 34);
+      ctx.fillText(`INICIADAS: ${stats.startedPct}%`, leftX + 760, footY + 34);
+      ctx.fillText(`FINALIZADAS: ${stats.finishedPct}%`, leftX + 1160, footY + 34);
 
       // 2) COLUNA DIREITA: CARD DE KPIs 3D + GRÁFICO ROSCA 3D VOLUMÉTRICO (SEMPRE DENTRO DA FOLHA)
       // 2.1) Card KPIs (TOTAL, FEITO, A FAZER, % FEITO)
@@ -5056,23 +5060,490 @@
       return new Blob(chunks, { type: 'application/pdf' });
     }
 
-    function exportToPdfNow() {
+    // =========================================================================
+    // FOLHA DE RASCUNHO & CHECKLIST MANUAL DE CAMPO (FUNDO BRANCO P/ CANETA)
+    // =========================================================================
+    function renderDraftWorksheetPdfPageCanvas(sheet, rowsSlice, pageIndex, totalPages, stats, rowOffset) {
+      const W = 2200;
+      const H = 1555; // A4 Paisagem em alta definição (297mm x 210mm)
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext('2d');
+
+      // Fundo Branco Puro Econômico de Tinta (ideal p/ escrever à caneta)
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, W, H);
+
+      // Moldura Externa da Folha de Campo
+      drawRoundedRectPdf(ctx, 24, 20, W - 48, H - 40, 14, '#ffffff', '#1e293b', 2.5);
+
+      // 1) CABEÇALHO DE CAMPO COM CAMPOS PARA PREENCHIMENTO MANUAL À CANETA
+      drawRoundedRectPdf(ctx, 42, 36, W - 84, 92, 12, '#f8fafc', '#334155', 2);
+
+      // Selo CHECKS-MAX + Título da Ficha Manual
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 24px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('✔ CHECKS-MAX — FICHA DE CHECKLIST & RASCUNHO MANUAL DE CAMPO', 64, 71);
+
+      // Linha de Preenchimento Manual no Cabeçalho (Responsável, Equipe, Turno, Visto)
+      ctx.fillStyle = '#334155';
+      ctx.font = 'bold 17px "Segoe UI", Arial, sans-serif';
+      ctx.fillText(
+        'RESPONSÁVEL / EQUIPE: ______________________________________   |   TURNO: 06:00 ÀS 19:00   |   SAÍDA: ____:____   |   VISTO: ___________________',
+        64,
+        109
+      );
+
+      // Data Gigante no Canto Direito do Cabeçalho
+      drawRoundedRectPdf(ctx, W - 470, 46, 412, 72, 10, '#fff1f2', '#e11d48', 2);
+      ctx.fillStyle = '#be123c';
+      ctx.font = '900 36px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`DATA: ${String(sheet.bannerDate || sheet.name || 'HOJE')}`, W - 264, 88);
+      ctx.fillStyle = '#475569';
+      ctx.font = 'bold 13px "Segoe UI", Arial, sans-serif';
+      ctx.fillText(`Impresso em: ${new Date().toLocaleString('pt-BR')}  •  Pág. ${pageIndex + 1}/${totalPages}`, W - 264, 111);
+
+      // Layout Lado a Lado: Esquerda = Tabela de Checklist + Rascunho (1565px), Direita = Resumo + Rosca 3D + Bloco de Notas (525px)
+      const leftX = 42;
+      const leftY = 142;
+      const leftW = 1565;
+      const rightX = leftX + leftW + 20;
+      const rightW = W - rightX - 42;
+
+      // 2) TABELA DE CHECKLIST & RASCUNHO MANUAL (LADO ESQUERDO)
+      drawRoundedRectPdf(ctx, leftX, leftY, leftW, H - leftY - 36, 14, '#ffffff', '#334155', 2);
+
+      // Cabeçalho das Colunas (Com Nº e Coluna de RASCUNHO / ANOTAÇÃO MANUAL)
+      const thY = leftY + 12;
+      const thH = 46;
+      drawRoundedRectPdf(ctx, leftX + 12, thY, leftW - 24, thH, 8, '#1e293b', '#0f172a', 1.5);
+
+      const colNumX = leftX + 18;
+      const colNumW = 54;
+      const colCorX = colNumX + colNumW + 6;
+      const colCorW = 158;
+      const colActX = colCorX + colCorW + 10;
+      const colActW = 695;
+      const colIniX = colActX + colActW + 8;
+      const colIniW = 104;
+      const colFinX = colIniX + colIniW + 8;
+      const colFinW = 108;
+      const colPctX = colFinX + colFinW + 8;
+      const colPctW = 86;
+      const colObsX = colPctX + colPctW + 10;
+      const colObsW = leftX + leftW - 22 - colObsX;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 15px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Nº', colNumX + colNumW / 2, thY + 29);
+      ctx.fillText('STATUS ATUAL', colCorX + colCorW / 2, thY + 29);
+      ctx.textAlign = 'left';
+      ctx.fillText('ATIVIDADE PARA HOJE (CHECKLIST DE CAMPO)', colActX + 10, thY + 29);
+      ctx.textAlign = 'center';
+      ctx.fillText('INICIADA', colIniX + colIniW / 2, thY + 22);
+      ctx.font = 'bold 11px "Segoe UI", Arial, sans-serif';
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillText('(50% • Caneta)', colIniX + colIniW / 2, thY + 38);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 15px "Segoe UI", Arial, sans-serif';
+      ctx.fillText('FINALIZADA', colFinX + colFinW / 2, thY + 22);
+      ctx.font = 'bold 11px "Segoe UI", Arial, sans-serif';
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillText('(100% • Caneta)', colFinX + colFinW / 2, thY + 38);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 15px "Segoe UI", Arial, sans-serif';
+      ctx.fillText('%', colPctX + colPctW / 2, thY + 29);
+      ctx.fillText('✏️ RASCUNHO / ANOTAÇÃO MANUAL', colObsX + colObsW / 2, thY + 29);
+
+      // Quantas linhas reais + linhas extras em branco para anotar novas tarefas à mão
+      const maxSlotsOnPage = 20;
+      const extraBlankCount = Math.max(2, Math.min(4, maxSlotsOnPage - rowsSlice.length));
+      const totalDisplayRows = rowsSlice.length + extraBlankCount;
+      const availTableH = H - (thY + thH) - 110;
+      const rowH = Math.min(58, Math.max(42, Math.floor(availTableH / Math.max(1, totalDisplayRows))));
+      let curY = thY + thH + 6;
+
+      // Renderiza as atividades existentes
+      rowsSlice.forEach((row, idx) => {
+        const globalNum = String((rowOffset || 0) + idx + 1).padStart(2, '0');
+        const pct = calcRowPct(row);
+        const rowBg = idx % 2 === 0 ? '#ffffff' : '#f8fafc';
+        drawRoundedRectPdf(ctx, leftX + 12, curY, leftW - 24, rowH - 4, 7, rowBg, '#cbd5e1', 1.2);
+
+        // Nº da Linha
+        ctx.fillStyle = '#334155';
+        ctx.font = '900 16px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(globalNum, colNumX + colNumW / 2, curY + (rowH - 4) / 2 + 6);
+
+        // Pílula de Status Clara (Alto Contraste p/ Impressão e Economia de Tinta)
+        let pillBg = '#fef2f2';
+        let pillBorder = '#dc2626';
+        let pillText = '#b91c1c';
+        let label = 'A FAZER (0%)';
+        if (pct === 100) {
+          pillBg = '#ecfdf5';
+          pillBorder = '#059669';
+          pillText = '#047857';
+          label = 'CONCLUÍDO';
+        } else if (pct === 50) {
+          pillBg = '#fffbeb';
+          pillBorder = '#d97706';
+          pillText = '#b45309';
+          label = 'PARCIAL (50%)';
+        }
+        drawRoundedRectPdf(ctx, colCorX, curY + 6, colCorW, rowH - 16, 6, pillBg, pillBorder, 1.8);
+        ctx.fillStyle = pillText;
+        ctx.font = '900 14px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, colCorX + colCorW / 2, curY + (rowH - 4) / 2 + 5);
+
+        // Atividade + Selo de Repasse (↪)
+        let actStartX = colActX + 8;
+        if (row.rolledFrom) {
+          const badgeTxt = `↪ ${String(row.rolledFrom).slice(0, 5)}`;
+          drawRoundedRectPdf(ctx, actStartX, curY + 8, 76, rowH - 20, 6, '#fff7ed', '#ea580c', 1.5);
+          ctx.fillStyle = '#c2410c';
+          ctx.font = 'bold 13px "Segoe UI", Arial, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(badgeTxt, actStartX + 38, curY + (rowH - 4) / 2 + 5);
+          actStartX += 84;
+        }
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 16.5px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'left';
+        const rawAct = String(row.activity || '').toUpperCase();
+        const maxChars = row.rolledFrom ? 50 : 58;
+        const displayAct = rawAct.length > maxChars ? rawAct.slice(0, maxChars - 1) + '…' : rawAct;
+        ctx.fillText(displayAct, actStartX, curY + (rowH - 4) / 2 + 6);
+
+        // Quadrado Grande INICIADA (pronto para marcar à caneta se estiver vazio)
+        const cbSize = 27;
+        const cbY = curY + Math.floor((rowH - 4 - cbSize) / 2);
+        const cbIniX = colIniX + Math.floor((colIniW - cbSize) / 2);
+        if (row.started) {
+          drawRoundedRectPdf(ctx, cbIniX, cbY, cbSize, cbSize, 5, '#d1fae5', '#059669', 2.2);
+          ctx.fillStyle = '#047857';
+          ctx.font = '900 20px "Segoe UI", Arial, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('✓', cbIniX + cbSize / 2, cbY + 21);
+        } else {
+          drawRoundedRectPdf(ctx, cbIniX, cbY, cbSize, cbSize, 5, '#ffffff', '#1e293b', 2.2);
+        }
+
+        // Quadrado Grande FINALIZADA (pronto para marcar à caneta se estiver vazio)
+        const cbFinX = colFinX + Math.floor((colFinW - cbSize) / 2);
+        if (row.finished) {
+          drawRoundedRectPdf(ctx, cbFinX, cbY, cbSize, cbSize, 5, '#d1fae5', '#059669', 2.2);
+          ctx.fillStyle = '#047857';
+          ctx.font = '900 20px "Segoe UI", Arial, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText('✓', cbFinX + cbSize / 2, cbY + 21);
+        } else {
+          drawRoundedRectPdf(ctx, cbFinX, cbY, cbSize, cbSize, 5, '#ffffff', '#1e293b', 2.2);
+        }
+
+        // Coluna % (se for 0%, deixa "___%" para escrever à mão após concluir em campo!)
+        ctx.fillStyle = pct === 100 ? '#047857' : pct === 50 ? '#b45309' : '#64748b';
+        ctx.font = '900 15.5px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(pct === 0 ? '____%' : `${pct}%`, colPctX + colPctW / 2, curY + (rowH - 4) / 2 + 6);
+
+        // Coluna de RASCUNHO / ANOTAÇÃO MANUAL (Linha pontilhada para escrever à caneta)
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.3;
+        ctx.setLineDash([3, 3]);
+        const lineY = curY + rowH - 13;
+        ctx.beginPath();
+        ctx.moveTo(colObsX + 8, lineY);
+        ctx.lineTo(colObsX + colObsW - 8, lineY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        curY += rowH;
+      });
+
+      // Renderiza Linhas Extras em Branco para o usuário anotar novas tarefas à caneta em campo
+      for (let b = 0; b < extraBlankCount; b++) {
+        const blankNum = String((rowOffset || 0) + rowsSlice.length + b + 1).padStart(2, '0');
+        drawRoundedRectPdf(ctx, leftX + 12, curY, leftW - 24, rowH - 4, 7, '#ffffff', '#94a3b8', 1.2);
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = 'bold 15px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(blankNum, colNumX + colNumW / 2, curY + (rowH - 4) / 2 + 6);
+
+        // Caixa Status em branco para riscar/escrever
+        drawRoundedRectPdf(ctx, colCorX, curY + 6, colCorW, rowH - 16, 6, '#f8fafc', '#94a3b8', 1.3);
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = 'bold 11px "Segoe UI", Arial, sans-serif';
+        ctx.fillText('[  ] 50%   [  ] 100%', colCorX + colCorW / 2, curY + (rowH - 4) / 2 + 5);
+
+        // Linha pontilhada para escrever nova atividade à caneta
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = 'italic 12px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'left';
+        if (b === 0) {
+          ctx.fillText('✏️ (Linha extra p/ anotar nova atividade à caneta):', colActX + 8, curY + 16);
+        }
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.3;
+        ctx.setLineDash([3, 3]);
+        const lineY = curY + rowH - 12;
+        ctx.beginPath();
+        ctx.moveTo(colActX + 8, lineY);
+        ctx.lineTo(colActX + colActW - 10, lineY);
+        ctx.stroke();
+
+        // Linha pontilhada na coluna de Rascunho
+        ctx.beginPath();
+        ctx.moveTo(colObsX + 8, lineY);
+        ctx.lineTo(colObsX + colObsW - 8, lineY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Quadrados em branco INICIADA e FINALIZADA para marcar à caneta
+        const cbSize = 27;
+        const cbY = curY + Math.floor((rowH - 4 - cbSize) / 2);
+        drawRoundedRectPdf(ctx, colIniX + Math.floor((colIniW - cbSize) / 2), cbY, cbSize, cbSize, 5, '#ffffff', '#1e293b', 2.2);
+        drawRoundedRectPdf(ctx, colFinX + Math.floor((colFinW - cbSize) / 2), cbY, cbSize, cbSize, 5, '#ffffff', '#1e293b', 2.2);
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = 'bold 15px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('____%', colPctX + colPctW / 2, curY + (rowH - 4) / 2 + 6);
+
+        curY += rowH;
+      }
+
+      // Barra Inferior de Fechamento (TOTAL EM % + Espaço para Fechamento Manual à Caneta)
+      const footY = H - 84;
+      drawRoundedRectPdf(ctx, leftX + 12, footY, leftW - 24, 48, 10, '#fef9c3', '#ca8a04', 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 18px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(
+        `📊 TOTAL SISTEMA:   INICIADAS: ${stats.startedPct}%   |   FINALIZADAS (100%): ${stats.finishedPct}%`,
+        leftX + 32,
+        footY + 31
+      );
+      ctx.textAlign = 'right';
+      ctx.fillText(
+        '✏️ FECHAMENTO MANUAL FIM DO DIA:   FEITAS: ____/____   ( ______% )',
+        leftX + leftW - 32,
+        footY + 31
+      );
+
+      // 3) COLUNA DIREITA: RESUMO + GRÁFICO ROSCA 3D + BLOCO DE RASCUNHO LIVRE P/ CANETA
+      // 3.1) Card de Resumo do Dia
+      const kpiY = leftY;
+      const kpiH = 266;
+      drawRoundedRectPdf(ctx, rightX, kpiY, rightW, kpiH, 14, '#ffffff', '#334155', 2);
+
+      const kpiItems = [
+        { dot: '#2563eb', label: 'TOTAL DE ATIVIDADES', val: String(stats.total), color: '#0f172a' },
+        { dot: '#059669', label: 'FEITO NO SISTEMA (100%)', val: String(stats.done), color: '#059669' },
+        { dot: '#ea580c', label: 'A FAZER / PARCIAL (<100%)', val: String(stats.todo), color: '#ea580c' },
+        { dot: '#0284c7', label: '% FEITO (CONCLUÍDO)', val: `${stats.pctFormatted}%`, color: '#0284c7' }
+      ];
+
+      kpiItems.forEach((k, idx) => {
+        const iy = kpiY + 14 + idx * 60;
+        drawRoundedRectPdf(ctx, rightX + 14, iy, rightW - 28, 50, 10, '#f8fafc', '#cbd5e1', 1.5);
+        ctx.beginPath();
+        ctx.arc(rightX + 36, iy + 25, 8, 0, Math.PI * 2);
+        ctx.fillStyle = k.dot;
+        ctx.fill();
+
+        ctx.fillStyle = '#1e293b';
+        ctx.font = '900 16px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(k.label, rightX + 54, iy + 31);
+
+        ctx.fillStyle = k.color;
+        ctx.font = '900 24px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(k.val, rightX + rightW - 28, iy + 33);
+      });
+
+      // 3.2) Card Gráfico Rosca 3D + Barras (Fundo Branco Limpo)
+      const chartY = kpiY + kpiH + 16;
+      const chartH = 510;
+      drawRoundedRectPdf(ctx, rightX, chartY, rightW, chartH, 14, '#ffffff', '#334155', 2);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 18px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('🧊 PAINEL 3D — STATUS NO MOMENTO DA IMPRESSÃO', rightX + 18, chartY + 34);
+
+      const cx = rightX + rightW / 2;
+      const cy = chartY + 185;
+      const outerR = 112;
+      const ringThick = 34;
+      const radiusMid = outerR - ringThick / 2;
+
+      const doneFrac = stats.total > 0 ? stats.done / stats.total : 0;
+      const partFrac = stats.total > 0 ? stats.partialCount / stats.total : 0;
+      const todoFrac = Math.max(0, 1 - doneFrac - partFrac);
+
+      const startAngle = -Math.PI / 2;
+      const doneEnd = startAngle + doneFrac * Math.PI * 2;
+      const partEnd = doneEnd + partFrac * Math.PI * 2;
+      const todoEnd = startAngle + Math.PI * 2;
+
+      ctx.save();
+      ctx.scale(1, 0.82);
+      const scaledCy = cy / 0.82;
+      for (let layer = 11; layer >= 0; layer--) {
+        const offsetY = scaledCy + layer * 1.6;
+        const isTop = layer === 0;
+        if (todoFrac > 0.001 || stats.total === 0) {
+          ctx.beginPath();
+          ctx.arc(cx, offsetY, radiusMid, stats.total === 0 ? 0 : partEnd, stats.total === 0 ? Math.PI * 2 : todoEnd);
+          ctx.lineWidth = ringThick;
+          ctx.strokeStyle = isTop ? '#f97316' : '#c2410c';
+          ctx.stroke();
+        }
+        if (partFrac > 0.001) {
+          ctx.beginPath();
+          ctx.arc(cx, offsetY, radiusMid, doneEnd, partEnd);
+          ctx.lineWidth = ringThick;
+          ctx.strokeStyle = isTop ? '#fbbf24' : '#d97706';
+          ctx.stroke();
+        }
+        if (doneFrac > 0.001) {
+          ctx.beginPath();
+          ctx.arc(cx, offsetY, radiusMid, startAngle, doneEnd);
+          ctx.lineWidth = ringThick;
+          ctx.strokeStyle = isTop ? '#0ea5e9' : '#0284c7';
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+
+      drawRoundedRectPdf(ctx, cx - 64, cy - 42, 128, 82, 41, '#ffffff', '#0284c7', 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 32px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${Math.round(stats.pct)}%`, cx, cy - 2);
+      ctx.fillStyle = '#475569';
+      ctx.font = 'bold 14px "Segoe UI", Arial, sans-serif';
+      ctx.fillText(`${stats.done}/${stats.total} FEITOS`, cx, cy + 22);
+
+      // Barras horizontais compactas
+      const barsStartY = chartY + 315;
+      const breakdown = [
+        { label: '✅ 100% FEITO', count: stats.done, pct: stats.total ? Math.round((stats.done / stats.total) * 100) : 0, color: '#059669' },
+        { label: '🟠 50% PARCIAL', count: stats.partialCount, pct: stats.total ? Math.round((stats.partialCount / stats.total) * 100) : 0, color: '#d97706' },
+        { label: '⏳ 0% A FAZER', count: stats.notStartedCount, pct: stats.total ? Math.round((stats.notStartedCount / stats.total) * 100) : 0, color: '#dc2626' }
+      ];
+
+      breakdown.forEach((b, idx) => {
+        const by = barsStartY + idx * 60;
+        drawRoundedRectPdf(ctx, rightX + 16, by, rightW - 32, 50, 8, '#f8fafc', '#cbd5e1', 1.2);
+        ctx.fillStyle = b.color;
+        ctx.font = '900 15px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(b.label, rightX + 28, by + 21);
+
+        ctx.fillStyle = '#0f172a';
+        ctx.textAlign = 'right';
+        ctx.fillText(`${b.count} (${b.pct}%)`, rightX + rightW - 28, by + 21);
+
+        const trX = rightX + 28;
+        const trY = by + 30;
+        const trW = rightW - 56;
+        drawRoundedRectPdf(ctx, trX, trY, trW, 11, 5, '#e2e8f0', '#cbd5e1', 1);
+        if (b.pct > 0) {
+          drawRoundedRectPdf(ctx, trX, trY, Math.max(12, (trW * b.pct) / 100), 11, 5, b.color, null, 0);
+        }
+      });
+
+      // 3.3) BLOCO DE RASCUNHO LIVRE & OBSERVAÇÕES MANUAIS DE CAMPO (PAUTA P/ CANETA)
+      const notesY = chartY + chartH + 16;
+      const notesH = H - notesY - 36;
+      drawRoundedRectPdf(ctx, rightX, notesY, rightW, notesH, 14, '#ffffff', '#1e293b', 2);
+
+      drawRoundedRectPdf(ctx, rightX + 14, notesY + 12, rightW - 28, 38, 8, '#f1f5f9', '#cbd5e1', 1.2);
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 16px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('✏️ BLOCO DE RASCUNHO & OBSERVAÇÕES MANUAIS', rightX + 26, notesY + 37);
+
+      // Linhas pautadas para escrita à caneta
+      const numNoteLines = 8;
+      const firstLineY = notesY + 92;
+      const lineStep = Math.floor((notesH - 145) / numNoteLines);
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 1.4;
+      for (let l = 0; l < numNoteLines; l++) {
+        const ly = firstLineY + l * lineStep;
+        ctx.beginPath();
+        ctx.moveTo(rightX + 22, ly);
+        ctx.lineTo(rightX + rightW - 22, ly);
+        ctx.stroke();
+      }
+
+      if (sheet.footerNote && String(sheet.footerNote).trim()) {
+        ctx.fillStyle = '#334155';
+        ctx.font = 'bold 15px "Segoe UI", Arial, sans-serif';
+        ctx.fillText(String(sheet.footerNote).trim().slice(0, 54), rightX + 26, firstLineY - 7);
+      }
+
+      // Linha de Assinatura / Conferência no rodapé do card direito
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 15px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('ASSINATURA / CONFERÊNCIA: ____________________________________', rightX + rightW / 2, notesY + notesH - 20);
+
+      return canvas;
+    }
+
+    function exportToPdfNow(mode) {
       closeAllDropdowns();
       try {
         const sheet = getActiveSheet();
         if (!sheet) return;
-        showToast('⏳ Gerando arquivo PDF 3D completo para download...', 'info');
+        const pdfMode = mode || 'rascunho';
+        showToast(
+          pdfMode === 'dark3d'
+            ? '⏳ Gerando PDF 3D Colorido (Tema Escuro)...'
+            : '⏳ Gerando PDF Folha de Rascunho Manual (Fundo Branco p/ Caneta)...',
+          'info'
+        );
 
         const rows = sheet.rows || [];
         const stats = getSheetStats(sheet);
         let partialCount = 0;
         let notStartedCount = 0;
+        let startedCount = 0;
+        let finishedCount = 0;
         rows.forEach((r) => {
+          if (r.started) startedCount++;
+          if (r.finished) finishedCount++;
           const p = calcRowPct(r);
           if (p === 50) partialCount++;
           else if (p === 0) notStartedCount++;
         });
-        const fullStats = Object.assign({}, stats, { partialCount, notStartedCount });
+        const total = rows.length;
+        const startedPct = total > 0 ? Math.round((startedCount / total) * 100) : 0;
+        const finishedPct = total > 0 ? Math.round((finishedCount / total) * 100) : 0;
+        const pctFormatted = total > 0 ? ((finishedCount / total) * 100).toFixed(2).replace('.', ',') : '0,00';
+
+        const fullStats = Object.assign({}, stats, {
+          partialCount,
+          notStartedCount,
+          startedPct,
+          finishedPct,
+          pctFormatted
+        });
 
         // Paginação automática (até 18 atividades por página A4 Paisagem com Tabela + Card 3D lado a lado)
         const pageSize = 18;
@@ -5086,14 +5557,17 @@
         }
 
         const canvases = pagesRows.map((slice, idx) =>
-          renderSheetPdfPageCanvas(sheet, slice, idx, pagesRows.length, fullStats)
+          pdfMode === 'dark3d'
+            ? renderSheetPdfPageCanvas(sheet, slice, idx, pagesRows.length, fullStats)
+            : renderDraftWorksheetPdfPageCanvas(sheet, slice, idx, pagesRows.length, fullStats, idx * pageSize)
         );
 
         const pdfBlob = buildBinaryPdfFromCanvases(canvases);
         const safeSheetName = String(sheet.bannerDate || sheet.name || 'Checklist')
           .replace(/[\\/?*[\]:\s]+/g, '-')
           .replace(/-+/g, '-');
-        const fileName = `CHECKS-MAX_${safeSheetName}.pdf`;
+        const suffix = pdfMode === 'dark3d' ? '3D' : 'RASCUNHO-MANUAL';
+        const fileName = `CHECKS-MAX_${safeSheetName}_${suffix}.pdf`;
 
         const url = URL.createObjectURL(pdfBlob);
         const a = document.createElement('a');
