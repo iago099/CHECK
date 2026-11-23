@@ -72,34 +72,29 @@
       background: linear-gradient(180deg, #162032 0%, var(--toolbar-bg) 100%);
       color: var(--toolbar-text);
       min-height: 54px;
-      padding: 6px 14px;
+      padding: 6px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      scrollbar-width: none;
+      gap: 6px;
+      flex-wrap: wrap;
+      overflow: visible !important;
       border-bottom: 1px solid #1e293b;
       position: sticky;
       top: 0;
-      z-index: 60;
+      z-index: 600;
       box-shadow:
         0 6px 20px rgba(0, 0, 0, 0.45),
         inset 0 1px 0 rgba(255, 255, 255, 0.1),
         0 3px 0 #05080d;
     }
 
-    .topbar::-webkit-scrollbar {
-      display: none;
-    }
-
     .topbar-group {
       display: flex;
       align-items: center;
       gap: 6px;
-      flex-wrap: nowrap;
-      flex-shrink: 0;
+      flex-wrap: wrap;
+      overflow: visible !important;
     }
 
     .brand-pill {
@@ -248,21 +243,21 @@
 
     .dropdown-menu {
       display: none;
-      position: absolute;
-      top: calc(100% + 8px);
-      left: 0;
-      min-width: 235px;
+      position: fixed;
+      top: 58px;
+      left: 16px;
+      min-width: 245px;
       background: linear-gradient(180deg, #1b2538 0%, #111824 100%);
-      border: 1px solid #3b4c6b;
+      border: 1.5px solid #38bdf8;
       border-radius: 12px;
       box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.68),
+        0 22px 48px rgba(0, 0, 0, 0.82),
         0 4px 0 #070a10,
-        inset 0 1px 1px rgba(255, 255, 255, 0.14);
-      padding: 7px;
-      z-index: 100;
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+      padding: 8px;
+      z-index: 99999;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
     }
 
     .dropdown.open .dropdown-menu {
@@ -1257,15 +1252,57 @@
       to { transform: translateX(0); opacity: 1; }
     }
 
+    @page {
+      size: A4 landscape;
+      margin: 7mm;
+    }
+
     @media print {
-      .topbar, .excel-tabs-bar, .no-print, .alert-toast-container, .smartphone-sim-toolbar, .mobile-bottom-nav {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .topbar, .excel-tabs-bar, .no-print, .alert-toast-container, .smartphone-sim-toolbar, .mobile-bottom-nav, .mobile-kpi-strip, .mobile-view-switcher {
         display: none !important;
       }
       body {
-        background: #ffffff;
+        background: var(--bg-page) !important;
+        zoom: 0.84;
       }
       .workspace {
-        padding: 0;
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+      }
+      .sheet-layout {
+        display: grid !important;
+        grid-template-columns: 1fr 255px !important;
+        gap: 12px !important;
+        align-items: start !important;
+      }
+      .sheet-main-card {
+        overflow: visible !important;
+        box-shadow: none !important;
+      }
+      .right-panel {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      .donut-card {
+        padding: 10px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      .chart-3d-stage {
+        animation: none !important;
+        transform: none !important;
+      }
+      .total-yellow-bar {
+        grid-template-columns: 110px 1fr 95px 95px 125px !important;
       }
     }
 
@@ -1853,17 +1890,20 @@
           📂 Excel & PDF ▾
         </button>
         <div class="dropdown-menu">
-          <label class="dropdown-item" style="cursor:pointer;">
-            <span>📥 Importar Arquivo Excel (.xlsx)</span>
-            <input type="file" accept=".xlsx,.xls,.csv" style="display:none;" onchange="importExcelFile(event)" />
-          </label>
+          <div style="padding:4px 10px 6px;font-size:10px;font-weight:800;color:#38bdf8;letter-spacing:0.6px;text-transform:uppercase;">
+            📂 Exportar / Baixar & Importar
+          </div>
+          <button class="dropdown-item" onclick="exportToPdfNow()">
+            <span>📄 Exportar / Baixar em PDF (Completo)</span>
+          </button>
           <button class="dropdown-item" onclick="exportToExcel()">
             <span>📤 Baixar Planilha Excel (.xlsx)</span>
           </button>
           <div class="dropdown-divider"></div>
-          <button class="dropdown-item" onclick="window.print()">
-            <span>🖨️ Imprimir / Salvar em PDF</span>
-          </button>
+          <label class="dropdown-item" style="cursor:pointer;">
+            <span>📥 Importar Arquivo Excel (.xlsx)</span>
+            <input type="file" accept=".xlsx,.xls,.csv" style="display:none;" onchange="importExcelFile(event)" />
+          </label>
         </div>
       </div>
     </div>
@@ -4501,18 +4541,40 @@
     }
 
     // =========================================================================
-    // CONTROLE DOS MENUS DROPDOWN E MODAIS
+    // CONTROLE DOS MENUS DROPDOWN E MODAIS (COM POSICIONAMENTO FIXO ANTI-CORTE)
     // =========================================================================
     function toggleDropdown(id) {
-      event.stopPropagation();
+      if (typeof event !== 'undefined' && event && event.stopPropagation) {
+        event.stopPropagation();
+      }
       const el = document.getElementById(id);
+      if (!el) return;
       const wasOpen = el.classList.contains('open');
       closeAllDropdowns();
-      if (!wasOpen) el.classList.add('open');
+      if (!wasOpen) {
+        el.classList.add('open');
+        const btn = el.querySelector('button');
+        const menu = el.querySelector('.dropdown-menu');
+        if (btn && menu) {
+          const rect = btn.getBoundingClientRect();
+          const menuWidth = Math.max(menu.offsetWidth || 245, 245);
+          const safeLeft = Math.max(8, Math.min(rect.left, window.innerWidth - menuWidth - 12));
+          menu.style.top = (rect.bottom + 6) + 'px';
+          menu.style.left = safeLeft + 'px';
+        }
+      }
     }
 
     function closeAllDropdowns() {
       document.querySelectorAll('.dropdown.open').forEach((d) => d.classList.remove('open'));
+    }
+
+    function exportToPdfNow() {
+      closeAllDropdowns();
+      showToast('📄 Abrindo exportação de PDF (Tabela + Card 3D lado a lado)...', 'info');
+      setTimeout(() => {
+        window.print();
+      }, 120);
     }
 
     // =========================================================================
