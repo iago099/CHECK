@@ -1894,10 +1894,14 @@
             📂 Exportar / Baixar & Importar
           </div>
           <button class="dropdown-item" onclick="exportToPdfNow()">
-            <span>📄 Exportar / Baixar em PDF (Completo)</span>
+            <span>📄 Baixar Arquivo PDF (.pdf)</span>
           </button>
           <button class="dropdown-item" onclick="exportToExcel()">
             <span>📤 Baixar Planilha Excel (.xlsx)</span>
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="printSheetPdf()">
+            <span>🖨️ Imprimir Folha (A4 Paisagem)</span>
           </button>
           <div class="dropdown-divider"></div>
           <label class="dropdown-item" style="cursor:pointer;">
@@ -4569,12 +4573,542 @@
       document.querySelectorAll('.dropdown.open').forEach((d) => d.classList.remove('open'));
     }
 
-    function exportToPdfNow() {
+    function showToast(msg, type) {
+      let box = document.getElementById('checksMaxQuickToast');
+      if (!box) {
+        box = document.createElement('div');
+        box.id = 'checksMaxQuickToast';
+        box.style.cssText = 'position:fixed;bottom:52px;right:18px;z-index:100000;padding:12px 18px;border-radius:12px;font-weight:800;font-size:13px;color:#fff;background:linear-gradient(135deg,#0f172a,#1e293b);border:1.5px solid #38bdf8;box-shadow:0 12px 28px rgba(0,0,0,0.65);transition:opacity 0.25s ease,transform 0.25s ease;';
+        document.body.appendChild(box);
+      }
+      box.style.borderColor = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#38bdf8';
+      box.textContent = msg;
+      box.style.opacity = '1';
+      box.style.transform = 'translateY(0)';
+      clearTimeout(box._hideTimer);
+      box._hideTimer = setTimeout(() => {
+        box.style.opacity = '0';
+        box.style.transform = 'translateY(10px)';
+      }, 3600);
+    }
+
+    function printSheetPdf() {
       closeAllDropdowns();
-      showToast('📄 Abrindo exportação de PDF (Tabela + Card 3D lado a lado)...', 'info');
+      showToast('🖨️ Abrindo impressão A4 Paisagem (Tabela + Card 3D)...', 'info');
       setTimeout(() => {
         window.print();
       }, 120);
+    }
+
+    // =========================================================================
+    // GERADOR E DOWNLOAD DIRETO DE ARQUIVO PDF (.PDF) EM A4 PAISAGEM (3D + TABELA)
+    // =========================================================================
+    function drawRoundedRectPdf(ctx, x, y, w, h, r, fill, stroke, lineW) {
+      const radius = Math.min(r, w / 2, h / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.arcTo(x + w, y, x + w, y + h, radius);
+      ctx.arcTo(x + w, y + h, x, y + h, radius);
+      ctx.arcTo(x, y + h, x, y, radius);
+      ctx.arcTo(x, y, x + w, y, radius);
+      ctx.closePath();
+      if (fill) {
+        ctx.fillStyle = fill;
+        ctx.fill();
+      }
+      if (stroke) {
+        ctx.lineWidth = lineW || 1.5;
+        ctx.strokeStyle = stroke;
+        ctx.stroke();
+      }
+    }
+
+    function renderSheetPdfPageCanvas(sheet, rowsSlice, pageIndex, totalPages, stats) {
+      const W = 2200;
+      const H = 1555; // Proporção exata A4 Paisagem (297mm x 210mm)
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext('2d');
+
+      // Fundo principal 3D Dark
+      const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+      bgGrad.addColorStop(0, '#090e17');
+      bgGrad.addColorStop(1, '#111827');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Barra de topo do documento PDF
+      drawRoundedRectPdf(ctx, 36, 26, W - 72, 68, 14, '#0f172a', '#1e293b', 2);
+      ctx.fillStyle = '#10b981';
+      ctx.font = 'bold 26px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('✔ CHECKS-MAX — RELATÓRIO OFICIAL DE ATIVIDADES & PAINEL 3D', 62, 69);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 20px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'right';
+      const nowStr = new Date().toLocaleString('pt-BR');
+      ctx.fillText(`Aba: ${sheet.name}  |  Gerado em: ${nowStr}  |  Pág. ${pageIndex + 1}/${totalPages}`, W - 62, 68);
+
+      // Layout Lado a Lado: Esquerda = Tabela (W_LEFT = 1560), Direita = Card 3D (W_RIGHT = 536)
+      const leftX = 36;
+      const leftY = 112;
+      const leftW = 1565;
+      const rightX = leftX + leftW + 24;
+      const rightW = W - rightX - 36;
+
+      // 1) CARD ESQUERDO (BANNER DATA + TABELA DE ATIVIDADES)
+      drawRoundedRectPdf(ctx, leftX, leftY, leftW, H - leftY - 36, 18, '#131b2b', '#26344d', 2);
+
+      // Banner Data 3D
+      drawRoundedRectPdf(ctx, leftX + 18, leftY + 16, leftW - 36, 86, 14, '#1b2538', '#334155', 2);
+      ctx.fillStyle = '#ff4444';
+      ctx.font = '900 50px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(String(sheet.bannerDate || sheet.name || 'HOJE'), leftX + leftW / 2, leftY + 76);
+
+      // Barra de progresso abaixo da data
+      const barY = leftY + 114;
+      drawRoundedRectPdf(ctx, leftX + 18, barY, leftW - 36, 12, 6, '#0b111e', null, 0);
+      const fillRatio = Math.max(0.02, Math.min(1, (stats.done + stats.partialCount * 0.5) / Math.max(1, stats.total)));
+      const barGrad = ctx.createLinearGradient(leftX + 18, 0, leftX + 18 + (leftW - 36) * fillRatio, 0);
+      barGrad.addColorStop(0, '#f59e0b');
+      barGrad.addColorStop(1, '#10b981');
+      drawRoundedRectPdf(ctx, leftX + 18, barY, (leftW - 36) * fillRatio, 12, 6, barGrad, null, 0);
+
+      // Cabeçalho da Tabela
+      const thY = leftY + 138;
+      const thH = 48;
+      drawRoundedRectPdf(ctx, leftX + 18, thY, leftW - 36, thH, 10, '#0d1320', '#2b3954', 1.5);
+
+      const colCorX = leftX + 28;
+      const colCorW = 195;
+      const colActX = colCorX + colCorW + 16;
+      const colActW = 875;
+      const colIniX = colActX + colActW + 10;
+      const colIniW = 135;
+      const colFinX = colIniX + colIniW + 10;
+      const colFinW = 135;
+      const colPctX = colFinX + colFinW + 10;
+      const colPctW = 145;
+
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 18px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText((sheet.headers && sheet.headers.cor) || 'COR', colCorX + 10, thY + 31);
+      ctx.textAlign = 'center';
+      ctx.fillText((sheet.headers && sheet.headers.activity) || 'ATIVIDADE PARA HOJE', colActX + colActW / 2, thY + 31);
+      ctx.fillText((sheet.headers && sheet.headers.started) || 'INICIADA', colIniX + colIniW / 2, thY + 31);
+      ctx.fillText((sheet.headers && sheet.headers.finished) || 'FINALIZADA', colFinX + colFinW / 2, thY + 31);
+      ctx.fillText((sheet.headers && sheet.headers.pct) || 'CONCLUÍDA %', colPctX + colPctW / 2, thY + 31);
+
+      // Linhas da Tabela
+      const maxRowsHere = Math.max(rowsSlice.length, 1);
+      const availTableH = H - (thY + thH) - 135;
+      const rowH = Math.min(62, Math.max(44, Math.floor(availTableH / maxRowsHere)));
+      let curY = thY + thH + 8;
+
+      rowsSlice.forEach((row, idx) => {
+        const pct = calcRowPct(row);
+        const rowBg = idx % 2 === 0 ? '#182235' : '#151e30';
+        drawRoundedRectPdf(ctx, leftX + 18, curY, leftW - 36, rowH - 5, 10, rowBg, '#26334d', 1);
+
+        // Pílula 3D de Status (COR)
+        let pillBg = '#ef4444';
+        let pillBorder = '#991b1b';
+        let pillText = '#ffffff';
+        let label = 'NÃO INICIADO';
+        if (pct === 100) {
+          pillBg = '#10b981';
+          pillBorder = '#065f46';
+          label = 'CONCLUIDO';
+        } else if (pct === 50) {
+          pillBg = '#f59e0b';
+          pillBorder = '#b45309';
+          pillText = '#0f172a';
+          label = 'PARCIAL';
+        }
+        drawRoundedRectPdf(ctx, colCorX, curY + 7, colCorW, rowH - 19, 9, pillBg, pillBorder, 2);
+        ctx.fillStyle = pillText;
+        ctx.font = '900 17px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, colCorX + colCorW / 2, curY + (rowH - 5) / 2 + 6);
+
+        // Atividade + Badge de Repasse (↪)
+        let actTextX = colActX + colActW / 2;
+        if (row.rolledFrom) {
+          const badgeTxt = `↪ ${String(row.rolledFrom).slice(0, 5)}`;
+          drawRoundedRectPdf(ctx, colActX + 4, curY + 10, 86, rowH - 25, 8, '#3b2510', '#f59e0b', 1.5);
+          ctx.fillStyle = '#fbbf24';
+          ctx.font = 'bold 15px "Segoe UI", Arial, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(badgeTxt, colActX + 47, curY + (rowH - 5) / 2 + 5);
+          actTextX = colActX + 96 + (colActW - 96) / 2;
+        }
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 18px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'center';
+        const rawAct = String(row.activity || '').toUpperCase();
+        const maxChars = row.rolledFrom ? 58 : 66;
+        const displayAct = rawAct.length > maxChars ? rawAct.slice(0, maxChars - 1) + '…' : rawAct;
+        ctx.fillText(displayAct, actTextX, curY + (rowH - 5) / 2 + 6);
+
+        // Checkbox INICIADA
+        const cbSize = 28;
+        const cbY = curY + Math.floor((rowH - 5 - cbSize) / 2);
+        const cbIniX = colIniX + Math.floor((colIniW - cbSize) / 2);
+        if (row.started) {
+          drawRoundedRectPdf(ctx, cbIniX, cbY, cbSize, cbSize, 7, '#10b981', '#047857', 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 19px "Segoe UI", Arial, sans-serif';
+          ctx.fillText('✓', cbIniX + cbSize / 2, cbY + 21);
+        } else {
+          drawRoundedRectPdf(ctx, cbIniX, cbY, cbSize, cbSize, 7, '#1e1b26', '#ef4444', 2);
+        }
+
+        // Checkbox FINALIZADA
+        const cbFinX = colFinX + Math.floor((colFinW - cbSize) / 2);
+        if (row.finished) {
+          drawRoundedRectPdf(ctx, cbFinX, cbY, cbSize, cbSize, 7, '#10b981', '#047857', 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = 'bold 19px "Segoe UI", Arial, sans-serif';
+          ctx.fillText('✓', cbFinX + cbSize / 2, cbY + 21);
+        } else {
+          drawRoundedRectPdf(ctx, cbFinX, cbY, cbSize, cbSize, 7, '#1e1b26', '#ef4444', 2);
+        }
+
+        // CONCLUÍDA EM %
+        ctx.fillStyle = pct === 100 ? '#34d399' : pct === 50 ? '#fbbf24' : '#f8fafc';
+        ctx.font = '900 19px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${pct}%`, colPctX + colPctW / 2, curY + (rowH - 5) / 2 + 6);
+
+        curY += rowH;
+      });
+
+      // Barra Dourada 3D de Rodapé (TOTAL EM %)
+      const footY = H - 108;
+      const goldGrad = ctx.createLinearGradient(0, footY, 0, footY + 52);
+      goldGrad.addColorStop(0, '#fde047');
+      goldGrad.addColorStop(1, '#ca8a04');
+      drawRoundedRectPdf(ctx, leftX + 180, footY, leftW - 360, 52, 12, goldGrad, '#a16207', 2);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '900 22px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('TOTAL EM %', leftX + 520, footY + 34);
+      ctx.fillText(`${stats.startedPct}% (INICIADAS)`, leftX + 980, footY + 34);
+      ctx.fillText(`${stats.finishedPct}% (FINALIZADAS)`, leftX + 1250, footY + 34);
+
+      // 2) COLUNA DIREITA: CARD DE KPIs 3D + GRÁFICO ROSCA 3D VOLUMÉTRICO (SEMPRE DENTRO DA FOLHA)
+      // 2.1) Card KPIs (TOTAL, FEITO, A FAZER, % FEITO)
+      const kpiY = leftY;
+      const kpiH = 290;
+      drawRoundedRectPdf(ctx, rightX, kpiY, rightW, kpiH, 18, '#131b2b', '#26344d', 2);
+
+      const kpiItems = [
+        { dot: '#3b82f6', label: 'TOTAL DE ATIVIDADES', val: String(stats.total), color: '#f8fafc' },
+        { dot: '#10b981', label: 'FEITO (100%)', val: String(stats.done), color: '#10b981' },
+        { dot: '#f97316', label: 'A FAZER / PARCIAL', val: String(stats.todo), color: '#f97316' },
+        { dot: '#22c55e', label: '% FEITO (CONCLUÍDO)', val: `${stats.pctFormatted}%`, color: '#38bdf8' }
+      ];
+
+      kpiItems.forEach((k, idx) => {
+        const iy = kpiY + 16 + idx * 66;
+        drawRoundedRectPdf(ctx, rightX + 16, iy, rightW - 32, 56, 12, '#1a2438', '#2d3c59', 1.5);
+        ctx.beginPath();
+        ctx.arc(rightX + 42, iy + 28, 9, 0, Math.PI * 2);
+        ctx.fillStyle = k.dot;
+        ctx.fill();
+
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = '900 18px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(k.label, rightX + 62, iy + 34);
+
+        ctx.fillStyle = k.color;
+        ctx.font = '900 26px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(k.val, rightX + rightW - 34, iy + 37);
+      });
+
+      // 2.2) Card do PAINEL 3D VIVO (Rosca 3D Extrudada + Barras 3D)
+      const chartY = kpiY + kpiH + 22;
+      const chartH = H - chartY - 36;
+      drawRoundedRectPdf(ctx, rightX, chartY, rightW, chartH, 18, '#131b2b', '#26344d', 2);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = '900 20px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('🧊 PAINEL 3D VIVO — PROGRESSO DO DIA', rightX + 24, chartY + 42);
+
+      // Desenha Rosca 3D com 14 Camadas Volumétricas no Canvas
+      const cx = rightX + rightW / 2;
+      const cy = chartY + 275;
+      const outerR = 152;
+      const ringThick = 46;
+      const radiusMid = outerR - ringThick / 2;
+
+      const doneFrac = stats.total > 0 ? stats.done / stats.total : 0;
+      const partFrac = stats.total > 0 ? stats.partialCount / stats.total : 0;
+      const todoFrac = Math.max(0, 1 - doneFrac - partFrac);
+
+      const startAngle = -Math.PI / 2;
+      const doneEnd = startAngle + doneFrac * Math.PI * 2;
+      const partEnd = doneEnd + partFrac * Math.PI * 2;
+      const todoEnd = startAngle + Math.PI * 2;
+
+      // Sombra de base da Rosca 3D
+      ctx.save();
+      ctx.scale(1, 0.82);
+      const scaledCy = cy / 0.82;
+      ctx.beginPath();
+      ctx.arc(cx, scaledCy + 34, radiusMid, 0, Math.PI * 2);
+      ctx.lineWidth = ringThick + 8;
+      ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+      ctx.stroke();
+
+      // 14 camadas de extrusão 3D (de baixo para cima)
+      for (let layer = 14; layer >= 0; layer--) {
+        const offsetY = scaledCy + layer * 1.9;
+        const isTop = layer === 0;
+
+        // Fatia A FAZER (Laranja)
+        if (todoFrac > 0.001 || stats.total === 0) {
+          ctx.beginPath();
+          ctx.arc(cx, offsetY, radiusMid, stats.total === 0 ? 0 : partEnd, stats.total === 0 ? Math.PI * 2 : todoEnd);
+          ctx.lineWidth = ringThick;
+          ctx.strokeStyle = isTop ? '#f97316' : '#9a3412';
+          ctx.stroke();
+        }
+        // Fatia PARCIAL 50% (Âmbar)
+        if (partFrac > 0.001) {
+          ctx.beginPath();
+          ctx.arc(cx, offsetY, radiusMid, doneEnd, partEnd);
+          ctx.lineWidth = ringThick;
+          ctx.strokeStyle = isTop ? '#fbbf24' : '#b45309';
+          ctx.stroke();
+        }
+        // Fatia FEITO 100% (Azul/Verde 3D)
+        if (doneFrac > 0.001) {
+          ctx.beginPath();
+          ctx.arc(cx, offsetY, radiusMid, startAngle, doneEnd);
+          ctx.lineWidth = ringThick;
+          ctx.strokeStyle = isTop ? '#0ea5e9' : '#0369a1';
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+
+      // Orbe central 3D da Rosca
+      drawRoundedRectPdf(ctx, cx - 82, cy - 58, 164, 108, 54, '#0f172a', '#38bdf8', 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '900 44px "Segoe UI", Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${Math.round(stats.pct)}%`, cx, cy - 4);
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 17px "Segoe UI", Arial, sans-serif';
+      ctx.fillText(`${stats.done}/${stats.total} FEITOS`, cx, cy + 28);
+
+      // Barras Cilíndricas 3D Horizontais na parte inferior do Card Direito
+      const barsStartY = chartY + 470;
+      const breakdown = [
+        { label: '✅ 100% FEITO', count: stats.done, pct: stats.total ? Math.round((stats.done / stats.total) * 100) : 0, color: '#10b981', track: '#064e3b' },
+        { label: '🟠 50% PARCIAL', count: stats.partialCount, pct: stats.total ? Math.round((stats.partialCount / stats.total) * 100) : 0, color: '#f59e0b', track: '#78350f' },
+        { label: '⏳ 0% A FAZER', count: stats.notStartedCount, pct: stats.total ? Math.round((stats.notStartedCount / stats.total) * 100) : 0, color: '#ef4444', track: '#7f1d1d' }
+      ];
+
+      breakdown.forEach((b, idx) => {
+        const by = barsStartY + idx * 92;
+        drawRoundedRectPdf(ctx, rightX + 20, by, rightW - 40, 76, 12, '#182235', '#293752', 1.5);
+        ctx.fillStyle = b.color;
+        ctx.font = '900 18px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(b.label, rightX + 38, by + 29);
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.textAlign = 'right';
+        ctx.fillText(`${b.count} (${b.pct}%)`, rightX + rightW - 38, by + 29);
+
+        // Trilho 3D
+        const trX = rightX + 38;
+        const trY = by + 44;
+        const trW = rightW - 76;
+        drawRoundedRectPdf(ctx, trX, trY, trW, 16, 8, '#0b111e', '#1e293b', 1);
+        if (b.pct > 0) {
+          drawRoundedRectPdf(ctx, trX, trY, Math.max(18, (trW * b.pct) / 100), 16, 8, b.color, null, 0);
+        }
+      });
+
+      // Resumo de Rodapé do Card 3D
+      if (sheet.footerNote && String(sheet.footerNote).trim()) {
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = 'italic 16px "Segoe UI", Arial, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText('Nota: ' + String(sheet.footerNote).trim().slice(0, 52), rightX + 24, chartY + chartH - 22);
+      }
+
+      return canvas;
+    }
+
+    function dataUrlToUint8ArrayPdf(dataUrl) {
+      const base64 = dataUrl.split(',')[1];
+      const bin = atob(base64);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) {
+        bytes[i] = bin.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    function stringToUint8ArrayPdf(str) {
+      const bytes = new Uint8Array(str.length);
+      for (let i = 0; i < str.length; i++) {
+        bytes[i] = str.charCodeAt(i) & 0xff;
+      }
+      return bytes;
+    }
+
+    function buildBinaryPdfFromCanvases(canvases) {
+      const chunks = [];
+      const offsets = [0]; // Índice 0 reservado pelo padrão PDF
+      let currentOffset = 0;
+
+      function pushStr(str) {
+        const arr = stringToUint8ArrayPdf(str);
+        chunks.push(arr);
+        currentOffset += arr.length;
+      }
+
+      function pushBytes(arr) {
+        chunks.push(arr);
+        currentOffset += arr.length;
+      }
+
+      function startObj(id) {
+        offsets[id] = currentOffset;
+        pushStr(`${id} 0 obj\n`);
+      }
+
+      function endObj() {
+        pushStr(`\nendobj\n`);
+      }
+
+      // Cabeçalho PDF 1.4 binário
+      pushStr('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+
+      // Obj 1: Catalog
+      startObj(1);
+      pushStr('<< /Type /Catalog /Pages 2 0 R >>');
+      endObj();
+
+      const pageObjIds = canvases.map((_, idx) => 3 + idx * 3);
+
+      // Obj 2: Pages
+      startObj(2);
+      pushStr(`<< /Type /Pages /Kids [${pageObjIds.map((id) => `${id} 0 R`).join(' ')}] /Count ${canvases.length} >>`);
+      endObj();
+
+      // Para cada página: Page (3+i*3), Content (4+i*3), Image XObject (5+i*3)
+      const pageW = 841.89;
+      const pageH = 595.28;
+
+      canvases.forEach((canvas, idx) => {
+        const pageId = 3 + idx * 3;
+        const contentId = 4 + idx * 3;
+        const imgId = 5 + idx * 3;
+
+        const jpegBytes = dataUrlToUint8ArrayPdf(canvas.toDataURL('image/jpeg', 0.94));
+        const contentStream = `q ${pageW} 0 0 ${pageH} 0 0 cm /Im0 Do Q`;
+
+        startObj(pageId);
+        pushStr(
+          `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageW} ${pageH}] /Resources << /XObject << /Im0 ${imgId} 0 R >> >> /Contents ${contentId} 0 R >>`
+        );
+        endObj();
+
+        startObj(contentId);
+        pushStr(`<< /Length ${contentStream.length} >>\nstream\n${contentStream}\nendstream`);
+        endObj();
+
+        startObj(imgId);
+        pushStr(
+          `<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`
+        );
+        pushBytes(jpegBytes);
+        pushStr('\nendstream');
+        endObj();
+      });
+
+      const totalObjs = 2 + canvases.length * 3;
+      const xrefOffset = currentOffset;
+      pushStr(`xref\n0 ${totalObjs + 1}\n`);
+      pushStr('0000000000 65535 f \n');
+      for (let i = 1; i <= totalObjs; i++) {
+        const offStr = String(offsets[i] || 0).padStart(10, '0');
+        pushStr(`${offStr} 00000 n \n`);
+      }
+
+      pushStr(`trailer\n<< /Size ${totalObjs + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`);
+
+      return new Blob(chunks, { type: 'application/pdf' });
+    }
+
+    function exportToPdfNow() {
+      closeAllDropdowns();
+      try {
+        const sheet = getActiveSheet();
+        if (!sheet) return;
+        showToast('⏳ Gerando arquivo PDF 3D completo para download...', 'info');
+
+        const rows = sheet.rows || [];
+        const stats = getSheetStats(sheet);
+        let partialCount = 0;
+        let notStartedCount = 0;
+        rows.forEach((r) => {
+          const p = calcRowPct(r);
+          if (p === 50) partialCount++;
+          else if (p === 0) notStartedCount++;
+        });
+        const fullStats = Object.assign({}, stats, { partialCount, notStartedCount });
+
+        // Paginação automática (até 18 atividades por página A4 Paisagem com Tabela + Card 3D lado a lado)
+        const pageSize = 18;
+        const pagesRows = [];
+        if (rows.length === 0) {
+          pagesRows.push([]);
+        } else {
+          for (let i = 0; i < rows.length; i += pageSize) {
+            pagesRows.push(rows.slice(i, i + pageSize));
+          }
+        }
+
+        const canvases = pagesRows.map((slice, idx) =>
+          renderSheetPdfPageCanvas(sheet, slice, idx, pagesRows.length, fullStats)
+        );
+
+        const pdfBlob = buildBinaryPdfFromCanvases(canvases);
+        const safeSheetName = String(sheet.bannerDate || sheet.name || 'Checklist')
+          .replace(/[\\/?*[\]:\s]+/g, '-')
+          .replace(/-+/g, '-');
+        const fileName = `CHECKS-MAX_${safeSheetName}.pdf`;
+
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+        showToast(`✅ PDF baixado com sucesso: ${fileName}`, 'success');
+      } catch (err) {
+        console.error('Erro ao gerar PDF direto:', err);
+        window.print();
+      }
     }
 
     // =========================================================================
